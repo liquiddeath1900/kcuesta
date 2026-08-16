@@ -99,9 +99,11 @@
     { id: 'vegetales', nombre: 'Vegetales' },
     { id: 'frutas', nombre: 'Frutas' },
     { id: 'granos', nombre: 'Granos' },
-    // Faltaba: las fuentes traen cerdo, pollo, res, huevos y leche, así que
-    // había rubros que ningún filtro alcanzaba.
-    { id: 'pecuario', nombre: 'Carnes' }
+    // Faltaba entera: las fuentes traen cerdo, pollo, res, huevos y leche,
+    // así que había rubros que ningún filtro alcanzaba. Se rotula
+    // "Pecuario" —el término del Ministerio— y no "Carnes", que dejaba
+    // fuera el huevo y la leche que también caen aquí.
+    { id: 'pecuario', nombre: 'Pecuario' }
   ];
   var catActiva = 'todos';
 
@@ -253,10 +255,19 @@
     // Un solo precio no necesita desplegable: se dibuja la misma cáscara
     // sin control, para que los rubros de una sola tienda no parezcan
     // datos rotos al lado de los demás.
+    //
+    // Tampoco se le cuelga la lista: con una sola oferta, la cabecera YA
+    // trae el precio y la tienda, así que la lista repetía lo mismo y
+    // dejaba estas trece tarjetas al doble de alto que las demás. Solo se
+    // rescata el enlace a la tienda.
     if (!hayVarias) {
       return '<article class="rubro rubro-sola">' +
-        '<div class="rb-cab">' + cabecera + '</div>' +
-        filasOfertas(r) + '</article>';
+        '<div class="rb-cab">' + cabecera +
+          (mejor.url
+            ? '<a class="rb-ir" href="' + esc(mejor.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>'
+            : '') +
+        '</div>' +
+      '</article>';
     }
 
     return '<article class="rubro">' +

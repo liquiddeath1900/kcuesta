@@ -417,10 +417,15 @@ body.con-pie { padding-bottom: 64px; }
 /* Dos filas: producto + precio arriba, la referencia mayorista a todo el
    ancho abajo. Antes la referencia peleaba por la columna de texto, la
    dejaba en 111px y la cabecera se estiraba a 218px en un teléfono. */
+/* El tamaño es un punto medio buscado a propósito: la foto de 52px hacía
+   caber muchas tarjetas de un vistazo pero el producto casi no se veía, y
+   agrandarla hasta una tarjeta por pantalla mataba la comparación, que es
+   para lo que se agrupó. A 68px se distingue el producto y siguen entrando
+   cuatro o cinco rubros en un teléfono. */
 .rb-cab { display: grid; position: relative;
-  grid-template-columns: 52px 1fr auto;
+  grid-template-columns: 68px 1fr auto;
   grid-template-areas: "foto txt precio" "ref ref ref";
-  gap: 4px 12px; align-items: center; padding: 12px 14px; min-height: 56px; }
+  gap: 6px 13px; align-items: center; padding: 14px 16px; min-height: 68px; }
 .rb-foto { grid-area: foto; }
 .rb-txt { grid-area: txt; }
 .rb-precio { grid-area: precio; }
@@ -428,15 +433,16 @@ body.con-pie { padding-bottom: 64px; }
 .rubro details[open] .rb-cab { border-bottom: 1px solid var(--linea);
   background: var(--verde-50); }
 
-.rb-foto { width: 52px; height: 52px; border-radius: 8px; overflow: hidden;
+.rb-foto { width: 68px; height: 68px; border-radius: 10px; overflow: hidden;
   background: var(--arena); flex: none; }
 .rb-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .rb-foto .sin-foto { width: 100%; height: 100%; display: grid; place-items: center;
   font-weight: 800; color: var(--tinta-3); }
 
 .rb-txt { min-width: 0; }
-.rb-nom { font-weight: 700; line-height: 1.2; }
-.rb-meta { font-size: .78rem; color: var(--tinta-3); margin-top: 2px; }
+.rb-nom { font-weight: 700; line-height: 1.2; font-size: 1.04rem;
+  letter-spacing: -.01em; }
+.rb-meta { font-size: .79rem; color: var(--tinta-3); margin-top: 3px; }
 .rb-ref { font-size: .74rem; color: var(--tinta-3); margin-top: 3px;
   display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
 
@@ -447,7 +453,7 @@ body.con-pie { padding-bottom: 64px; }
 .marca.baja { background: var(--baja-bg); color: var(--baja); }
 
 .rb-precio { text-align: right; font-weight: 750; line-height: 1.15; white-space: nowrap; }
-.rb-precio .cifra { font-size: 1.02rem; }
+.rb-precio .cifra { font-size: 1.18rem; letter-spacing: -.02em; }
 .rb-u { display: block; font-size: .68rem; color: var(--tinta-3); font-weight: 400; }
 
 /* La flecha se saca del flujo: solo indica estado. El objetivo tocable es
@@ -476,7 +482,10 @@ body.con-pie { padding-bottom: 64px; }
 .rb-ir:hover { text-decoration: underline; }
 .rb-pie { padding: 9px 14px; font-size: .72rem; background: var(--arena); }
 
-.rubro-sola .rb-lista { border-top: 1px solid var(--linea); }
+/* En la tarjeta de una sola tienda el enlace va en la cabecera, alineado
+   con la referencia mayorista de la segunda fila. */
+.rubro-sola .rb-cab { grid-template-areas: "foto txt precio" "ref ref ir"; }
+.rubro-sola .rb-ir { grid-area: ir; justify-self: end; }
 .pastillas.cadenas { margin-top: 6px; }
 .pastilla.chica { font-size: .76rem; padding: 5px 11px; }
 
