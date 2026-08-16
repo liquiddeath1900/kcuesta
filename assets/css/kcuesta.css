@@ -119,9 +119,11 @@ p  { margin: 0 0 1em; }
   border-bottom: 1px solid var(--linea);
 }
 .barra-in { display: flex; align-items: center; gap: 18px; height: 66px; }
-.marca { font-family: var(--display); font-weight: 700; font-size: 1.42rem;
-  letter-spacing: -.045em; color: var(--verde-800); text-decoration: none; }
-.marca span { color: var(--naranja-500); }
+/* La marca ahora es imagen; se escala por altura para no deformarse */
+.marca { display: flex; align-items: center; text-decoration: none; flex: 0 0 auto; }
+.marca img { height: 30px; width: auto; display: block; }
+@media (min-width: 760px) { .marca img { height: 34px; } }
+@media (max-width: 340px) { .marca img { height: 26px; } }
 .nav-esc { display: none; gap: 24px; margin-left: 10px; }
 .nav-esc a { text-decoration: none; font-size: .92rem; font-weight: 550; color: var(--tinta-2);
   padding: 6px 0; border-bottom: 2px solid transparent; }

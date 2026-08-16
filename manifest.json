@@ -1,0 +1,14 @@
+{
+  "name": "Kcuesta — El mercado agrícola dominicano",
+  "short_name": "Kcuesta",
+  "description": "Compra y vende cosecha directo entre productores y compradores en República Dominicana.",
+  "lang": "es-DO",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBFAF6",
+  "theme_color": "#1D4A33",
+  "icons": [
+    { "src": "assets/brand/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/brand/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
