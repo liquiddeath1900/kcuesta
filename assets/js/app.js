@@ -98,7 +98,10 @@
     { id: 'viveres', nombre: 'Víveres' },
     { id: 'vegetales', nombre: 'Vegetales' },
     { id: 'frutas', nombre: 'Frutas' },
-    { id: 'granos', nombre: 'Granos' }
+    { id: 'granos', nombre: 'Granos' },
+    // Faltaba: las fuentes traen cerdo, pollo, res, huevos y leche, así que
+    // había rubros que ningún filtro alcanzaba.
+    { id: 'pecuario', nombre: 'Carnes' }
   ];
   var catActiva = 'todos';
 
@@ -443,9 +446,14 @@
         });
       });
       caja.innerHTML = ['todas'].concat(ids).map(function (id) {
-        var n = id === 'todas' ? 'Todas las tiendas' : O.cadenas[id].nombre;
+        // Nombre corto en el chip, completo en el title: "Supermercados
+        // Nacional" empujaba la fila fuera de la pantalla.
+        var c = O.cadenas[id] || {};
+        var n = id === 'todas' ? 'Todas' : (c.corto || c.nombre || id);
+        var largo = id === 'todas' ? 'Todas las tiendas' : (c.nombre || id);
         return '<button class="pastilla chica' + (id === cadenaActiva ? ' on' : '') +
-               '" data-cadena="' + esc(id) + '">' + esc(n) + '</button>';
+               '" data-cadena="' + esc(id) + '" title="' + esc(largo) + '">' +
+               esc(n) + '</button>';
       }).join('');
     }
   }

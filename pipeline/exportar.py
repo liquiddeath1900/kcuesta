@@ -264,6 +264,18 @@ def _ofertas(db, hoy: dt.date) -> dict:
     cadenas = {c["id"]: c for c in db.seleccionar(
         "cadenas", select="id,nombre,url,tipo", activo="eq.true")}
 
+    # Nombre corto para las pastillas de filtro. "Supermercados Nacional"
+    # es lo que empujaba la fila fuera de la pantalla; en un chip basta
+    # "Nacional". El nombre completo se sigue usando en la tarjeta.
+    for c in cadenas.values():
+        c["corto"] = (c["nombre"]
+                      .replace("Supermercados ", "")
+                      .replace("Supermercado ", "")
+                      .replace(" Market", "")
+                      .replace("La ", "")
+                      .replace(" RD", "")
+                      .strip())
+
     # ---- Agrupado por cultivo ----
     # 147 ofertas son apenas 43 rubros: el arroz selecto solo trae 15 y el
     # ají morrón 13. Listadas planas, la página repite "Ají" trece veces
