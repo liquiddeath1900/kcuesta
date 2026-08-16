@@ -8,6 +8,58 @@ Las decisiones de fondo sobre el mercado con productores están en
 
 ---
 
+## Lo primero de mañana
+
+1. **Crear el bucket de Supabase para las fotos.** Acordado el 16/08. Es el
+   que va a guardar las fotos que suba el productor. No pueden ir al repo:
+   GitHub Pages tiene límite blando de 1 GB por sitio, ~6,600 fotos. Hace
+   falta el bucket, sus políticas RLS y la cuota por usuario **antes** de
+   abrir la publicación en octubre.
+2. **Rediseñar la parrilla según elboletoganador.com** (ver abajo).
+3. Lo de "Bloqueado en manos del dueño", que sigue frenando el pipeline.
+
+---
+
+## Referencia de diseño: elboletoganador.com
+
+El dueño lo trajo el 16/08 y le gusta el layout. Lo que de verdad sirve
+para Kcuesta, separado de lo que es marca ajena:
+
+**Vale la pena copiar**
+
+- **Parrilla de varias columnas en escritorio.** Ellos ponen cuatro
+  tarjetas por fila; Kcuesta hoy usa una sola columna a todo el ancho, que
+  en un monitor desperdicia media pantalla y obliga a bajar por 44 rubros.
+  En teléfono se queda en una columna.
+- **Panel de filtros en una tarjeta blanca elevada**, con los campos
+  rotulados uno al lado del otro, en vez de tres filas de pastillas
+  apiladas. Para Kcuesta serían: rubro, provincia (cuando haya
+  productores) y cadena.
+- **Barra de servicio arriba** con la tasa del dólar. Kcuesta ya la tiene
+  en `_meta.tasa_cambio` del Banco Central y hoy solo se usa en una nota al
+  pie de precios.html. Ahí arriba tiene más sentido, junto a la fecha del
+  dato.
+- **Encabezado de sección con barra de acento a la izquierda** y el
+  selector de orden a la derecha, en la misma línea.
+- **Insignia de frescura tipo "HOY"** pegada a la fecha. Kcuesta ya calcula
+  `diasDesde()` y hoy lo entierra en el pie de la tarjeta.
+- **Jerarquía de la tarjeta**: número principal grande con su rótulo
+  debajo, y los secundarios más pequeños al lado. Calza con precio por
+  libra grande + mayorista y rango en chico.
+- **Chips de acción al pie de la tarjeta** ("Historial", "Predicciones").
+  Para Kcuesta: "Historial" —que ya se puede, hay serie desde 2017— y
+  "Comparar".
+
+**No copiar**
+
+- El morado, los degradados y las sombras fuertes. Kcuesta es tierra
+  cálida y esa decisión ya está tomada en el sistema de diseño.
+- Meter todo arriba del pliegue a la fuerza. Su tarjeta cabe en poco
+  porque son tres números; la de Kcuesta lleva comparación contra el
+  mayorista, que es el argumento.
+
+---
+
 ## Bloqueado en manos del dueño
 
 - [ ] **Aplicar el esquema en Supabase.** `db/03_retail.sql` y luego
