@@ -521,3 +521,58 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .justo .punto:nth-child(3) .punto-ico { background: var(--verde-50); border-color: var(--verde-100); }
 .aviso-seg { margin-top: 24px; text-align: center; max-width: 46em; margin-left: auto;
   margin-right: auto; }
+
+/* ============ Vitrina: mercado visible, acciones bajo llave ============ */
+.tarjeta.velada { position: relative; pointer-events: none; user-select: none; }
+.tarjeta.velada .tarjeta-cuerpo { filter: blur(4px); opacity: .55; }
+.tarjeta.velada .tarjeta-foto img { filter: saturate(.6); opacity: .7; }
+.tarjeta.velada::after { content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(251,250,246,.55)); }
+
+.corte-vitrina { margin: 26px 0 8px; }
+.corte-caja { text-align: center; background: var(--carta); border: 1px solid var(--linea);
+  border-radius: var(--r-xl); padding: 34px 26px; box-shadow: var(--s-2); }
+.corte-caja h3 { font-family: var(--display); font-size: 1.4rem; font-weight: 600;
+  letter-spacing: -.02em; margin-bottom: .35em; }
+.corte-caja p { max-width: 34em; margin: 0 auto 20px; }
+.corte-caja .boton { width: auto; margin: 0 auto; }
+
+/* ============ Correcciones de responsividad ============ */
+/* Renglones cómodos en pantallas grandes: la medida importa tanto como el ancho */
+.muestra-txt p, .pasos-3 p, .punto p, .nota-futuro p,
+.nota-metodo li, .cierre p, .portada-sub { max-width: 62ch; }
+.pie p { max-width: 78ch; }
+.hero-sub, .entrar-sub { max-width: 56ch; }
+
+/* El h1 de "Mi cuenta" se veía pequeño para ser un título de página */
+.perfil-cab h1 { font-size: clamp(1.6rem, 4.5vw, 2rem); }
+
+/* Plegables muy angostos (280px): que nada quede apretado */
+@media (max-width: 340px) {
+  .env { padding: 0 14px; }
+  .barra-in { gap: 10px; height: 60px; }
+  .marca { font-size: 1.22rem; }
+  .btn-entrar { padding: 0 14px; font-size: .84rem; }
+  .boton.grande { min-height: 52px; font-size: .96rem; padding: 0 22px; }
+  .acciones { grid-template-columns: 1fr; }
+  .entrar-caja { padding: 26px 20px; }
+  .prov { font-size: .9rem; gap: 9px; padding: 0 14px; }
+}
+
+/* Móvil en horizontal: menos aire vertical, se aprovecha la pantalla */
+@media (max-height: 420px) and (orientation: landscape) {
+  .portada { padding: 26px 0 18px; }
+  .entrar-env { min-height: auto; padding: 24px 20px 40px; }
+  .cierre-grande, .pasos-sec, .muestra, .justo, .tres-puntos { padding: 34px 0; }
+}
+
+/* Pantallas muy grandes: que la portada no se estire sin control */
+@media (min-width: 1600px) {
+  :root { --ancho: 1280px; }
+}
+
+/* Texto secundario: la medida se limita para que se lea en pantallas grandes */
+p.silencio { max-width: 76ch; }
+.pie p.silencio, .aviso-seg { max-width: 72ch; }
+.aviso-seg { margin-left: auto; margin-right: auto; }
+p.aviso-seg { max-width: 62ch; }

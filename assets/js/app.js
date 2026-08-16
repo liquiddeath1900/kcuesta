@@ -249,3 +249,89 @@
   }
 
 })();
+
+/* ============================================================
+   Vitrina: sin cuenta se ve el mercado, pero no se puede actuar.
+   Ver es gratis; contactar y publicar piden sesión.
+   Lo que de verdad protege el teléfono del vendedor es RLS en Postgres,
+   no esto — esto solo decide qué se dibuja.
+   ============================================================ */
+(function () {
+  'use strict';
+  if (!document.body.classList.contains('pag-privada')) return;
+
+  var VISIBLES = 6;   // cuántos anuncios se ven completos sin cuenta
+
+  function hayToken() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k === 'kcuesta-auth' || k.indexOf('-auth-token') > -1) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function bloquear() {
+    document.body.classList.add('sin-cuenta');
+
+    // Las acciones de cada tarjeta llevan a la entrada.
+    document.querySelectorAll('.tarjeta .acciones').forEach(function (acc) {
+      acc.innerHTML = '<a class="boton" href="entrar.html">Entra para contactar</a>';
+    });
+
+    // A partir del sexto anuncio: se difumina y aparece la invitación.
+    var tarjetas = document.querySelectorAll('#rejilla .tarjeta');
+    if (tarjetas.length > VISIBLES) {
+      for (var i = VISIBLES; i < tarjetas.length; i++) {
+        tarjetas[i].classList.add('velada');
+      }
+      var corte = document.getElementById('corte-vitrina');
+      if (!corte) {
+        corte = document.createElement('div');
+        corte.id = 'corte-vitrina';
+        corte.className = 'corte-vitrina';
+        corte.innerHTML =
+          '<div class="corte-caja">' +
+            '<h3>Hay ' + tarjetas.length + ' anuncios hoy</h3>' +
+            '<p class="silencio">Entra gratis para verlos todos, ver el teléfono del ' +
+            'productor y escribirle.</p>' +
+            '<a class="boton grande" href="entrar.html">Comenzar</a>' +
+          '</div>';
+        document.getElementById('rejilla').after(corte);
+      }
+    }
+  }
+
+  function desbloquear() {
+    document.body.classList.remove('sin-cuenta');
+    var c = document.getElementById('corte-vitrina');
+    if (c) c.remove();
+    document.querySelectorAll('.tarjeta.velada').forEach(function (t) {
+      t.classList.remove('velada');
+    });
+  }
+
+  function aplicar() {
+    if (document.body.dataset.sesion === 'si') desbloquear(); else bloquear();
+  }
+
+  document.addEventListener('kc:sesion', function () {
+    document.body.dataset.sesion = 'si';
+    aplicar();
+  });
+
+  // Estado inicial: sin rastro de sesión, se bloquea de una vez.
+  if (!hayToken() && !/[?&#](code|access_token)=/.test(location.href)) {
+    aplicar();
+  } else {
+    setTimeout(function () { if (document.body.dataset.sesion !== 'si') aplicar(); }, 3000);
+  }
+
+  // Si el filtro vuelve a dibujar la rejilla, se reaplica.
+  var obs = new MutationObserver(function () {
+    if (document.body.dataset.sesion !== 'si') bloquear();
+  });
+  var rej = document.getElementById('rejilla');
+  if (rej) obs.observe(rej, { childList: true });
+})();
