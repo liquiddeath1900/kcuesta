@@ -1,0 +1,92 @@
+name: Captura de precios
+
+# 15:00 UTC = 11:00 en RD, después de que MERCADOM publica en la mañana.
+#
+# Correr a diario NO es por frescura: MERCADOM sobrescribe un solo archivo
+# sin histórico. El día que esto no corra, ese día se pierde y no hay forma
+# de volver a pedirlo. Por eso el job no falla aunque una fuente caiga.
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    inputs:
+      fuente:
+        description: 'Fuente a capturar (o "todas")'
+        default: 'todas'
+      seco:
+        description: 'Corrida en seco: no escribe nada'
+        type: boolean
+        default: false
+
+concurrency:
+  group: precios
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  capturar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar poppler y dependencias
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          pip install -q -r pipeline/requirements.txt
+
+      - name: Pruebas de normalización
+        # Baratas y sin red. Si el mapeo de nombres o unidades se rompió, es
+        # mejor enterarse antes de escribir 600 filas mal normalizadas.
+        run: python -m pytest pipeline/pruebas -q
+
+      - name: Capturar
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          USAR_FOTOS_RETAIL: ${{ vars.USAR_FOTOS_RETAIL || 'true' }}
+        run: |
+          python -m pipeline.run \
+            --fuente="${{ inputs.fuente || 'todas' }}" \
+            ${{ inputs.seco && '--seco' || '' }} \
+            | tee captura.log
+
+      - name: Resumen
+        if: always()
+        run: |
+          {
+            echo '## Captura de precios'
+            echo '```'
+            sed -n '/^=\{6,\}/,$p' captura.log 2>/dev/null | head -60
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar datos y archivo crudo
+        if: ${{ !inputs.seco }}
+        run: |
+          git config user.name  'kcuesta-bot'
+          git config user.email 'bot@kcuesta.com'
+          git add archivo/ data/ assets/js/datos.js
+          if git diff --cached --quiet; then
+            echo 'sin cambios que publicar'
+            exit 0
+          fi
+          git commit -m "Precios del $(date -u +%Y-%m-%d)"
+          # Hay sesiones concurrentes trabajando sobre este repo, así que
+          # nunca se empuja sin rebasar primero.
+          for intento in 1 2 3; do
+            git pull --rebase origin main && git push origin main && exit 0
+            echo "reintento $intento"
+            sleep 5
+          done
+          exit 1

@@ -1,0 +1,9 @@
+# El pipeline corre con lo mínimo a propósito: menos dependencias, menos
+# cosas que se rompan solas en una Action que nadie mira hasta que falla.
+# El texto de los PDF lo saca `pdftotext`, de poppler-utils (se instala por
+# apt en el workflow, no por pip).
+requests>=2.31
+Pillow>=10.0
+
+# Solo para las pruebas
+pytest>=8.0

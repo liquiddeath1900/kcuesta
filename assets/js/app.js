@@ -4,8 +4,16 @@
 
   var P = window.KC.precios;
   var A = window.KC.anuncios;
+  var O = window.KC.ofertas || { ofertas: [], cadenas: {} };
   var cultivoPorId = {};
   P.cultivos.forEach(function (c) { cultivoPorId[c.id] = c; });
+
+  // Mientras no haya productores publicando, el mercado muestra ofertas
+  // reales de supermercado en vez de anuncios de muestra. No se disfrazan
+  // de oferta de finca: son precio de góndola y la tarjeta lo dice. Sirven
+  // de referencia — es contra este número que se leerá la primera oferta
+  // de finca que entre.
+  var HAY_ANUNCIOS = A.anuncios.length > 0;
 
   /* ---------- utilidades ---------- */
 
@@ -36,7 +44,9 @@
   }
 
   function diasDesde(iso) {
-    var d = Math.round((new Date('2026-08-16') - new Date(iso)) / 86400000);
+    var hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    var d = Math.round((hoy - new Date(iso)) / 86400000);
     if (d <= 0) return 'Hoy';
     if (d === 1) return 'Ayer';
     return 'Hace ' + d + ' días';
@@ -45,8 +55,14 @@
   /* ---------- cintillo de precios oficiales ---------- */
 
   function pintarCintillo() {
-    var destacados = P.cultivos.filter(function (c) { return c.destacado; });
-    var resto = P.cultivos.filter(function (c) { return !c.destacado; });
+    // No todo rubro trae mayorista: el Ministerio publica varios solo a
+    // nivel minorista o de supermercado. La cinta cotiza por mayor, así que
+    // los que no lo tienen se quedan fuera en vez de imprimir un hueco.
+    var conMayorista = P.cultivos.filter(function (c) {
+      return typeof c.precio_mayorista === 'number';
+    });
+    var destacados = conMayorista.filter(function (c) { return c.destacado; });
+    var resto = conMayorista.filter(function (c) { return !c.destacado; });
     var todos = destacados.concat(resto);
 
     var html = todos.map(function (c) {
@@ -174,26 +190,118 @@
     '</article>';
   }
 
+  /* ---------- tarjeta de oferta de supermercado ---------- */
+
+  // La brecha aquí se lee al revés que en un anuncio de finca: mide cuánto
+  // se le suma al producto entre el mayorista y la góndola. Ese sobreprecio
+  // es el argumento entero de Kcuesta, así que se muestra sin adornos.
+  function sobreprecio(o) {
+    if (!o.mercado_ref_unidad || !o.precio) return null;
+    return ((o.precio - o.mercado_ref_unidad) / o.mercado_ref_unidad) * 100;
+  }
+
+  function tarjetaOferta(o) {
+    var cult = cultivoPorId[o.cultivo] || {};
+    var cad = O.cadenas[o.cadena] || { nombre: o.cadena };
+    var s = sobreprecio(o);
+
+    var foto = o.foto
+      ? '<img src="' + esc(o.foto) + '" alt="' + esc(o.titulo) + '" loading="lazy" width="480" height="360">'
+      : '<div class="sin-foto"><span>' + esc(o.titulo.charAt(0)) + '</span></div>';
+
+    var rebaja = (o.precio_lista && o.precio_lista > o.precio)
+      ? '<span class="flota flota-d chip baja">Rebajado</span>' : '';
+
+    return '' +
+    '<article class="tarjeta tarjeta-oferta">' +
+      '<div class="tarjeta-foto">' + foto +
+        '<span class="flota chip">' + esc(cad.nombre) + '</span>' + rebaja +
+      '</div>' +
+      '<div class="tarjeta-cuerpo">' +
+        '<div>' +
+          '<div class="tarjeta-tit">' + esc(o.titulo) + '</div>' +
+          '<div class="tarjeta-meta">' +
+            esc(cult.nombre || o.cultivo) +
+            (cult.categoria ? ' · ' + esc(cult.categoria) : '') +
+          '</div>' +
+        '</div>' +
+
+        '<div class="ancla">' +
+          '<div class="nivel nivel-mayor">' +
+            '<span class="nivel-et">En góndola</span>' +
+            '<div class="ancla-precio">' +
+              '<span class="n cifra">' + rd(o.precio, o.precio % 1 ? 2 : 0) + '</span>' +
+              '<span class="u">/ ' + esc(o.unidad) + '</span>' +
+            '</div>' +
+            (s !== null
+              ? '<div class="delta ' + (s > 0 ? 'sube' : 'baja') + '">' +
+                  Math.abs(s).toFixed(0) + '% ' +
+                  (s > 0 ? 'sobre el mayorista' : 'bajo el mayorista') + '</div>'
+              : '') +
+          '</div>' +
+          (o.mercado_ref_unidad
+            ? '<div class="ancla-ref">Mayorista oficial: <strong class="cifra">' +
+                rd(o.mercado_ref_unidad, 2) + '</strong> por unidad</div>'
+            : '<div class="ancla-ref silencio">Sin referencia mayorista para este rubro</div>') +
+        '</div>' +
+
+        '<div class="entrega">' +
+          '<span class="chip">Precio al consumidor</span>' +
+          '<span class="chip">' + esc(diasDesde(o.fecha)) + '</span>' +
+        '</div>' +
+
+        '<div class="vend">' +
+          '<div class="vend-n">' + esc(cad.nombre) + '</div>' +
+          '<div class="silencio">Precio de góndola, no de finca · foto: ' +
+            esc(o.foto_credito) + '</div>' +
+        '</div>' +
+
+        '<div class="acciones acciones-una">' +
+          (o.url
+            ? '<a class="boton fantasma" href="' + esc(o.url) + '" target="_blank" rel="noopener nofollow">Ver en ' + esc(cad.nombre) + '</a>'
+            : '<span class="silencio">Sin enlace público</span>') +
+        '</div>' +
+      '</div>' +
+    '</article>';
+  }
+
   /* ---------- render ---------- */
 
   function render() {
-    var lista = A.anuncios.filter(function (an) {
-      if (catActiva === 'todos') return true;
-      var c = cultivoPorId[an.cultivo];
-      return c && c.categoria === catActiva;
-    });
-
     var orden = document.getElementById('orden').value;
-    lista.sort(function (x, y) {
-      if (orden === 'brecha') return (brecha(x) || 0) - (brecha(y) || 0);
-      if (orden === 'barato') return x.precio_por_unidad - y.precio_por_unidad;
-      if (orden === 'volumen') return y.cantidad - x.cantidad;
-      return new Date(y.publicado) - new Date(x.publicado);
-    });
+    var lista, html;
+
+    if (HAY_ANUNCIOS) {
+      lista = A.anuncios.filter(function (an) {
+        if (catActiva === 'todos') return true;
+        var c = cultivoPorId[an.cultivo];
+        return c && c.categoria === catActiva;
+      });
+      lista.sort(function (x, y) {
+        if (orden === 'brecha') return (brecha(x) || 0) - (brecha(y) || 0);
+        if (orden === 'barato') return x.precio_por_unidad - y.precio_por_unidad;
+        if (orden === 'volumen') return y.cantidad - x.cantidad;
+        return new Date(y.publicado) - new Date(x.publicado);
+      });
+      html = lista.map(tarjeta).join('');
+    } else {
+      lista = O.ofertas.filter(function (o) {
+        if (catActiva === 'todos') return true;
+        var c = cultivoPorId[o.cultivo];
+        return c && c.categoria === catActiva;
+      });
+      lista.sort(function (x, y) {
+        if (orden === 'brecha') return (sobreprecio(y) || 0) - (sobreprecio(x) || 0);
+        if (orden === 'barato') return x.precio - y.precio;
+        if (orden === 'volumen') return y.precio - x.precio;
+        return new Date(y.fecha) - new Date(x.fecha);
+      });
+      html = lista.map(tarjetaOferta).join('');
+    }
 
     document.getElementById('cuenta').textContent =
       lista.length + (lista.length === 1 ? ' resultado' : ' resultados');
-    document.getElementById('rejilla').innerHTML = lista.map(tarjeta).join('');
+    document.getElementById('rejilla').innerHTML = html;
     document.getElementById('vacio').hidden = lista.length !== 0;
   }
 
@@ -260,7 +368,12 @@
   'use strict';
   if (!document.body.classList.contains('pag-privada')) return;
 
-  var VISIBLES = 6;   // cuántos anuncios se ven completos sin cuenta
+  // La vitrina aplica SIEMPRE, muestre anuncios de productor u ofertas de
+  // supermercado. No es solo por proteger el contacto del vendedor: sin
+  // cuenta no hay forma de saber quién está usando la plataforma, y eso es
+  // lo único que dice si esto le sirve a alguien antes de que haya
+  // productores publicando.
+  var VISIBLES = 6;   // cuántas tarjetas se ven completas sin cuenta
 
   function hayToken() {
     try {
@@ -275,14 +388,18 @@
   function bloquear() {
     document.body.classList.add('sin-cuenta');
 
-    // Las acciones de cada tarjeta llevan a la entrada.
+    // Las acciones de cada tarjeta llevan a la entrada. El texto cambia
+    // según lo que se esté mostrando: en una oferta de supermercado no hay
+    // a quién contactar, pero sí hay una tienda a la que ir.
     document.querySelectorAll('.tarjeta .acciones').forEach(function (acc) {
+      var esOferta = acc.closest('.tarjeta-oferta');
       // Un solo botón: ocupa el ancho completo, si no el texto se parte en dos.
       acc.className = 'acciones acciones-una';
-      acc.innerHTML = '<a class="boton" href="entrar.html">Entrar para contactar</a>';
+      acc.innerHTML = '<a class="boton" href="entrar.html">' +
+        (esOferta ? 'Entrar para ver la tienda' : 'Entrar para contactar') + '</a>';
     });
 
-    // A partir del sexto anuncio: se difumina y aparece la invitación.
+    // A partir de la sexta tarjeta: se difumina y aparece la invitación.
     var tarjetas = document.querySelectorAll('#rejilla .tarjeta');
     if (tarjetas.length > VISIBLES) {
       for (var i = VISIBLES; i < tarjetas.length; i++) {
@@ -290,14 +407,19 @@
       }
       var corte = document.getElementById('corte-vitrina');
       if (!corte) {
+        var soloOfertas = !document.querySelector('#rejilla .tarjeta:not(.tarjeta-oferta)');
         corte = document.createElement('div');
         corte.id = 'corte-vitrina';
         corte.className = 'corte-vitrina';
         corte.innerHTML =
           '<div class="corte-caja">' +
-            '<h3>Hay ' + tarjetas.length + ' anuncios hoy</h3>' +
-            '<p class="silencio">Entra gratis para verlos todos, ver el teléfono del ' +
-            'productor y escribirle.</p>' +
+            (soloOfertas
+              ? '<h3>Hay ' + tarjetas.length + ' precios de supermercado hoy</h3>' +
+                '<p class="silencio">Entra gratis para verlos todos, comparar cadenas ' +
+                'y recibir aviso cuando un productor publique tu rubro.</p>'
+              : '<h3>Hay ' + tarjetas.length + ' anuncios hoy</h3>' +
+                '<p class="silencio">Entra gratis para verlos todos, ver el teléfono del ' +
+                'productor y escribirle.</p>') +
             '<a class="boton grande" href="entrar.html">Comenzar</a>' +
           '</div>';
         document.getElementById('rejilla').after(corte);

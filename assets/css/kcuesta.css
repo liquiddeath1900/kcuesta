@@ -348,17 +348,65 @@ body.con-pie { padding-bottom: 64px; }
 .vacio { border: 1.5px dashed var(--linea-2); border-radius: var(--r-lg);
   padding: 38px 24px; text-align: center; background: var(--arena); }
 
-/* ---------- Tabla de precios ---------- */
-.tabla-env { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--r-lg);
-  background: var(--carta); }
-.tabla { width: 100%; border-collapse: collapse; font-size: .89rem; min-width: 540px; }
-.tabla th { text-align: left; font-size: .7rem; text-transform: uppercase; letter-spacing: .09em;
-  color: var(--tinta-3); padding: 13px 15px; background: var(--arena);
-  border-bottom: 1px solid var(--linea); white-space: nowrap; font-weight: 750; }
-.tabla td { padding: 13px 15px; border-bottom: 1px solid var(--linea); vertical-align: top; }
-.tabla tr:last-child td { border-bottom: none; }
-.tabla tbody tr:hover { background: var(--verde-50); }
-.tabla .der { text-align: right; }
+/* ---------- Lista de precios ----------
+   Antes era una <table> de siete columnas con min-width:540px dentro de un
+   contenedor con overflow-x. En un teléfono eso obliga a arrastrar la tabla
+   de lado para leer el precio de supermercado, que es media razón por la que
+   alguien entra a esta página.
+
+   Ahora cada rubro es una tarjeta: los cuatro niveles de precio caen en una
+   rejilla 2×2 en pantalla chica y se alinean en fila a partir de 760px, de
+   modo que en escritorio se sigue leyendo como una tabla. Sin scroll lateral
+   en ningún ancho.                                                          */
+.lista-precios { border: 1px solid var(--linea); border-radius: var(--r-lg);
+  background: var(--carta); overflow: hidden; }
+
+.lp-cab { display: none; }
+
+.lp-fila { padding: 14px 15px; border-bottom: 1px solid var(--linea); }
+.lp-fila:last-child { border-bottom: none; }
+.lp-fila:hover { background: var(--verde-50); }
+
+.lp-enc { display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; margin-bottom: 11px; }
+.lp-nom { font-weight: 700; line-height: 1.25; }
+.lp-sub { font-size: .78rem; color: var(--tinta-3); margin-top: 2px; }
+
+.lp-niveles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  background: var(--linea); border: 1px solid var(--linea);
+  border-radius: 8px; overflow: hidden; }
+.lp-nivel { background: var(--carta); padding: 8px 10px; min-width: 0; }
+.lp-et { display: block; font-size: .62rem; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--tinta-3); font-weight: 750; margin-bottom: 2px; }
+.lp-val { font-size: .92rem; font-weight: 650; overflow-wrap: anywhere; }
+.lp-val .silencio { font-weight: 400; }
+.lp-u { display: block; font-size: .7rem; color: var(--tinta-3); font-weight: 400; }
+
+/* El cambio semanal se dibuja dos veces y solo una se muestra: pegado al
+   nombre en tarjeta, en su propia columna en fila. Sale más barato que
+   mover un nodo con JS al cambiar de ancho. */
+.lp-cambio { display: none; }
+.lp-cambio-movil { flex: none; }
+
+@media (min-width: 760px) {
+  .lp-cab { display: grid; grid-template-columns: 2.1fr repeat(4, 1fr) .85fr;
+    gap: 14px; padding: 12px 16px; background: var(--arena);
+    border-bottom: 1px solid var(--linea); }
+  .lp-cab span { font-size: .68rem; text-transform: uppercase; letter-spacing: .09em;
+    color: var(--tinta-3); font-weight: 750; }
+  .lp-cab .der { text-align: right; }
+
+  .lp-fila { display: grid; grid-template-columns: 2.1fr repeat(4, 1fr) .85fr;
+    gap: 14px; align-items: center; padding: 12px 16px; }
+  .lp-enc { display: block; margin: 0; }
+  /* display:contents sube las cuatro celdas a la rejilla de la fila, así se
+     alinean con el encabezado sin duplicar el marcado por breakpoint. */
+  .lp-niveles { display: contents; }
+  .lp-nivel { background: none; padding: 0; text-align: right; border: none; }
+  .lp-et { display: none; }          /* en fila, el encabezado ya rotula */
+  .lp-cambio { display: block; text-align: right; }
+  .lp-cambio-movil { display: none; }
+}
 .nota-metodo { margin: 34px 0; padding: 26px; background: var(--arena);
   border: 1px solid var(--linea); border-radius: var(--r-lg); }
 .nota-metodo ul { margin: 0 0 14px; padding-left: 20px; }
