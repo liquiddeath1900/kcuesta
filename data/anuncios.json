@@ -2,9 +2,9 @@
   "_meta": {
     "aviso": "PROTOTIPO. Los productores, fincas y cantidades de esta lista son ilustrativos y no corresponden a personas reales. Los precios de referencia del mercado SÍ son oficiales y verificables (ver data/precios.json).",
     "logica_precio": "Cada anuncio se ancla al precio mayorista oficial del Mercado Nuevo. El precio del anuncio se sitúa entre lo que hoy paga el intermediario en finca (≈50% del mayorista) y lo que cobra el mayorista — de modo que el productor recibe más y el comprador paga menos.",
-    "referencia_intermediacion": "https://hoy.com.do/economia/intermediarios-van-a-fincas-de-productores_212963.html"
+    "referencia_intermediacion": "https://hoy.com.do/economia/intermediarios-van-a-fincas-de-productores_212963.html",
+    "fotos": "Fotografías con licencia libre de Wikimedia Commons. Créditos en assets/img/CREDITOS.md. Son ilustrativas del rubro, no fotos de las fincas mencionadas."
   },
-
   "anuncios": [
     {
       "id": "a001",
@@ -14,10 +14,13 @@
       "cantidad": 12,
       "unidad_venta": "Millar",
       "precio": 12500,
-      "precio_por_unidad": 12.50,
-      "mercado_ref_unidad": 17.00,
+      "precio_por_unidad": 12.5,
+      "mercado_ref_unidad": 17.0,
       "entrega": "Puesto en finca",
-      "entrega_alt": { "descripcion": "Puesto en Mercado Nuevo", "precio": 14800 },
+      "entrega_alt": {
+        "descripcion": "Puesto en Mercado Nuevo",
+        "precio": 14800
+      },
       "provincia": "Bahoruco",
       "municipio": "Tamayo",
       "corte": "2026-08-20",
@@ -25,7 +28,8 @@
       "pago": "Al contado",
       "nota": "Segunda a 90% del precio. La rabiza va aparte.",
       "vendedor": "v01",
-      "publicado": "2026-08-15"
+      "publicado": "2026-08-15",
+      "foto": "assets/img/platano.jpg"
     },
     {
       "id": "a002",
@@ -35,8 +39,8 @@
       "cantidad": 40,
       "unidad_venta": "Quintal",
       "precio": 2050,
-      "precio_por_unidad": 20.50,
-      "mercado_ref_unidad": 27.00,
+      "precio_por_unidad": 20.5,
+      "mercado_ref_unidad": 27.0,
       "entrega": "Puesto en finca",
       "provincia": "Espaillat",
       "municipio": "Moca",
@@ -45,7 +49,8 @@
       "pago": "Al contado",
       "nota": "Yuca mocana de primera. La rabiza se vende aparte a RD$1,200 el quintal.",
       "vendedor": "v02",
-      "publicado": "2026-08-14"
+      "publicado": "2026-08-14",
+      "foto": "assets/img/yuca.jpg"
     },
     {
       "id": "a003",
@@ -55,8 +60,8 @@
       "cantidad": 60,
       "unidad_venta": "Saco de 50 lb",
       "precio": 760,
-      "precio_por_unidad": 15.20,
-      "mercado_ref_unidad": 20.00,
+      "precio_por_unidad": 15.2,
+      "mercado_ref_unidad": 20.0,
       "entrega": "Puesto en Azua",
       "provincia": "Azua",
       "municipio": "Las Charcas",
@@ -65,7 +70,8 @@
       "pago": "Al contado",
       "nota": "Campo abierto, riego de Ysura. Se puede despachar en dos tandas.",
       "vendedor": "v03",
-      "publicado": "2026-08-16"
+      "publicado": "2026-08-16",
+      "foto": "assets/img/aji.jpg"
     },
     {
       "id": "a004",
@@ -78,7 +84,10 @@
       "precio_por_unidad": 14.22,
       "mercado_ref_unidad": 17.78,
       "entrega": "Puesto en finca",
-      "entrega_alt": { "descripcion": "Puesto en Santo Domingo", "precio": 745 },
+      "entrega_alt": {
+        "descripcion": "Puesto en Santo Domingo",
+        "precio": 745
+      },
       "provincia": "La Vega",
       "municipio": "Constanza",
       "corte": "2026-08-19",
@@ -86,7 +95,8 @@
       "pago": "Al contado",
       "nota": "Ambiente controlado. Huacal de 45 lb, calibre parejo.",
       "vendedor": "v04",
-      "publicado": "2026-08-15"
+      "publicado": "2026-08-15",
+      "foto": "assets/img/invernad.jpg"
     },
     {
       "id": "a005",
@@ -96,8 +106,8 @@
       "cantidad": 80,
       "unidad_venta": "Saco de 100 lb",
       "precio": 1150,
-      "precio_por_unidad": 11.50,
-      "mercado_ref_unidad": 15.00,
+      "precio_por_unidad": 11.5,
+      "mercado_ref_unidad": 15.0,
       "entrega": "Puesto en finca",
       "provincia": "La Vega",
       "municipio": "Tireo, Constanza",
@@ -107,7 +117,8 @@
       "nota": "Prefiero vender aquí antes que botarla. Precio conversable por volumen.",
       "urgente": true,
       "vendedor": "v05",
-      "publicado": "2026-08-16"
+      "publicado": "2026-08-16",
+      "foto": "assets/img/finca.jpg"
     },
     {
       "id": "a006",
@@ -117,8 +128,8 @@
       "cantidad": 25,
       "unidad_venta": "Saco de 100 lb",
       "precio": 6200,
-      "precio_por_unidad": 62.00,
-      "mercado_ref_unidad": 78.00,
+      "precio_por_unidad": 62.0,
+      "mercado_ref_unidad": 78.0,
       "entrega": "Puesto en finca",
       "provincia": "San Juan",
       "municipio": "El Valle",
@@ -127,7 +138,8 @@
       "pago": "Al contado o 50% adelanto",
       "nota": "Grano limpio, ya secado. Saco de 100 libras.",
       "vendedor": "v06",
-      "publicado": "2026-08-13"
+      "publicado": "2026-08-13",
+      "foto": "assets/img/habichuela.jpg"
     },
     {
       "id": "a007",
@@ -137,8 +149,8 @@
       "cantidad": 45,
       "unidad_venta": "Ciento",
       "precio": 1850,
-      "precio_por_unidad": 18.50,
-      "mercado_ref_unidad": 25.00,
+      "precio_por_unidad": 18.5,
+      "mercado_ref_unidad": 25.0,
       "entrega": "Puesto en finca",
       "provincia": "San Juan",
       "municipio": "Sabaneta",
@@ -147,7 +159,8 @@
       "pago": "Al contado",
       "nota": "Fruta de mata, tamaño parejo.",
       "vendedor": "v07",
-      "publicado": "2026-08-14"
+      "publicado": "2026-08-14",
+      "foto": "assets/img/aguacate.jpg"
     },
     {
       "id": "a008",
@@ -157,10 +170,13 @@
       "cantidad": 30,
       "unidad_venta": "Ciento",
       "precio": 7600,
-      "precio_por_unidad": 76.00,
-      "mercado_ref_unidad": 100.00,
+      "precio_por_unidad": 76.0,
+      "mercado_ref_unidad": 100.0,
       "entrega": "Puesto en finca",
-      "entrega_alt": { "descripcion": "Puesto en Santo Domingo", "precio": 8400 },
+      "entrega_alt": {
+        "descripcion": "Puesto en Santo Domingo",
+        "precio": 8400
+      },
       "provincia": "Monte Plata",
       "municipio": "Sabana Grande de Boyá",
       "corte": "2026-08-19",
@@ -178,8 +194,8 @@
       "cantidad": 55,
       "unidad_venta": "Quintal",
       "precio": 1020,
-      "precio_por_unidad": 10.20,
-      "mercado_ref_unidad": 13.00,
+      "precio_por_unidad": 10.2,
+      "mercado_ref_unidad": 13.0,
       "entrega": "Puesto en finca",
       "provincia": "Peravia",
       "municipio": "Baní",
@@ -188,7 +204,8 @@
       "pago": "Al contado",
       "nota": "Batata tifey de primera, sin rechazo.",
       "vendedor": "v09",
-      "publicado": "2026-08-15"
+      "publicado": "2026-08-15",
+      "foto": "assets/img/finca.jpg"
     },
     {
       "id": "a010",
@@ -198,8 +215,8 @@
       "cantidad": 18,
       "unidad_venta": "Millar",
       "precio": 8200,
-      "precio_por_unidad": 8.20,
-      "mercado_ref_unidad": 11.00,
+      "precio_por_unidad": 8.2,
+      "mercado_ref_unidad": 11.0,
       "entrega": "Puesto en finca",
       "provincia": "Hermanas Mirabal",
       "municipio": "Salcedo",
@@ -208,7 +225,8 @@
       "pago": "Al contado",
       "nota": "Macho x hembra. Segunda disponible a 90%.",
       "vendedor": "v10",
-      "publicado": "2026-08-14"
+      "publicado": "2026-08-14",
+      "foto": "assets/img/platano.jpg"
     },
     {
       "id": "a011",
@@ -218,8 +236,8 @@
       "cantidad": 35,
       "unidad_venta": "Saco de 180 und",
       "precio": 1450,
-      "precio_por_unidad": 11.60,
-      "mercado_ref_unidad": 15.20,
+      "precio_por_unidad": 11.6,
+      "mercado_ref_unidad": 15.2,
       "entrega": "Puesto en finca",
       "provincia": "Azua",
       "municipio": "Estebanía",
@@ -228,7 +246,8 @@
       "pago": "Al contado",
       "nota": "Saco de 180 unidades, aproximadamente 125 lb.",
       "vendedor": "v03",
-      "publicado": "2026-08-16"
+      "publicado": "2026-08-16",
+      "foto": "assets/img/tomate.jpg"
     },
     {
       "id": "a012",
@@ -238,8 +257,8 @@
       "cantidad": 22,
       "unidad_venta": "Ciento",
       "precio": 5300,
-      "precio_por_unidad": 53.00,
-      "mercado_ref_unidad": 70.00,
+      "precio_por_unidad": 53.0,
+      "mercado_ref_unidad": 70.0,
       "entrega": "Puesto en finca",
       "provincia": "Azua",
       "municipio": "Padre Las Casas",
@@ -248,7 +267,8 @@
       "pago": "Al contado",
       "nota": "Red Lady grande. También hay mediana.",
       "vendedor": "v11",
-      "publicado": "2026-08-15"
+      "publicado": "2026-08-15",
+      "foto": "assets/img/mercado.jpg"
     },
     {
       "id": "a013",
@@ -258,8 +278,8 @@
       "cantidad": 20,
       "unidad_venta": "Quintal",
       "precio": 4700,
-      "precio_por_unidad": 47.00,
-      "mercado_ref_unidad": 60.00,
+      "precio_por_unidad": 47.0,
+      "mercado_ref_unidad": 60.0,
       "entrega": "Puesto en finca",
       "provincia": "La Altagracia",
       "municipio": "Higüey",
@@ -268,7 +288,8 @@
       "pago": "Al contado",
       "nota": "Ñame mina, pieza grande.",
       "vendedor": "v12",
-      "publicado": "2026-08-13"
+      "publicado": "2026-08-13",
+      "foto": "assets/img/mercado.jpg"
     },
     {
       "id": "a014",
@@ -279,7 +300,7 @@
       "unidad_venta": "Ciento",
       "precio": 445,
       "precio_por_unidad": 4.45,
-      "mercado_ref_unidad": 6.00,
+      "mercado_ref_unidad": 6.0,
       "entrega": "Puesto en finca",
       "provincia": "Valverde",
       "municipio": "Mao",
@@ -288,23 +309,165 @@
       "pago": "Al contado",
       "nota": "Racimo de 60 lb aprox. Volumen disponible todas las semanas.",
       "vendedor": "v13",
-      "publicado": "2026-08-16"
+      "publicado": "2026-08-16",
+      "foto": "assets/img/guineo.jpg"
     }
   ],
-
   "vendedores": {
-    "v01": { "nombre": "Finca La Esperanza", "responsable": "R. Féliz", "provincia": "Bahoruco", "desde": "2026", "cultivos": ["Plátano"], "verificado": true, "tareas": 180 },
-    "v02": { "nombre": "Conuco Los Hermanos", "responsable": "J. Peña", "provincia": "Espaillat", "desde": "2026", "cultivos": ["Yuca", "Yautía"], "verificado": true, "tareas": 65 },
-    "v03": { "nombre": "Agrícola Ysura", "responsable": "M. Ramírez", "provincia": "Azua", "desde": "2026", "cultivos": ["Ají", "Berenjena", "Tomate"], "verificado": true, "tareas": 340 },
-    "v04": { "nombre": "Invernaderos del Valle", "responsable": "C. Durán", "provincia": "La Vega", "desde": "2026", "cultivos": ["Tomate", "Lechuga"], "verificado": true, "tareas": 42 },
-    "v05": { "nombre": "Cosecheros de Tireo", "responsable": "A. Núñez", "provincia": "La Vega", "desde": "2026", "cultivos": ["Zanahoria", "Papa", "Repollo"], "verificado": false, "tareas": 90 },
-    "v06": { "nombre": "Granero del Sur", "responsable": "F. Montero", "provincia": "San Juan", "desde": "2026", "cultivos": ["Habichuela", "Maíz"], "verificado": true, "tareas": 210 },
-    "v07": { "nombre": "Finca El Cerro", "responsable": "L. Guzmán", "provincia": "San Juan", "desde": "2026", "cultivos": ["Aguacate"], "verificado": false, "tareas": 55 },
-    "v08": { "nombre": "Piñas Monte Alto", "responsable": "E. Santana", "provincia": "Monte Plata", "desde": "2026", "cultivos": ["Piña"], "verificado": true, "tareas": 400 },
-    "v09": { "nombre": "Finca Doña Ana", "responsable": "P. Castillo", "provincia": "Peravia", "desde": "2026", "cultivos": ["Batata", "Auyama"], "verificado": false, "tareas": 70 },
-    "v10": { "nombre": "Plataneras del Cibao", "responsable": "H. Rosario", "provincia": "Hermanas Mirabal", "desde": "2026", "cultivos": ["Plátano", "Guineo"], "verificado": true, "tareas": 150 },
-    "v11": { "nombre": "Frutales Padre Las Casas", "responsable": "N. Beltré", "provincia": "Azua", "desde": "2026", "cultivos": ["Lechosa", "Mango"], "verificado": false, "tareas": 88 },
-    "v12": { "nombre": "Conuco del Este", "responsable": "S. Mota", "provincia": "La Altagracia", "desde": "2026", "cultivos": ["Ñame", "Yautía", "Coco"], "verificado": false, "tareas": 46 },
-    "v13": { "nombre": "Bananeros de Mao", "responsable": "D. Espinal", "provincia": "Valverde", "desde": "2026", "cultivos": ["Guineo"], "verificado": true, "tareas": 260 }
+    "v01": {
+      "nombre": "Finca La Esperanza",
+      "responsable": "R. Féliz",
+      "provincia": "Bahoruco",
+      "desde": "2026",
+      "cultivos": [
+        "Plátano"
+      ],
+      "verificado": true,
+      "tareas": 180
+    },
+    "v02": {
+      "nombre": "Conuco Los Hermanos",
+      "responsable": "J. Peña",
+      "provincia": "Espaillat",
+      "desde": "2026",
+      "cultivos": [
+        "Yuca",
+        "Yautía"
+      ],
+      "verificado": true,
+      "tareas": 65
+    },
+    "v03": {
+      "nombre": "Agrícola Ysura",
+      "responsable": "M. Ramírez",
+      "provincia": "Azua",
+      "desde": "2026",
+      "cultivos": [
+        "Ají",
+        "Berenjena",
+        "Tomate"
+      ],
+      "verificado": true,
+      "tareas": 340
+    },
+    "v04": {
+      "nombre": "Invernaderos del Valle",
+      "responsable": "C. Durán",
+      "provincia": "La Vega",
+      "desde": "2026",
+      "cultivos": [
+        "Tomate",
+        "Lechuga"
+      ],
+      "verificado": true,
+      "tareas": 42
+    },
+    "v05": {
+      "nombre": "Cosecheros de Tireo",
+      "responsable": "A. Núñez",
+      "provincia": "La Vega",
+      "desde": "2026",
+      "cultivos": [
+        "Zanahoria",
+        "Papa",
+        "Repollo"
+      ],
+      "verificado": false,
+      "tareas": 90
+    },
+    "v06": {
+      "nombre": "Granero del Sur",
+      "responsable": "F. Montero",
+      "provincia": "San Juan",
+      "desde": "2026",
+      "cultivos": [
+        "Habichuela",
+        "Maíz"
+      ],
+      "verificado": true,
+      "tareas": 210
+    },
+    "v07": {
+      "nombre": "Finca El Cerro",
+      "responsable": "L. Guzmán",
+      "provincia": "San Juan",
+      "desde": "2026",
+      "cultivos": [
+        "Aguacate"
+      ],
+      "verificado": false,
+      "tareas": 55
+    },
+    "v08": {
+      "nombre": "Piñas Monte Alto",
+      "responsable": "E. Santana",
+      "provincia": "Monte Plata",
+      "desde": "2026",
+      "cultivos": [
+        "Piña"
+      ],
+      "verificado": true,
+      "tareas": 400
+    },
+    "v09": {
+      "nombre": "Finca Doña Ana",
+      "responsable": "P. Castillo",
+      "provincia": "Peravia",
+      "desde": "2026",
+      "cultivos": [
+        "Batata",
+        "Auyama"
+      ],
+      "verificado": false,
+      "tareas": 70
+    },
+    "v10": {
+      "nombre": "Plataneras del Cibao",
+      "responsable": "H. Rosario",
+      "provincia": "Hermanas Mirabal",
+      "desde": "2026",
+      "cultivos": [
+        "Plátano",
+        "Guineo"
+      ],
+      "verificado": true,
+      "tareas": 150
+    },
+    "v11": {
+      "nombre": "Frutales Padre Las Casas",
+      "responsable": "N. Beltré",
+      "provincia": "Azua",
+      "desde": "2026",
+      "cultivos": [
+        "Lechosa",
+        "Mango"
+      ],
+      "verificado": false,
+      "tareas": 88
+    },
+    "v12": {
+      "nombre": "Conuco del Este",
+      "responsable": "S. Mota",
+      "provincia": "La Altagracia",
+      "desde": "2026",
+      "cultivos": [
+        "Ñame",
+        "Yautía",
+        "Coco"
+      ],
+      "verificado": false,
+      "tareas": 46
+    },
+    "v13": {
+      "nombre": "Bananeros de Mao",
+      "responsable": "D. Espinal",
+      "provincia": "Valverde",
+      "desde": "2026",
+      "cultivos": [
+        "Guineo"
+      ],
+      "verificado": true,
+      "tareas": 260
+    }
   }
 }
