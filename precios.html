@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precios oficiales de hoy — Kcuesta</title>
+<meta name="description" content="Precios mayoristas y minoristas oficiales de los productos agrícolas en República Dominicana, con fuente y fecha.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="assets/css/kcuesta.css">
+</head>
+<body class="con-pie">
+
+<div class="aviso-demo"><strong>Prototipo.</strong> Los precios de esta página son oficiales y verificables.</div>
+
+<header class="barra">
+  <div class="env barra-in">
+    <a href="index.html" class="marca">k<span>cuesta</span></a>
+    <nav class="nav-esc">
+      <a href="index.html">Mercado</a>
+      <a href="precios.html" class="on">Precios</a>
+      <a href="vender.html">Vender</a>
+    </nav>
+    <a href="vender.html" class="boton btn-pub">Publicar gratis</a>
+  </div>
+</header>
+
+<main class="env">
+  <section class="hero">
+    <h1>Precios oficiales</h1>
+    <p class="hero-sub">Lo que cuesta hoy en el Mercado Nuevo de Santo Domingo, por el empaque en que
+      realmente se vende. Con su fuente y su fecha.</p>
+    <div class="fuente">
+      <span>📄</span>
+      <span><strong>Ministerio de Agricultura</strong> — Informe de Precios Promedios Semanal,
+        3 al 7 de agosto 2026. Recolectado en el Mercado "Nuevo" de Santo Domingo.
+        Metodología OIMA. Precio moda (el precio al que se vende el mayor volumen).</span>
+      <a href="https://agricultura.gob.do/wp-content/uploads/2026/08/Informe-de-precios-07-de-agosto-2026.pdf" target="_blank" rel="noopener">Ver PDF oficial →</a>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <div class="filtro-fila">
+      <div class="cuenta" id="cuenta">— productos</div>
+      <div class="filtro-ctrl">
+        <label class="sr" for="orden">Ordenar</label>
+        <select id="orden">
+          <option value="nombre">Por nombre</option>
+          <option value="sube">Los que más subieron</option>
+          <option value="baja">Los que más bajaron</option>
+          <option value="margen">Mayor margen mayorista → minorista</option>
+        </select>
+      </div>
+    </div>
+    <div class="pastillas" id="pastillas"></div>
+  </section>
+
+  <div class="tabla-env">
+    <table class="tabla" id="tabla">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Empaque</th>
+          <th class="der">Mayorista</th>
+          <th class="der">Minorista</th>
+          <th class="der">Semana</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <section class="nota-metodo">
+    <h2>Cómo leer esto</h2>
+    <ul>
+      <li><strong>El empaque importa.</strong> El plátano se cotiza por <em>millar</em>, la yuca por
+        <em>quintal</em> (100 libras), el tomate por <em>huacal</em> de 45 libras, el ají por
+        <em>saco</em> de 50. Comparar sin el empaque no dice nada.</li>
+      <li><strong>Mayorista no es finca.</strong> El precio mayorista ya viene después del
+        intermediario. Lo que recibe el productor en su finca no lo publica nadie en el país.</li>
+      <li><strong>Esto no es tiempo real.</strong> El Ministerio publica lunes, miércoles y viernes;
+        Merca Santo Domingo publica a diario. Aquí siempre verás la fecha del dato.</li>
+    </ul>
+    <p class="silencio">
+      Nota: precios de referencia, suministrados por los productores, sujetos a variación.
+      Tasa de cambio del informe: US$1 = RD$58.43 (Banco Central).
+    </p>
+  </section>
+</main>
+
+<footer class="pie"><div class="env">
+  <p><strong>Kcuesta</strong> — ¿A cómo está?</p>
+  <p class="silencio">Fuentes: Ministerio de Agricultura y MERCADOM. Kcuesta no interviene en las transacciones.</p>
+</div></footer>
+
+<nav class="pie-nav">
+  <a href="index.html"><span class="ico">🛒</span>Mercado</a>
+  <a href="precios.html" class="on"><span class="ico">📊</span>Precios</a>
+  <a href="vender.html"><span class="ico">➕</span>Vender</a>
+</nav>
+
+<script src="assets/js/datos.js"></script>
+<script>
+(function(){
+  'use strict';
+  var C = window.KC.precios.cultivos;
+  var CATS=[{id:'todos',nombre:'Todo'},{id:'viveres',nombre:'Víveres'},{id:'vegetales',nombre:'Vegetales'},
+            {id:'frutas',nombre:'Frutas'},{id:'granos',nombre:'Granos'}];
+  var cat='todos';
+  function rd(n,d){return 'RD$ '+n.toLocaleString('es-DO',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  function pastillas(){
+    document.getElementById('pastillas').innerHTML = CATS.map(function(c){
+      return '<button class="pastilla'+(c.id===cat?' on':'')+'" data-cat="'+c.id+'">'+c.nombre+'</button>';
+    }).join('');
+  }
+
+  function render(){
+    var l = C.filter(function(c){return cat==='todos'||c.categoria===cat;});
+    var o = document.getElementById('orden').value;
+    l = l.slice().sort(function(a,b){
+      if(o==='sube')  return (b.cambio_semanal_mayorista||0)-(a.cambio_semanal_mayorista||0);
+      if(o==='baja')  return (a.cambio_semanal_mayorista||0)-(b.cambio_semanal_mayorista||0);
+      if(o==='margen')return (b.margen_mayorista_minorista||0)-(a.margen_mayorista_minorista||0);
+      return a.nombre.localeCompare(b.nombre,'es');
+    });
+    document.getElementById('cuenta').textContent = l.length+' productos';
+    document.getElementById('tbody').innerHTML = l.map(function(c){
+      var d=c.cambio_semanal_mayorista||0;
+      var cls=d>0?'sube':(d<0?'baja':'');
+      var txt=d===0?'estable':(d>0?'▲ ':'▼ ')+Math.abs(d).toFixed(1)+'%';
+      return '<tr>'+
+        '<td><strong>'+esc(c.nombre)+'</strong>'+(c.calidad?'<br><span class="silencio">'+esc(c.calidad)+'</span>':'')+'</td>'+
+        '<td class="silencio">'+esc(c.unidad_mayorista)+'</td>'+
+        '<td class="der cifra"><strong>'+rd(c.precio_mayorista)+'</strong></td>'+
+        '<td class="der cifra">'+rd(c.precio_minorista,2)+'<br><span class="silencio">/'+esc(c.unidad_minorista)+'</span></td>'+
+        '<td class="der"><span class="chip '+cls+'">'+txt+'</span></td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  document.addEventListener('click',function(e){
+    var p=e.target.closest('[data-cat]');
+    if(p){cat=p.dataset.cat;pastillas();render();}
+  });
+  document.getElementById('orden').addEventListener('change',render);
+  pastillas();render();
+})();
+</script>
+</body>
+</html>

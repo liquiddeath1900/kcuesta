@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publicar mi cosecha — Kcuesta</title>
+<meta name="description" content="Publica lo que tienes en venta. Es gratis. Tu precio se muestra al lado del precio oficial del mercado.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="assets/css/kcuesta.css">
+</head>
+<body class="con-pie">
+
+<div class="aviso-demo"><strong>Prototipo.</strong> Este formulario no envía nada — es una demostración del flujo.</div>
+
+<header class="barra">
+  <div class="env barra-in">
+    <a href="index.html" class="marca">k<span>cuesta</span></a>
+    <nav class="nav-esc">
+      <a href="index.html">Mercado</a>
+      <a href="precios.html">Precios</a>
+      <a href="vender.html" class="on">Vender</a>
+    </nav>
+  </div>
+</header>
+
+<main class="env" style="max-width:760px">
+  <section class="hero">
+    <h1>Publica lo que tienes</h1>
+    <p class="hero-sub">Gratis. Sin cuenta. El comprador ve tu precio al lado del precio oficial del
+      mercado — así sabe que lo tuyo está bien puesto.</p>
+  </section>
+
+  <form class="form" id="form" novalidate>
+
+    <div class="campo">
+      <label for="cultivo">¿Qué vendes?</label>
+      <select id="cultivo" required></select>
+      <p class="ayuda" id="ayuda-cultivo">El empaque se ajusta solo según el rubro.</p>
+    </div>
+
+    <div class="campo-fila">
+      <div class="campo">
+        <label for="cantidad">¿Cuánto tienes?</label>
+        <input type="number" id="cantidad" min="1" value="10" inputmode="numeric" required>
+      </div>
+      <div class="campo">
+        <label for="unidad">Empaque</label>
+        <input type="text" id="unidad" readonly>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="calidad">Calidad</label>
+      <div class="opciones" id="calidad">
+        <button type="button" class="opcion on" data-v="Primera">Primera</button>
+        <button type="button" class="opcion" data-v="Segunda">Segunda</button>
+        <button type="button" class="opcion" data-v="Rabiza">Rabiza</button>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="precio">¿A cómo lo das? <span class="silencio" id="lbl-unidad"></span></label>
+      <div class="precio-in">
+        <span class="precio-pre">RD$</span>
+        <input type="number" id="precio" min="0" step="1" inputmode="numeric" required>
+      </div>
+
+      <!-- El ancla en vivo: el vendedor ve su precio contra el mercado mientras escribe -->
+      <div class="ancla-vivo" id="ancla">
+        <div class="av-fila">
+          <span>Mercado Nuevo hoy</span>
+          <b class="cifra" id="av-mercado">—</b>
+        </div>
+        <div class="av-fila">
+          <span>Tu precio</span>
+          <b class="cifra" id="av-tuyo">—</b>
+        </div>
+        <div class="av-delta" id="av-delta">Escribe tu precio para comparar</div>
+        <p class="silencio" id="av-nota"></p>
+      </div>
+    </div>
+
+    <div class="campo-fila">
+      <div class="campo">
+        <label for="provincia">Provincia</label>
+        <select id="provincia"></select>
+      </div>
+      <div class="campo">
+        <label for="municipio">Municipio o sección</label>
+        <input type="text" id="municipio" placeholder="Ej: Tamayo">
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Entrega</label>
+      <div class="opciones">
+        <button type="button" class="opcion on" data-e>Puesto en finca</button>
+        <button type="button" class="opcion" data-e>Puesto en Mercado Nuevo</button>
+        <button type="button" class="opcion" data-e>Puesto en Santo Domingo</button>
+      </div>
+      <p class="ayuda">"Puesto en finca" = el comprador recoge. Los demás incluyen el flete.</p>
+    </div>
+
+    <div class="campo">
+      <label>Pago</label>
+      <div class="opciones">
+        <button type="button" class="opcion on" data-p>Al contado</button>
+        <button type="button" class="opcion" data-p>50% adelanto</button>
+        <button type="button" class="opcion" data-p>A convenir</button>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="corte">¿Cuándo se corta?</label>
+      <input type="text" id="corte" placeholder="Ej: listo para cortar el jueves">
+    </div>
+
+    <div class="campo">
+      <label for="tel">Tu teléfono (WhatsApp)</label>
+      <input type="tel" id="tel" placeholder="809-000-0000" inputmode="tel">
+      <p class="ayuda">Solo se muestra cuando el comprador toca "Ver teléfono".</p>
+    </div>
+
+    <button type="submit" class="boton">Publicar gratis</button>
+    <p class="silencio" style="margin-top:12px">
+      Kcuesta no cobra comisión ni interviene en el trato. Publicar no te obliga a vender.
+    </p>
+  </form>
+
+  <div class="vacio" id="ok" hidden>
+    <h3>Así quedaría tu anuncio</h3>
+    <p class="silencio">En el prototipo no se guarda nada.</p>
+    <div id="ok-prev" style="margin-top:14px;text-align:left"></div>
+  </div>
+</main>
+
+<footer class="pie"><div class="env">
+  <p class="silencio">Por tu seguridad, no realices pagos por adelantado. Revisa la mercancía y haz el
+    trato personalmente en un lugar seguro.</p>
+</div></footer>
+
+<nav class="pie-nav">
+  <a href="index.html"><span class="ico">🛒</span>Mercado</a>
+  <a href="precios.html"><span class="ico">📊</span>Precios</a>
+  <a href="vender.html" class="on"><span class="ico">➕</span>Vender</a>
+</nav>
+
+<script src="assets/js/datos.js"></script>
+<script>
+(function(){
+  'use strict';
+  var C = window.KC.precios.cultivos;
+  var PROVS = ['Azua','Bahoruco','Barahona','Dajabón','Duarte','El Seibo','Elías Piña','Espaillat',
+    'Hato Mayor','Hermanas Mirabal','Independencia','La Altagracia','La Romana','La Vega',
+    'María Trinidad Sánchez','Monseñor Nouel','Monte Cristi','Monte Plata','Pedernales','Peravia',
+    'Puerto Plata','Samaná','San Cristóbal','San José de Ocoa','San Juan','San Pedro de Macorís',
+    'Sánchez Ramírez','Santiago','Santiago Rodríguez','Santo Domingo','Valverde','Distrito Nacional'];
+
+  function rd(n,d){return 'RD$ '+Number(n).toLocaleString('es-DO',
+    {minimumFractionDigits:d||0,maximumFractionDigits:d||0});}
+
+  document.getElementById('cultivo').innerHTML = C.map(function(c){
+    return '<option value="'+c.id+'">'+c.nombre+(c.calidad?' ('+c.calidad+')':'')+'</option>';
+  }).join('');
+  document.getElementById('provincia').innerHTML = PROVS.map(function(p){
+    return '<option>'+p+'</option>';
+  }).join('');
+
+  function actual(){
+    var id = document.getElementById('cultivo').value;
+    return C.filter(function(c){return c.id===id;})[0];
+  }
+
+  function sincronizar(){
+    var c = actual();
+    document.getElementById('unidad').value = c.unidad_mayorista;
+    document.getElementById('lbl-unidad').textContent = 'por ' + c.unidad_mayorista.toLowerCase();
+    document.getElementById('precio').placeholder = c.precio_mayorista;
+    comparar();
+  }
+
+  function comparar(){
+    var c = actual();
+    var v = parseFloat(document.getElementById('precio').value);
+    document.getElementById('av-mercado').textContent = rd(c.precio_mayorista) + ' / ' + c.unidad_mayorista;
+    if(!v || v <= 0){
+      document.getElementById('av-tuyo').textContent = '—';
+      document.getElementById('av-delta').textContent = 'Escribe tu precio para comparar';
+      document.getElementById('av-delta').className = 'av-delta';
+      document.getElementById('av-nota').textContent = '';
+      return;
+    }
+    document.getElementById('av-tuyo').textContent = rd(v) + ' / ' + c.unidad_mayorista;
+    var p = ((v - c.precio_mayorista) / c.precio_mayorista) * 100;
+    var el = document.getElementById('av-delta');
+    var nota = document.getElementById('av-nota');
+    if(p <= -1){
+      el.textContent = Math.abs(p).toFixed(0) + '% bajo el precio del mercado';
+      el.className = 'av-delta baja';
+      nota.textContent = 'Se ve atractivo para el comprador. Recuerda: el mayorista ya viene después del intermediario, así que este precio puede seguir siendo mejor que lo que te ofrecen en finca.';
+    } else if(p >= 1){
+      el.textContent = Math.abs(p).toFixed(0) + '% sobre el precio del mercado';
+      el.className = 'av-delta sube';
+      nota.textContent = 'Está por encima de la referencia oficial. Si tu calidad lo justifica, dilo en la nota del anuncio.';
+    } else {
+      el.textContent = 'Al precio del mercado';
+      el.className = 'av-delta';
+      nota.textContent = '';
+    }
+  }
+
+  document.getElementById('cultivo').addEventListener('change', sincronizar);
+  document.getElementById('precio').addEventListener('input', comparar);
+
+  document.addEventListener('click', function(e){
+    var o = e.target.closest('.opcion');
+    if(!o) return;
+    Array.prototype.forEach.call(o.parentNode.children, function(x){ x.classList.remove('on'); });
+    o.classList.add('on');
+  });
+
+  document.getElementById('form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var c = actual();
+    var cant = document.getElementById('cantidad').value;
+    var pre = parseFloat(document.getElementById('precio').value) || c.precio_mayorista;
+    var mun = document.getElementById('municipio').value || '—';
+    var prov = document.getElementById('provincia').value;
+    var cal = document.querySelector('#calidad .on').dataset.v;
+    var ent = document.querySelector('[data-e].on').textContent;
+    document.getElementById('ok-prev').innerHTML =
+      '<div class="tarjeta"><div class="tarjeta-cuerpo">' +
+      '<div class="tarjeta-tit">' + c.nombre + '</div>' +
+      '<div class="tarjeta-meta">' + cal + ' · ' + cant + ' ' + c.unidad_mayorista + '</div>' +
+      '<div class="linea-meta"><span>📍 ' + mun + ', ' + prov + '</span></div>' +
+      '<div class="ancla"><div class="ancla-precio"><span class="n cifra">' + rd(pre) +
+      '</span><span class="u">/ ' + c.unidad_mayorista + '</span></div>' +
+      '<div class="ancla-ref">Mercado Nuevo hoy: <strong>' + rd(c.precio_mayorista) + '</strong></div></div>' +
+      '<div class="entrega"><span class="chip">' + ent + '</span></div>' +
+      '</div></div>';
+    document.getElementById('form').hidden = true;
+    document.getElementById('ok').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  sincronizar();
+})();
+</script>
+</body>
+</html>

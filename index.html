@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kcuesta — ¿A cómo está? Precios y mercado agrícola de República Dominicana</title>
+<meta name="description" content="Precios oficiales del mercado agrícola dominicano, claros y al día. Y lo que los productores tienen en venta hoy, con su precio comparado contra el mercado.">
+<meta property="og:title" content="Kcuesta — ¿A cómo está?">
+<meta property="og:description" content="Precios oficiales del mercado agrícola dominicano y lo que se vende hoy, directo del productor.">
+<meta property="og:locale" content="es_DO">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="assets/css/kcuesta.css">
+</head>
+<body class="con-pie">
+
+<div class="aviso-demo">
+  <strong>Prototipo.</strong> Los precios oficiales son reales y verificables. Los anuncios de productores son ilustrativos.
+</div>
+
+<header class="barra">
+  <div class="env barra-in">
+    <a href="index.html" class="marca">k<span>cuesta</span></a>
+    <nav class="nav-esc">
+      <a href="index.html" class="on">Mercado</a>
+      <a href="precios.html">Precios</a>
+      <a href="vender.html">Vender</a>
+    </nav>
+    <a href="vender.html" class="boton btn-pub">Publicar gratis</a>
+  </div>
+</header>
+
+<div class="cintillo">
+  <div class="cintillo-in" id="cintillo"></div>
+</div>
+
+<main class="env">
+
+  <section class="hero">
+    <h1>¿A cómo está?</h1>
+    <p class="hero-sub">
+      El precio oficial del mercado, todos los días — y lo que los productores tienen en venta ahora mismo,
+      con su precio comparado contra ese mercado.
+    </p>
+    <div class="fuente">
+      <span>📄</span>
+      <span>Precios mayoristas: <strong>Ministerio de Agricultura</strong>, informe del 7 de agosto 2026 ·
+      Referencia diaria: <strong>Merca Santo Domingo</strong>, 12 de agosto 2026</span>
+      <a href="https://agricultura.gob.do/wp-content/uploads/2026/08/Informe-de-precios-07-de-agosto-2026.pdf" target="_blank" rel="noopener">Ver documento oficial →</a>
+    </div>
+  </section>
+
+  <!-- El hueco que define el producto -->
+  <section class="brecha">
+    <div class="brecha-in">
+      <div class="brecha-txt">
+        <h2>Nadie mide lo que recibe el productor</h2>
+        <p>
+          La República Dominicana publica precios en cinco niveles: mayorista, minorista, supermercados,
+          colmados y carnicerías. <strong>Falta la finca.</strong> No existe una serie pública de precios
+          a nivel de productor — el escalón más bajo que alguien mide ya viene después del intermediario.
+        </p>
+        <p class="silencio">
+          Cada anuncio publicado aquí es un dato de precio en finca que hoy no existe en ninguna parte.
+        </p>
+      </div>
+      <div class="brecha-esc">
+        <div class="esc-fila"><span>Finca</span><b class="esc-falta">no se mide</b></div>
+        <div class="esc-fila"><span>Mayorista</span><b>RD$ 20.00 / lb</b></div>
+        <div class="esc-fila"><span>Minorista</span><b>RD$ 35.00 / lb</b></div>
+        <div class="esc-fila"><span>Supermercado</span><b>RD$ 61.49 / lb</b></div>
+        <div class="esc-fila"><span>Colmado</span><b>RD$ 91.50 / lb</b></div>
+        <p class="silencio esc-pie">Ají cubanela, mismo producto. Del mostrador mayorista al colmado: <strong>+154%</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="filtros" id="filtros">
+    <div class="filtro-fila">
+      <div class="cuenta" id="cuenta">— resultados</div>
+      <div class="filtro-ctrl">
+        <label class="sr">Ordenar por</label>
+        <select id="orden">
+          <option value="reciente">Más recientes</option>
+          <option value="brecha">Mayor diferencia vs mercado</option>
+          <option value="barato">Precio más bajo</option>
+          <option value="volumen">Mayor cantidad</option>
+        </select>
+      </div>
+    </div>
+    <div class="pastillas" id="pastillas"></div>
+  </section>
+
+  <section>
+    <div class="rejilla" id="rejilla"></div>
+    <div class="vacio" id="vacio" hidden>
+      <h3>Todavía no hay anuncios de este rubro</h3>
+      <p class="silencio">Pero el precio oficial sí está. Publica lo tuyo y sé el primero.</p>
+      <a href="vender.html" class="boton" style="max-width:260px;margin:12px auto 0;">Publicar mi cosecha</a>
+    </div>
+  </section>
+
+  <section class="cierre">
+    <h2>¿Eres productor?</h2>
+    <p>Publicar es gratis y no hace falta cuenta para mirar. Pon lo que tienes, di a cómo lo das,
+       y el comprador te ve el precio al lado del precio del mercado.</p>
+    <a href="vender.html" class="boton" style="max-width:300px">Publicar mi cosecha</a>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <div class="env">
+    <p><strong>Kcuesta</strong> — ¿A cómo está?</p>
+    <p class="silencio">
+      Precios de referencia tomados de publicaciones oficiales del Ministerio de Agricultura y de
+      Mercados Dominicanos de Abasto Agropecuario (MERCADOM). Precios sujetos a variación.
+      Kcuesta no interviene en las transacciones ni garantiza la calidad de los productos ofrecidos.
+    </p>
+    <p class="silencio">
+      Por tu seguridad, no realices pagos por adelantado. Revisa la mercancía y haz el trato
+      personalmente en un lugar seguro.
+    </p>
+  </div>
+</footer>
+
+<nav class="pie-nav">
+  <a href="index.html" class="on"><span class="ico">🛒</span>Mercado</a>
+  <a href="precios.html"><span class="ico">📊</span>Precios</a>
+  <a href="vender.html"><span class="ico">➕</span>Vender</a>
+</nav>
+
+<dialog id="modal" class="modal">
+  <form method="dialog">
+    <h3 class="modal-tit">Contactar</h3>
+    <p class="silencio">Así se vería el mensaje. En el prototipo no se envía nada.</p>
+    <label class="sr" for="m-msg">Mensaje</label>
+    <textarea id="m-msg" class="modal-msg" rows="5"></textarea>
+    <div class="modal-acc">
+      <button class="boton" value="wa">Enviar por WhatsApp</button>
+      <button class="boton fantasma" value="cerrar">Cerrar</button>
+    </div>
+    <p class="silencio" style="margin-top:10px">
+      Por tu seguridad, no realices pagos por adelantado. Revisa la mercancía y haz el trato
+      personalmente en un lugar seguro.
+    </p>
+  </form>
+</dialog>
+
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

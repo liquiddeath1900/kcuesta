@@ -1,0 +1,312 @@
+/* Kcuesta — sistema de diseño. Mobile-first. */
+
+:root {
+  /* Verde agrícola, no verde "gobierno" */
+  --verde-900: #0f2e1c;
+  --verde-700: #17593a;
+  --verde-600: #1c7048;
+  --verde-500: #22a05f;
+  --verde-100: #e4f5eb;
+
+  /* Señales de precio */
+  --sube: #c2352b;      /* en DR sube = malo para el comprador */
+  --sube-bg: #fdeceb;
+  --baja: #17805a;
+  --baja-bg: #e4f5eb;
+  --estable: #6b7280;
+  --estable-bg: #f1f3f5;
+
+  /* Acento: ámbar de mercado */
+  --ambar: #e08b1e;
+  --ambar-bg: #fdf3e3;
+
+  --tinta: #12181f;
+  --tinta-2: #48545f;
+  --tinta-3: #77838f;
+  --linea: #e2e6ea;
+  --fondo: #ffffff;
+  --fondo-2: #f7f9fa;
+
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 18px;
+  --sombra: 0 1px 2px rgba(18,24,31,.06), 0 4px 14px rgba(18,24,31,.06);
+  --sombra-alta: 0 2px 6px rgba(18,24,31,.08), 0 14px 34px rgba(18,24,31,.12);
+
+  --ancho: 1120px;
+  --tipo: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--tipo);
+  background: var(--fondo);
+  color: var(--tinta);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+.env { width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 0 16px; }
+
+/* ---------- Tipografía ---------- */
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; letter-spacing: -.02em; }
+h1 { font-size: 1.9rem; font-weight: 800; }
+h2 { font-size: 1.35rem; font-weight: 750; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+.silencio { color: var(--tinta-3); font-size: .8rem; }
+
+/* Cifras siempre tabulares — columnas de precio deben alinear */
+.cifra { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+
+/* ---------- Cabecera ---------- */
+.barra {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--linea);
+}
+.barra-in { display: flex; align-items: center; gap: 14px; height: 58px; }
+.marca { font-weight: 850; font-size: 1.3rem; letter-spacing: -.04em; color: var(--verde-700); text-decoration: none; }
+.marca span { color: var(--ambar); }
+
+/* ---------- Cintillo de precios ---------- */
+.cintillo { background: var(--verde-900); color: #fff; overflow: hidden; }
+.cintillo-in { display: flex; gap: 26px; padding: 9px 16px; overflow-x: auto; scrollbar-width: none; }
+.cintillo-in::-webkit-scrollbar { display: none; }
+.tick { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; font-size: .82rem; }
+.tick b { font-weight: 650; opacity: .85; font-size: .78rem; }
+.tick .v { font-weight: 750; }
+.tick .d { font-size: .74rem; font-weight: 700; }
+.d.up { color: #ff9b93; }
+.d.down { color: #7ee2b0; }
+.d.flat { color: rgba(255,255,255,.5); }
+
+/* ---------- Insignias ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: .74rem; font-weight: 700; line-height: 1.5;
+  background: var(--estable-bg); color: var(--estable);
+}
+.chip.baja { background: var(--baja-bg); color: var(--baja); }
+.chip.sube { background: var(--sube-bg); color: var(--sube); }
+.chip.verificado { background: var(--verde-100); color: var(--verde-700); }
+.chip.demo { background: var(--ambar-bg); color: #8a5410; }
+
+/* ---------- Tarjeta de anuncio ---------- */
+.rejilla { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 620px) { .rejilla { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 940px) { .rejilla { grid-template-columns: repeat(3, 1fr); } }
+
+.tarjeta {
+  border: 1px solid var(--linea); border-radius: var(--r-lg);
+  background: var(--fondo); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: box-shadow .16s ease, transform .16s ease;
+}
+.tarjeta:hover { box-shadow: var(--sombra-alta); transform: translateY(-2px); }
+.tarjeta-foto { position: relative; aspect-ratio: 4/3; background: var(--fondo-2); }
+.tarjeta-foto img { width: 100%; height: 100%; object-fit: cover; }
+.tarjeta-foto .flota { position: absolute; left: 10px; top: 10px; }
+.tarjeta-cuerpo { padding: 13px 14px 15px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.tarjeta-tit { font-weight: 750; font-size: 1rem; letter-spacing: -.01em; }
+.tarjeta-meta { color: var(--tinta-2); font-size: .84rem; }
+
+/* El ancla de precio — el mecanismo central */
+.ancla { border-top: 1px dashed var(--linea); padding-top: 10px; margin-top: auto; }
+.ancla-precio { display: flex; align-items: baseline; gap: 7px; }
+.ancla-precio .n { font-size: 1.5rem; font-weight: 820; letter-spacing: -.03em; }
+.ancla-precio .u { font-size: .82rem; color: var(--tinta-3); font-weight: 600; }
+.ancla-ref { display: flex; align-items: center; gap: 7px; margin-top: 4px; font-size: .78rem; color: var(--tinta-3); }
+
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 0 18px;             /* 44px = objetivo táctil mínimo */
+  border-radius: var(--r); border: 1px solid transparent;
+  font-family: inherit; font-size: .93rem; font-weight: 700;
+  cursor: pointer; text-decoration: none; width: 100%;
+  background: var(--verde-600); color: #fff;
+}
+.boton:hover { background: var(--verde-700); }
+.boton.fantasma { background: transparent; color: var(--verde-700); border-color: var(--linea); }
+.boton.fantasma:hover { background: var(--verde-100); border-color: var(--verde-500); }
+
+/* ---------- Fuente / procedencia ---------- */
+.fuente {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+  font-size: .76rem; color: var(--tinta-3);
+  padding: 9px 12px; background: var(--fondo-2);
+  border: 1px solid var(--linea); border-radius: var(--r);
+}
+.fuente a { color: var(--verde-700); font-weight: 650; }
+
+/* ---------- Aviso de prototipo ---------- */
+.aviso-demo {
+  background: var(--ambar-bg); border-bottom: 1px solid #f0dcbb;
+  color: #7a4a0d; font-size: .8rem; text-align: center; padding: 7px 16px;
+}
+
+/* ---------- Barra inferior móvil ---------- */
+.pie-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  display: flex; background: rgba(255,255,255,.97);
+  backdrop-filter: blur(12px); border-top: 1px solid var(--linea);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pie-nav a {
+  flex: 1; text-align: center; padding: 9px 4px 8px;
+  font-size: .68rem; font-weight: 650; color: var(--tinta-3); text-decoration: none;
+}
+.pie-nav a.on { color: var(--verde-700); }
+.pie-nav .ico { display: block; font-size: 1.18rem; margin-bottom: 1px; }
+@media (min-width: 860px) { .pie-nav { display: none; } }
+body.con-pie { padding-bottom: 62px; }
+@media (min-width: 860px) { body.con-pie { padding-bottom: 0; } }
+
+/* ---------- Estado vacío ---------- */
+.vacio {
+  border: 1.5px dashed var(--linea); border-radius: var(--r-lg);
+  padding: 30px 22px; text-align: center; background: var(--fondo-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Navegación escritorio ---------- */
+.nav-esc { display: none; gap: 18px; margin-left: 8px; }
+.nav-esc a { text-decoration: none; font-weight: 650; font-size: .92rem; color: var(--tinta-2); }
+.nav-esc a.on, .nav-esc a:hover { color: var(--verde-700); }
+.btn-pub { display: none; width: auto; margin-left: auto; }
+@media (min-width: 860px) {
+  .nav-esc { display: flex; }
+  .btn-pub { display: inline-flex; }
+}
+
+/* ---------- Hero ---------- */
+.hero { padding: 26px 0 18px; }
+.hero h1 { font-size: 2.1rem; margin-bottom: .3em; }
+@media (min-width: 700px) { .hero h1 { font-size: 2.8rem; } }
+.hero-sub { color: var(--tinta-2); font-size: 1.02rem; max-width: 620px; margin: 0 0 16px; }
+
+/* ---------- Bloque de la brecha ---------- */
+.brecha { background: var(--fondo-2); border: 1px solid var(--linea); border-radius: var(--r-lg); padding: 20px; margin: 8px 0 26px; }
+.brecha-in { display: grid; gap: 20px; }
+@media (min-width: 820px) { .brecha-in { grid-template-columns: 1.15fr 1fr; gap: 32px; } }
+.brecha h2 { font-size: 1.2rem; }
+.brecha p { color: var(--tinta-2); font-size: .93rem; margin: 0 0 10px; }
+.esc-fila { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--linea); font-size: .9rem; }
+.esc-fila span { color: var(--tinta-2); }
+.esc-fila b { font-variant-numeric: tabular-nums; font-weight: 700; }
+.esc-falta { color: var(--sube); background: var(--sube-bg); padding: 2px 9px; border-radius: 999px; font-size: .78rem; }
+.esc-pie { margin: 10px 0 0; }
+
+/* ---------- Filtros ---------- */
+.filtros { margin-bottom: 16px; }
+.filtro-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.cuenta { font-weight: 700; font-size: .93rem; }
+.filtro-ctrl select {
+  font-family: inherit; font-size: .88rem; font-weight: 600; color: var(--tinta);
+  padding: 8px 11px; border: 1px solid var(--linea); border-radius: var(--r);
+  background: var(--fondo); min-height: 40px;
+}
+.pastillas { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.pastillas::-webkit-scrollbar { display: none; }
+.pastilla {
+  flex: 0 0 auto; font-family: inherit; font-size: .86rem; font-weight: 650;
+  padding: 8px 15px; min-height: 38px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--linea); background: var(--fondo); color: var(--tinta-2);
+}
+.pastilla.on { background: var(--verde-700); border-color: var(--verde-700); color: #fff; }
+
+/* ---------- Piezas de la tarjeta ---------- */
+.sin-foto { width: 100%; height: 100%; display: grid; place-items: center; background: var(--verde-100); }
+.sin-foto span { font-size: 2.6rem; font-weight: 800; color: var(--verde-500); opacity: .55; }
+.flota-d { left: auto !important; right: 10px; }
+.linea-meta { display: flex; flex-direction: column; gap: 3px; font-size: .82rem; color: var(--tinta-2); }
+
+/* El delta va a tamaño de encabezado, no de insignia — patrón StockX */
+.delta { font-size: 1rem; font-weight: 750; letter-spacing: -.01em; margin-top: 3px; color: var(--estable); }
+.delta.baja { color: var(--baja); }
+.delta.sube { color: var(--sube); }
+
+.entrega { display: flex; flex-wrap: wrap; gap: 6px; }
+.vend { border-top: 1px solid var(--linea); padding-top: 9px; }
+.vend-n { font-weight: 700; font-size: .89rem; }
+.acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* ---------- Cierre y pie ---------- */
+.cierre { text-align: center; padding: 36px 16px 30px; margin-top: 30px; border-top: 1px solid var(--linea); }
+.cierre p { color: var(--tinta-2); max-width: 520px; margin: 0 auto 16px; }
+.cierre .boton { margin: 0 auto; }
+.pie { background: var(--fondo-2); border-top: 1px solid var(--linea); padding: 24px 0 34px; margin-top: 20px; }
+.pie p { margin: 0 0 8px; }
+
+/* ---------- Modal ---------- */
+.modal { border: none; border-radius: var(--r-lg); padding: 22px; max-width: 460px; width: calc(100% - 32px); box-shadow: var(--sombra-alta); }
+.modal::backdrop { background: rgba(18,24,31,.5); }
+.modal-msg { width: 100%; font-family: inherit; font-size: .9rem; padding: 11px; border: 1px solid var(--linea); border-radius: var(--r); resize: vertical; margin: 8px 0 12px; }
+.modal-acc { display: grid; gap: 8px; }
+@media (min-width: 460px) { .modal-acc { grid-template-columns: 1fr auto; } }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Tabla de precios ---------- */
+.tabla-env { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--r-lg); }
+.tabla { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 520px; }
+.tabla th { text-align: left; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--tinta-3); padding: 11px 12px; background: var(--fondo-2); border-bottom: 1px solid var(--linea); white-space: nowrap; }
+.tabla td { padding: 11px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+.tabla tr:last-child td { border-bottom: none; }
+.tabla .der { text-align: right; }
+.nota-metodo { margin: 30px 0; padding: 20px; background: var(--fondo-2); border: 1px solid var(--linea); border-radius: var(--r-lg); }
+.nota-metodo ul { margin: 0 0 12px; padding-left: 20px; }
+.nota-metodo li { color: var(--tinta-2); font-size: .9rem; margin-bottom: 8px; }
+
+/* ---------- Formulario ---------- */
+.form { display: flex; flex-direction: column; gap: 18px; margin-bottom: 30px; }
+.campo { display: flex; flex-direction: column; }
+.campo-fila { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .campo-fila { grid-template-columns: 1fr 1fr; } }
+.campo label { font-weight: 700; font-size: .9rem; margin-bottom: 6px; }
+.campo input, .campo select {
+  font-family: inherit; font-size: 1rem; padding: 11px 12px; min-height: 46px;
+  border: 1px solid var(--linea); border-radius: var(--r); background: var(--fondo); color: var(--tinta); width: 100%;
+}
+.campo input:focus, .campo select:focus { outline: 2px solid var(--verde-500); outline-offset: 1px; border-color: var(--verde-500); }
+.campo input[readonly] { background: var(--fondo-2); color: var(--tinta-2); }
+.ayuda { font-size: .78rem; color: var(--tinta-3); margin: 6px 0 0; }
+
+.opciones { display: flex; flex-wrap: wrap; gap: 8px; }
+.opcion {
+  font-family: inherit; font-size: .88rem; font-weight: 650; padding: 10px 15px; min-height: 44px;
+  border: 1px solid var(--linea); border-radius: var(--r); background: var(--fondo);
+  color: var(--tinta-2); cursor: pointer;
+}
+.opcion.on { background: var(--verde-100); border-color: var(--verde-500); color: var(--verde-700); }
+
+.precio-in { display: flex; align-items: stretch; }
+.precio-pre {
+  display: flex; align-items: center; padding: 0 13px; font-weight: 750; color: var(--tinta-2);
+  background: var(--fondo-2); border: 1px solid var(--linea); border-right: none;
+  border-radius: var(--r) 0 0 var(--r);
+}
+.precio-in input { border-radius: 0 var(--r) var(--r) 0; }
+
+/* Comparador en vivo mientras el productor escribe su precio */
+.ancla-vivo { margin-top: 12px; padding: 14px; background: var(--fondo-2); border: 1px solid var(--linea); border-radius: var(--r); }
+.av-fila { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: .87rem; padding: 3px 0; }
+.av-fila span { color: var(--tinta-2); }
+.av-delta { font-size: 1.05rem; font-weight: 780; letter-spacing: -.01em; margin-top: 8px; color: var(--estable); }
+.av-delta.baja { color: var(--baja); }
+.av-delta.sube { color: var(--sube); }
+.ancla-vivo .silencio { margin: 6px 0 0; }
