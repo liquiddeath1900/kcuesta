@@ -15,6 +15,7 @@ from pipeline.normalizar import (
     categoria_capturable,
     clave,
     foto_elegible,
+    libras_de_titulo,
     precio_por_unidad,
     unidades_por_empaque,
 )
@@ -137,6 +138,54 @@ def test_la_hoja_manda_sobre_el_ancestro():
     """Una góndola válida no le abre la puerta a un hijo procesado."""
     assert categoria_capturable("Carnes") is True
     assert categoria_capturable("Carnes/Sustitutos Cárnicos") is False
+
+
+# ------------------------------------------------------------------
+# Tamaño del empaque: sin esto la comparación entre cadenas miente
+# ------------------------------------------------------------------
+@pytest.mark.parametrize("titulo, libras", [
+    ("Pera Forelle Fresca – Caja 22 lb",                    22.0),
+    ("Papa Fresca – Saco (Aprox. 47–50 lb)",                 48.5),   # promedio del rango
+    ("Ají Gustoso Fresco – Pack 8oz",                         0.5),
+    ("Papas Gold Frescas – Caja Retail (6 Packs de 24 oz)",   9.0),   # 6 × 24 oz
+    ("Arroz Campos Premium – 1 lb",                           1.0),
+    ("Cebolla Amarilla – Saco 50 lb",                        50.0),
+    ("Leche Entera 1 kg",                                 2.2046),
+    # Vendido POR libra, sin número: es una libra.
+    ("Aji Cubanela,Lb (Aprox. 4 unidades Por Libra)",         1.0),
+    ("Filete De Pechuga Pollo Cibao Lb",                      1.0),
+    ("Batata Criolla Amarilla Fresca – Libra (Aprox. 1–2 unidades)", 1.0),
+    # No dice cuánto trae: None, nunca un supuesto.
+    ("Limón Verde Tahití – Caja y Malla",                    None),
+    ("Coco De Agua, Und",                                    None),
+])
+def test_libras_de_titulo(titulo, libras):
+    assert libras_de_titulo(titulo) == libras
+
+
+def test_saco_y_libra_se_vuelven_comparables():
+    """El bug que el agrupamiento destapó.
+
+    La cadena vende la cebolla suelta por libra a RD$46 y en saco de 50 lb a
+    RD$10,750. Sin normalizar, el rubro decía 'RD$46 – RD$10,750' y el saco
+    parecía 234 veces más caro. Por libra son RD$46 contra RD$215: más caro
+    igual, pero 4.7 veces, no 234.
+    """
+    suelta_lb = libras_de_titulo("Cebolla Amarilla Lb")
+    saco_lb = libras_de_titulo("Cebolla Amarilla – Saco 50 lb")
+    assert suelta_lb == 1.0 and saco_lb == 50.0
+
+    precio_suelta = 46.0 / suelta_lb
+    precio_saco = 10750.0 / saco_lb
+    assert round(precio_saco, 2) == 215.0
+    assert precio_saco / precio_suelta < 5        # no 234x
+
+
+def test_empaque_sin_peso_no_se_inventa():
+    """Igual que con las unidades del mayorista: mejor un hueco que un supuesto."""
+    assert libras_de_titulo("Limón Verde Tahití – Caja y Malla") is None
+    assert libras_de_titulo("") is None
+    assert libras_de_titulo(None) is None
 
 
 def test_grano_se_captura_pero_no_se_espeja_su_foto():

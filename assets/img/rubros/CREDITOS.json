@@ -1,0 +1,310 @@
+{
+  "aji-morron": {
+    "archivo": "assets/img/rubros/aji-morron.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Ají Morrón Rojo Fresco – lb (Aprox. 1–3 unidades)",
+    "url_producto": "https://fruttissimodr.com/product/fresh-red-bell-peppers/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2021/06/morron-rojo.jpg?fit=300%2C323&ssl=1"
+  },
+  "cebolla-amarilla": {
+    "archivo": "assets/img/rubros/cebolla-amarilla.webp",
+    "cadena": "La Sirena",
+    "producto": "Cebolla Amarilla Lb",
+    "url_producto": "https://www.sirena.do/cebolla-amarilla-lb-1000137/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175369/1-lb-01003.webp?v=639155772018100000"
+  },
+  "cebolla-roja": {
+    "archivo": "assets/img/rubros/cebolla-roja.webp",
+    "cadena": "La Sirena",
+    "producto": "Cebolla Roja Criolla Lb",
+    "url_producto": "https://www.sirena.do/cebolla-roja-lb-1000138/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175368/1-lb-01004.webp?v=639155766010370000"
+  },
+  "tomate-bugalu": {
+    "archivo": "assets/img/rubros/tomate-bugalu.webp",
+    "cadena": "La Sirena",
+    "producto": "Tomate Bugalu Lb",
+    "url_producto": "https://www.sirena.do/tomate-bugalu-lb-1001377/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175348/1-lb-02064.webp?v=639154950013800000"
+  },
+  "tomate-ensalada": {
+    "archivo": "assets/img/rubros/tomate-ensalada.webp",
+    "cadena": "La Sirena",
+    "producto": "Tomate De Ensalada Lb",
+    "url_producto": "https://www.sirena.do/tomate-de-ensalada-lb-1001379/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175537/1-lb-02066.webp?v=639159207020200000"
+  },
+  "guandul-verde": {
+    "archivo": "assets/img/rubros/guandul-verde.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Guandules Verdes Bandeja (Peso Aprox. 1 Libra)",
+    "url_producto": "https://supermercadosnacional.com/guandules-verdes-bandeja-peso-aprox-1-libra-2800757.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/8/2800757-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "guineo-verde": {
+    "archivo": "assets/img/rubros/guineo-verde.webp",
+    "cadena": "La Sirena",
+    "producto": "Guineo Verde Lb",
+    "url_producto": "https://www.sirena.do/guineo-verde-lb-1357277/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175036/1-lb-02033.webp?v=639154035099930000"
+  },
+  "yautia-amarilla": {
+    "archivo": "assets/img/rubros/yautia-amarilla.webp",
+    "cadena": "La Sirena",
+    "producto": "Yautia Amarilla Lb",
+    "url_producto": "https://www.sirena.do/yautia-amarilla-lb-1000179/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175041/1-lb-01009.webp?v=639154038041930000"
+  },
+  "yautia-coco": {
+    "archivo": "assets/img/rubros/yautia-coco.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Yautía Coco Fresca – Libra (Aprox. 1–2 unidades)",
+    "url_producto": "https://fruttissimodr.com/product/yautia-coco-fresca-libra-aprox-1-2-unidades/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2021/06/malangaCoco.jpg?fit=300%2C238&ssl=1"
+  },
+  "aji-cubanela": {
+    "archivo": "assets/img/rubros/aji-cubanela.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Aji Cubanela,Lb (Aprox. 4 unidades Por Libra)",
+    "url_producto": "https://supermercadosnacional.com/aji-cubanela-lb-aprox-4-unidades-por-libra-2021833.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/0/2021833-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "coco-seco": {
+    "archivo": "assets/img/rubros/coco-seco.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Coco Seco, Und",
+    "url_producto": "https://supermercadosnacional.com/coco-seco-und-2800274.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/C/O/COCO_SECO_UND.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "lechuga": {
+    "archivo": "assets/img/rubros/lechuga.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Lechuga Repollada, Lb (Peso Aprox. 2 Libra)",
+    "url_producto": "https://supermercadosnacional.com/lechuga-repollada-lb-peso-aprox-2-libra-2800128.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/8/2800128-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "melon-cantaloupe": {
+    "archivo": "assets/img/rubros/melon-cantaloupe.webp",
+    "cadena": "La Sirena",
+    "producto": "Melon Cantaloupe Und",
+    "url_producto": "https://www.sirena.do/melon-cantaloupe-und-1571801/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/166619/1-und-02272.webp?v=639112632172170000"
+  },
+  "naranja-agria": {
+    "archivo": "assets/img/rubros/naranja-agria.webp",
+    "cadena": "La Sirena",
+    "producto": "Naranja Agria Lb",
+    "url_producto": "https://www.sirena.do/naranja-agria-lb-1053659/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175028/1-lb-02257.webp?v=639154032054200000"
+  },
+  "platano-maduro": {
+    "archivo": "assets/img/rubros/platano-maduro.webp",
+    "cadena": "La Sirena",
+    "producto": "Platano Maduro Und",
+    "url_producto": "https://www.sirena.do/platano-maduro-und-1606012/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/169433/1-und-00044.webp?v=639122970007500000"
+  },
+  "platano-verde": {
+    "archivo": "assets/img/rubros/platano-verde.webp",
+    "cadena": "La Sirena",
+    "producto": "Platano Verde Und",
+    "url_producto": "https://www.sirena.do/platano-verde-und-1606537/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/176004/1-und-00002.webp?v=639172242041270000"
+  },
+  "yautia-blanca": {
+    "archivo": "assets/img/rubros/yautia-blanca.webp",
+    "cadena": "La Sirena",
+    "producto": "Yautia Blanca Lb",
+    "url_producto": "https://www.sirena.do/yautia-blanca-lb-1000180/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175043/1-lb-01010.webp?v=639154041027400000"
+  },
+  "name-mina": {
+    "archivo": "assets/img/rubros/name-mina.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Ñame Mina Fresco – Libra",
+    "url_producto": "https://fruttissimodr.com/product/name-fresco-lb/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2021/06/name-mina.webp?fit=800%2C800&ssl=1"
+  },
+  "aji-gustoso": {
+    "archivo": "assets/img/rubros/aji-gustoso.webp",
+    "cadena": "La Sirena",
+    "producto": "Ají Gustoso Lb",
+    "url_producto": "https://www.sirena.do/aji-gustoso-lb-1001290/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161947/1-lb-02004.png?v=639096183021000000"
+  },
+  "apio": {
+    "archivo": "assets/img/rubros/apio.webp",
+    "cadena": "La Sirena",
+    "producto": "Apio Fresco Lb",
+    "url_producto": "https://www.sirena.do/apio-fresco-lb-1001297/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161829/1-lb-02011.png?v=639096165153900000"
+  },
+  "cerdo-chuleta-ahumada": {
+    "archivo": "assets/img/rubros/cerdo-chuleta-ahumada.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Chuleta Ahumada De Cerdo Empacada, Lb (Peso Aprox. 2.2 Libras)",
+    "url_producto": "https://supermercadosnacional.com/chuleta-ahumada-de-cerdo-empacada-lb-peso-aprox-2-2-libras-2800357.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/8/2800357-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "limon-persa": {
+    "archivo": "assets/img/rubros/limon-persa.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Limón Persa Fresco – Libra (Aprox. 4–8 unidades)",
+    "url_producto": "https://fruttissimodr.com/product/fresh-persa/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2020/10/limon-persa-lb.png?fit=1309%2C1202&ssl=1"
+  },
+  "zanahoria": {
+    "archivo": "assets/img/rubros/zanahoria.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Zanahoria, Lb  (Aprox. 1-3 unidades Por Libra)",
+    "url_producto": "https://supermercadosnacional.com/zanahoria-lb-aprox-1-3-unidades-por-libra-2800148.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/8/2800148-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "aguacate-popenoe": {
+    "archivo": "assets/img/rubros/aguacate-popenoe.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Aguacate Popenoe, Und",
+    "url_producto": "https://supermercadosnacional.com/aguacate-popenoe-und-2129505.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/1/2129505-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "brocoli": {
+    "archivo": "assets/img/rubros/brocoli.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Brócoli Fresco – Libra (Aprox. 2–3 unidades)",
+    "url_producto": "https://fruttissimodr.com/product/brocoli-fresco-libra-aprox-2-3-unidades/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2020/10/brocoli-fresco1.jpg?fit=300%2C300&ssl=1"
+  },
+  "cerdo-guisar": {
+    "archivo": "assets/img/rubros/cerdo-guisar.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Cerdo Para Guisar Empacado, Lb (Peso Aprox. 2 Libra)",
+    "url_producto": "https://supermercadosnacional.com/cerdo-para-guisar-empacado-lb-peso-aprox-2-libra-2162506.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/1/2162506-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "chinola": {
+    "archivo": "assets/img/rubros/chinola.webp",
+    "cadena": "La Sirena",
+    "producto": "Chinola Lb",
+    "url_producto": "https://www.sirena.do/chinola-lb-1046428/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175622/1-lb-02245.webp?v=639160986009430000"
+  },
+  "mango-gota-oro": {
+    "archivo": "assets/img/rubros/mango-gota-oro.webp",
+    "cadena": "La Sirena",
+    "producto": "Mango Gota De Oro Und",
+    "url_producto": "https://www.sirena.do/mango-gota-de-oro-und-1653504/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161899/1-und-00055.png?v=639096165622000000"
+  },
+  "molondron": {
+    "archivo": "assets/img/rubros/molondron.webp",
+    "cadena": "La Sirena",
+    "producto": "Molondrón Fresco Lb",
+    "url_producto": "https://www.sirena.do/molondron-fresco-lb-1001349/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161866/1-lb-02042.png?v=639096165445300000"
+  },
+  "papa": {
+    "archivo": "assets/img/rubros/papa.webp",
+    "cadena": "Fruttissimo Market",
+    "producto": "Papa Fresca – Saco (Aprox. 47–50 lb)",
+    "url_producto": "https://fruttissimodr.com/product/papa-fresca-saco/",
+    "origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2026/01/saco-papa.png?fit=1536%2C1024&ssl=1"
+  },
+  "pepino": {
+    "archivo": "assets/img/rubros/pepino.webp",
+    "cadena": "La Sirena",
+    "producto": "Pepino Fresco Lb",
+    "url_producto": "https://www.sirena.do/pepino-fresco-lb-1001354/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/171613/1-lb-02048.webp?v=639137658009700000"
+  },
+  "pina-md2": {
+    "archivo": "assets/img/rubros/pina-md2.webp",
+    "cadena": "La Sirena",
+    "producto": "Piña Por Unidad",
+    "url_producto": "https://www.sirena.do/pina-und-1033127/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175025/1-und-00042.webp?v=639154032035900000"
+  },
+  "remolacha": {
+    "archivo": "assets/img/rubros/remolacha.webp",
+    "cadena": "La Sirena",
+    "producto": "Remolacha Fresca Lb",
+    "url_producto": "https://www.sirena.do/remolacha-fresca-lb-1001369/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161834/1-lb-02057.png?v=639096165202130000"
+  },
+  "sandia": {
+    "archivo": "assets/img/rubros/sandia.webp",
+    "cadena": "La Sirena",
+    "producto": "Sandia Fresca Lb",
+    "url_producto": "https://www.sirena.do/sandia-fresca-lb-1001374/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/176001/1-lb-02062.webp?v=639172242026000000"
+  },
+  "tayota": {
+    "archivo": "assets/img/rubros/tayota.webp",
+    "cadena": "La Sirena",
+    "producto": "Tayota Lb",
+    "url_producto": "https://www.sirena.do/tayota-lb-1072087/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161941/1-lb-02306.png?v=639096180020270000"
+  },
+  "zapote": {
+    "archivo": "assets/img/rubros/zapote.webp",
+    "cadena": "La Sirena",
+    "producto": "Zapote Lb",
+    "url_producto": "https://www.sirena.do/zapote-lb-1275351/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175034/1-lb-02184.webp?v=639154035087770000"
+  },
+  "arroz-selecto": {
+    "archivo": "assets/img/rubros/arroz-selecto.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Arroz Selecto Saco Etiqueta Azul Líder 20 Lb",
+    "url_producto": "https://supermercadosnacional.com/arroz-selecto-saco-etiqueta-azul-lider-20-lb-2067843.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/L/I/LIDER_ARROZ_SELECTO_SACO_20_LB_AZUL.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "arroz-super-selecto": {
+    "archivo": "assets/img/rubros/arroz-super-selecto.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Arroz Super Selecto Enriquecido Bisono 5 Lb",
+    "url_producto": "https://supermercadosnacional.com/arroz-super-selecto-enriquecido-bisono-5-lb-2010589.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/2/0/2010589-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "habichuela-pinta": {
+    "archivo": "assets/img/rubros/habichuela-pinta.webp",
+    "cadena": "La Sirena",
+    "producto": "Habichuela Pinta Wala 800 Gr",
+    "url_producto": "https://www.sirena.do/wala-habichuela-pinta-800-gr-1956607/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/165257/1-und-2100002980077.jpg?v=639105867231000000"
+  },
+  "habichuela-roja": {
+    "archivo": "assets/img/rubros/habichuela-roja.webp",
+    "cadena": "La Sirena",
+    "producto": "Habichuela Roja Wala 800 Gr",
+    "url_producto": "https://www.sirena.do/wala-habichuela-roja-800-gr-1956608/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/165264/1-und-2100002980084.jpg?v=639105867255500000"
+  },
+  "habichuela-blanca": {
+    "archivo": "assets/img/rubros/habichuela-blanca.webp",
+    "cadena": "La Sirena",
+    "producto": "Habichuela Blanca Wala 800 Gr",
+    "url_producto": "https://www.sirena.do/wala-habichuela-blanca-800g-1956605/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/165263/1-und-2100002980053.jpg?v=639105867252200000"
+  },
+  "habichuela-negra": {
+    "archivo": "assets/img/rubros/habichuela-negra.webp",
+    "cadena": "Supermercados Nacional",
+    "producto": "Habichuela Negra Líder 800 Gr",
+    "url_producto": "https://supermercadosnacional.com/habichuela-negra-lider-800-gr-2140263.html",
+    "origen": "https://supermercadosnacional.com/media/catalog/product/L/I/LIDER_HABICHUELA_NEGRA_800_GR.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width="
+  },
+  "leche-liquida": {
+    "archivo": "assets/img/rubros/leche-liquida.webp",
+    "cadena": "La Sirena",
+    "producto": "Leche Liquida La Granja 1 Lt",
+    "url_producto": "https://www.sirena.do/la-granja-leche-liquida-1-lt-1885582/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/168904/1-und-7467572560432.jpg?v=639120712885330000"
+  },
+  "arroz-superior": {
+    "archivo": "assets/img/rubros/arroz-superior.webp",
+    "cadena": "La Sirena",
+    "producto": "Arroz Superior Zerca 10 Lb",
+    "url_producto": "https://www.sirena.do/zerca-arroz-superior-10-lb-1957059/p",
+    "origen": "https://gruporamos.vteximg.com.br/arquivos/ids/165487/1-und-2100002981142.jpg?v=639105873017630000"
+  }
+}

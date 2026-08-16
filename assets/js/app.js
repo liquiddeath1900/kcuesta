@@ -190,86 +190,176 @@
     '</article>';
   }
 
-  /* ---------- tarjeta de oferta de supermercado ---------- */
+  /* ---------- tarjeta de rubro (comparación de precios) ----------
+     Una tarjeta por RUBRO, no por oferta. Con 147 ofertas en 43 rubros, la
+     lista plana repetía "Ají" trece veces seguidas.
 
-  // La brecha aquí se lee al revés que en un anuncio de finca: mide cuánto
-  // se le suma al producto entre el mayorista y la góndola. Ese sobreprecio
-  // es el argumento entero de Kcuesta, así que se muestra sin adornos.
-  function sobreprecio(o) {
-    if (!o.mercado_ref_unidad || !o.precio) return null;
-    return ((o.precio - o.mercado_ref_unidad) / o.mercado_ref_unidad) * 100;
+     La tarjeta cerrada carga todo lo que hace falta para decidir sin tocar
+     nada: mejor precio, cuántas tiendas, el rango y el sobreprecio contra
+     el mayorista. Se abre con <details>/<summary> nativo — ya trae
+     semántica de botón y estado abierto/cerrado para lectores de pantalla,
+     sin ARIA y sin JS.
+
+     Los porcentajes se reservan para la comparación contra el mayorista,
+     donde son grandes y cuentan la historia (+83%). Entre cadenas la
+     diferencia es de RD$4 a RD$25 y ahí un "+7%" no dice nada, así que va
+     en pesos. */
+
+  function tarjetaRubro(r) {
+    var cad = function (id) { return (O.cadenas[id] || {}).nombre || id; };
+    var mejor = r.ofertas[0];
+    var hayVarias = r.n > 1;
+    // Todo se compara POR LIBRA. Antes la cebolla decía "RD$46 – RD$10,750"
+    // porque metía la libra suelta y el saco de 50 en el mismo rango: el
+    // saco parecía 234 veces más caro cuando por libra es 4.7.
+    var porLb = r.precio_lb_min !== null && r.precio_lb_min !== undefined;
+    var rango = hayVarias && porLb && r.precio_lb_max > r.precio_lb_min;
+
+    var foto = r.foto
+      ? '<img src="' + esc(r.foto) + '" alt="' + esc(r.nombre) + '" loading="lazy" width="160" height="160">'
+      : '<div class="sin-foto"><span>' + esc(r.nombre.charAt(0)) + '</span></div>';
+
+    var marca = r.sobreprecio === null ? ''
+      : '<span class="marca ' + (r.sobreprecio > 0 ? 'sube' : 'baja') + '">' +
+          (r.sobreprecio > 0 ? '+' : '') + r.sobreprecio + '% sobre mayorista</span>';
+
+    // Encabezado: nombre a la izquierda, precio a la derecha en la misma
+    // línea base. Es la franja que se escanea con el pulgar.
+    // La referencia mayorista va en su PROPIA fila, a todo el ancho. Metida
+    // en la columna de texto la dejaba en 111px y todo se partía en cinco
+    // líneas: la cabecera medía 218px de alto en un teléfono.
+    var cabecera =
+      '<div class="rb-foto">' + foto + '</div>' +
+      '<div class="rb-txt">' +
+        '<div class="rb-nom">' + esc(r.nombre) + '</div>' +
+        '<div class="rb-meta">' +
+          (hayVarias ? r.n + ' tiendas' : '1 tienda') +
+          (rango ? ' · ' + rd(r.precio_lb_min, 2) + ' – ' + rd(r.precio_lb_max, 2) + '/lb'
+                 : ' · ' + esc(cad(mejor.cadena))) +
+        '</div>' +
+      '</div>' +
+      '<div class="rb-precio">' +
+        '<span class="cifra">' +
+          rd(porLb ? r.precio_lb_min : r.precio_min, 2) + '</span>' +
+        '<span class="rb-u">' + (porLb ? '/lb' : '/' + esc(mejor.unidad)) + '</span>' +
+      '</div>' +
+      (r.mercado_ref_unidad && porLb
+        ? '<div class="rb-ref">Mayorista ' + rd(r.mercado_ref_unidad, 2) + '/lb ' + marca + '</div>'
+        : '<div class="rb-ref silencio">Sin referencia comparable</div>');
+
+    // Un solo precio no necesita desplegable: se dibuja la misma cáscara
+    // sin control, para que los rubros de una sola tienda no parezcan
+    // datos rotos al lado de los demás.
+    if (!hayVarias) {
+      return '<article class="rubro rubro-sola">' +
+        '<div class="rb-cab">' + cabecera + '</div>' +
+        filasOfertas(r) + '</article>';
+    }
+
+    return '<article class="rubro">' +
+      '<details>' +
+        '<summary class="rb-cab">' + cabecera +
+          '<span class="rb-flecha" aria-hidden="true">▾</span>' +
+        '</summary>' +
+        filasOfertas(r) +
+      '</details>' +
+    '</article>';
   }
 
-  function tarjetaOferta(o) {
-    var cult = cultivoPorId[o.cultivo] || {};
-    var cad = O.cadenas[o.cadena] || { nombre: o.cadena };
-    var s = sobreprecio(o);
+  function filasOfertas(r) {
+    var cad = function (id) { return (O.cadenas[id] || {}).nombre || id; };
+    var base = r.precio_lb_min;
 
-    var foto = o.foto
-      ? '<img src="' + esc(o.foto) + '" alt="' + esc(o.titulo) + '" loading="lazy" width="480" height="360">'
-      : '<div class="sin-foto"><span>' + esc(o.titulo.charAt(0)) + '</span></div>';
+    return '<ul class="rb-lista">' + r.ofertas.map(function (o, i) {
+      // Entre cadenas la diferencia va en PESOS por libra. En porcentaje
+      // sería ruido: son RD$4 a RD$25. El porcentaje se guarda para el
+      // mayorista, donde es +161% y sí cuenta algo.
+      var etiqueta;
+      if (!o.precio_lb) {
+        etiqueta = '<span class="rb-dif">empaque sin peso declarado</span>';
+      } else if (i === 0) {
+        etiqueta = '<span class="rb-mejor">Mejor precio</span>';
+      } else {
+        var dif = o.precio_lb - base;
+        etiqueta = '<span class="rb-dif">+' + rd(dif, 2) + '/lb</span>';
+      }
+      var rebaja = (o.precio_lista && o.precio_lista > o.precio)
+        ? ' <s class="silencio cifra">' + rd(o.precio_lista, 2) + '</s>' : '';
 
-    var rebaja = (o.precio_lista && o.precio_lista > o.precio)
-      ? '<span class="flota flota-d chip baja">Rebajado</span>' : '';
-
-    return '' +
-    '<article class="tarjeta tarjeta-oferta">' +
-      '<div class="tarjeta-foto">' + foto +
-        '<span class="flota chip">' + esc(cad.nombre) + '</span>' + rebaja +
-      '</div>' +
-      '<div class="tarjeta-cuerpo">' +
-        '<div>' +
-          '<div class="tarjeta-tit">' + esc(o.titulo) + '</div>' +
-          '<div class="tarjeta-meta">' +
-            esc(cult.nombre || o.cultivo) +
-            (cult.categoria ? ' · ' + esc(cult.categoria) : '') +
-          '</div>' +
+      return '<li class="rb-fila">' +
+        '<div class="rb-cadena">' +
+          '<b>' + esc(cad(o.cadena)) + '</b>' +
+          '<span class="silencio rb-desc">' + esc(o.titulo) + '</span>' +
         '</div>' +
+        '<div class="rb-cifras">' +
+          '<span class="cifra rb-p">' +
+            rd(o.precio_lb || o.precio, 2) + '</span>' +
+          '<span class="rb-u">' + (o.precio_lb ? '/lb' : '/' + esc(o.unidad)) + '</span>' +
+          // El precio de etiqueta también se muestra: es lo que se paga en
+          // caja, y el de por libra es para comparar.
+          (o.precio_lb && o.libras !== 1
+            ? '<span class="rb-etiq silencio">' + rd(o.precio, 2) + ' el empaque</span>'
+            : '') + rebaja +
+          etiqueta +
+        '</div>' +
+        (o.url
+          ? '<a class="rb-ir" href="' + esc(o.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>'
+          : '') +
+      '</li>';
+    }).join('') + '</ul>' +
+    '<div class="rb-pie silencio">Precio al consumidor, no de finca · ' +
+      esc(diasDesde(r.ofertas[0].fecha)) + ' · foto: ' + esc(r.foto_credito) + '</div>';
+  }
 
-        '<div class="ancla">' +
-          '<div class="nivel nivel-mayor">' +
-            '<span class="nivel-et">En góndola</span>' +
-            '<div class="ancla-precio">' +
-              '<span class="n cifra">' + rd(o.precio, o.precio % 1 ? 2 : 0) + '</span>' +
-              '<span class="u">/ ' + esc(o.unidad) + '</span>' +
+  /* ---------- tarjeta de vendedor ----------
+     El otro eje. Agrupar solo por rubro esconde que una cadena está en
+     cuarenta tarjetas, y cuando entren productores de verdad una finca va a
+     publicar plátano, yuca y ají a la vez. Son dos preguntas distintas:
+     "¿a cómo está el ají?" y "¿qué tiene esta finca?". */
+
+  function tarjetaVendedor(v) {
+    var med = v.sobreprecio_mediana;
+    return '<article class="rubro vendedor">' +
+      '<details>' +
+        '<summary class="rb-cab">' +
+          '<div class="rb-txt">' +
+            '<div class="rb-nom">' + esc(v.nombre) + '</div>' +
+            '<div class="rb-meta">' + v.n_rubros + ' rubros · ' + v.n + ' artículos</div>' +
+            (med === null ? ''
+              : '<div class="rb-ref">Mediana <span class="marca ' +
+                  (med > 0 ? 'sube' : 'baja') + '">' + (med > 0 ? '+' : '') + med +
+                  '% sobre mayorista</span></div>') +
+          '</div>' +
+          '<span class="rb-flecha" aria-hidden="true">▾</span>' +
+        '</summary>' +
+        '<ul class="rb-lista">' + v.articulos.map(function (a) {
+          return '<li class="rb-fila">' +
+            '<div class="rb-cadena">' +
+              '<b>' + esc(a.nombre) + '</b>' +
+              '<span class="silencio rb-desc">' + esc(a.titulo) + '</span>' +
             '</div>' +
-            (s !== null
-              ? '<div class="delta ' + (s > 0 ? 'sube' : 'baja') + '">' +
-                  Math.abs(s).toFixed(0) + '% ' +
-                  (s > 0 ? 'sobre el mayorista' : 'bajo el mayorista') + '</div>'
-              : '') +
-          '</div>' +
-          (o.mercado_ref_unidad
-            ? '<div class="ancla-ref">Mayorista oficial: <strong class="cifra">' +
-                rd(o.mercado_ref_unidad, 2) + '</strong> por unidad</div>'
-            : '<div class="ancla-ref silencio">Sin referencia mayorista para este rubro</div>') +
-        '</div>' +
-
-        '<div class="entrega">' +
-          '<span class="chip">Precio al consumidor</span>' +
-          '<span class="chip">' + esc(diasDesde(o.fecha)) + '</span>' +
-        '</div>' +
-
-        '<div class="vend">' +
-          '<div class="vend-n">' + esc(cad.nombre) + '</div>' +
-          '<div class="silencio">Precio de góndola, no de finca · foto: ' +
-            esc(o.foto_credito) + '</div>' +
-        '</div>' +
-
-        '<div class="acciones acciones-una">' +
-          (o.url
-            ? '<a class="boton fantasma" href="' + esc(o.url) + '" target="_blank" rel="noopener nofollow">Ver en ' + esc(cad.nombre) + '</a>'
-            : '<span class="silencio">Sin enlace público</span>') +
-        '</div>' +
-      '</div>' +
+            '<div class="rb-cifras">' +
+              '<span class="cifra rb-p">' + rd(a.precio, a.precio % 1 ? 2 : 0) + '</span>' +
+              '<span class="rb-u">/' + esc(a.unidad) + '</span>' +
+            '</div>' +
+            (a.url ? '<a class="rb-ir" href="' + esc(a.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>' : '') +
+          '</li>';
+        }).join('') + '</ul>' +
+      '</details>' +
     '</article>';
   }
 
   /* ---------- render ---------- */
 
+  // Filtro por cadena: la investigación es clara en que agrupar por cadena
+  // rompe la comparación, pero filtrar por ella sí responde "¿qué cobra
+  // Nacional?" sin reordenar nada.
+  var cadenaActiva = 'todas';
+  var vista = 'rubro';          // 'rubro' | 'vendedor'
+
   function render() {
     var orden = document.getElementById('orden').value;
-    var lista, html;
+    var lista, html, etiqueta;
 
     if (HAY_ANUNCIOS) {
       lista = A.anuncios.filter(function (an) {
@@ -284,25 +374,80 @@
         return new Date(y.publicado) - new Date(x.publicado);
       });
       html = lista.map(tarjeta).join('');
+      etiqueta = lista.length === 1 ? ' anuncio' : ' anuncios';
+
+    } else if (vista === 'vendedor') {
+      lista = O.vendedores.slice();
+      html = lista.map(tarjetaVendedor).join('');
+      etiqueta = lista.length === 1 ? ' vendedor' : ' vendedores';
+
     } else {
-      lista = O.ofertas.filter(function (o) {
-        if (catActiva === 'todos') return true;
-        var c = cultivoPorId[o.cultivo];
-        return c && c.categoria === catActiva;
+      lista = O.rubros.filter(function (r) {
+        if (catActiva !== 'todos' && r.categoria !== catActiva) return false;
+        if (cadenaActiva !== 'todas' &&
+            !r.ofertas.some(function (o) { return o.cadena === cadenaActiva; })) return false;
+        return true;
       });
+
+      // Si hay filtro de cadena, se recorta cada rubro a esa cadena: si no,
+      // la tarjeta diría "5 tiendas" mientras el filtro dice una.
+      if (cadenaActiva !== 'todas') {
+        lista = lista.map(function (r) {
+          var solo = r.ofertas.filter(function (o) { return o.cadena === cadenaActiva; });
+          var precios = solo.map(function (o) { return o.precio; });
+          return Object.assign({}, r, {
+            ofertas: solo, n: solo.length,
+            precio_min: Math.min.apply(null, precios),
+            precio_max: Math.max.apply(null, precios),
+            sobreprecio: r.mercado_ref_unidad
+              ? Math.round((Math.min.apply(null, precios) - r.mercado_ref_unidad) /
+                  r.mercado_ref_unidad * 100)
+              : null
+          });
+        });
+      }
+
       lista.sort(function (x, y) {
-        if (orden === 'brecha') return (sobreprecio(y) || 0) - (sobreprecio(x) || 0);
-        if (orden === 'barato') return x.precio - y.precio;
-        if (orden === 'volumen') return y.precio - x.precio;
-        return new Date(y.fecha) - new Date(x.fecha);
+        if (orden === 'brecha') return (y.sobreprecio || -1e9) - (x.sobreprecio || -1e9);
+        if (orden === 'barato') return x.precio_min - y.precio_min;
+        if (orden === 'nombre') return x.nombre.localeCompare(y.nombre, 'es');
+        return (y.n - x.n) || x.nombre.localeCompare(y.nombre, 'es');
       });
-      html = lista.map(tarjetaOferta).join('');
+      html = lista.map(tarjetaRubro).join('');
+      etiqueta = lista.length === 1 ? ' rubro' : ' rubros';
     }
 
-    document.getElementById('cuenta').textContent =
-      lista.length + (lista.length === 1 ? ' resultado' : ' resultados');
+    document.getElementById('cuenta').textContent = lista.length + etiqueta;
     document.getElementById('rejilla').innerHTML = html;
     document.getElementById('vacio').hidden = lista.length !== 0;
+  }
+
+  /* ---------- controles de vista y cadena ---------- */
+
+  function pintarControles() {
+    if (HAY_ANUNCIOS) return;
+
+    var vistas = document.getElementById('vistas');
+    if (vistas) {
+      vistas.innerHTML =
+        '<button class="pastilla' + (vista === 'rubro' ? ' on' : '') + '" data-vista="rubro">Por rubro</button>' +
+        '<button class="pastilla' + (vista === 'vendedor' ? ' on' : '') + '" data-vista="vendedor">Por vendedor</button>';
+    }
+
+    var caja = document.getElementById('cadenas');
+    if (caja) {
+      caja.hidden = vista !== 'rubro';
+      var ids = Object.keys(O.cadenas).filter(function (id) {
+        return O.rubros.some(function (r) {
+          return r.ofertas.some(function (o) { return o.cadena === id; });
+        });
+      });
+      caja.innerHTML = ['todas'].concat(ids).map(function (id) {
+        var n = id === 'todas' ? 'Todas las tiendas' : O.cadenas[id].nombre;
+        return '<button class="pastilla chica' + (id === cadenaActiva ? ' on' : '') +
+               '" data-cadena="' + esc(id) + '">' + esc(n) + '</button>';
+      }).join('');
+    }
   }
 
   /* ---------- eventos ---------- */
@@ -310,6 +455,12 @@
   document.addEventListener('click', function (e) {
     var pas = e.target.closest('[data-cat]');
     if (pas) { catActiva = pas.dataset.cat; pintarPastillas(); render(); return; }
+
+    var vis = e.target.closest('[data-vista]');
+    if (vis) { vista = vis.dataset.vista; pintarControles(); render(); return; }
+
+    var cad = e.target.closest('[data-cadena]');
+    if (cad) { cadenaActiva = cad.dataset.cadena; pintarControles(); render(); return; }
 
     var con = e.target.closest('[data-contactar]');
     if (con) { abrirContacto(con.dataset.contactar); return; }
@@ -337,6 +488,7 @@
 
   pintarCintillo();
   pintarPastillas();
+  pintarControles();
   render();
 
   /* Hoja informativa: la explicación a un toque, fuera del camino. */
@@ -388,19 +540,24 @@
   function bloquear() {
     document.body.classList.add('sin-cuenta');
 
-    // Las acciones de cada tarjeta llevan a la entrada. El texto cambia
-    // según lo que se esté mostrando: en una oferta de supermercado no hay
-    // a quién contactar, pero sí hay una tienda a la que ir.
+    // Las acciones de cada anuncio llevan a la entrada.
     document.querySelectorAll('.tarjeta .acciones').forEach(function (acc) {
-      var esOferta = acc.closest('.tarjeta-oferta');
       // Un solo botón: ocupa el ancho completo, si no el texto se parte en dos.
       acc.className = 'acciones acciones-una';
-      acc.innerHTML = '<a class="boton" href="entrar.html">' +
-        (esOferta ? 'Entrar para ver la tienda' : 'Entrar para contactar') + '</a>';
+      acc.innerHTML = '<a class="boton" href="entrar.html">Entrar para contactar</a>';
+    });
+
+    // En las tarjetas de rubro no hay bloque de acciones: lo que saca de la
+    // página es el enlace "Ver →" de cada cadena. Sin cuenta lleva a entrar.
+    document.querySelectorAll('.rubro .rb-ir').forEach(function (a) {
+      a.setAttribute('href', 'entrar.html');
+      a.removeAttribute('target');
+      a.textContent = 'Entrar para ver →';
     });
 
     // A partir de la sexta tarjeta: se difumina y aparece la invitación.
-    var tarjetas = document.querySelectorAll('#rejilla .tarjeta');
+    // Sirve para los dos tipos, anuncio de productor y rubro.
+    var tarjetas = document.querySelectorAll('#rejilla .tarjeta, #rejilla .rubro');
     if (tarjetas.length > VISIBLES) {
       for (var i = VISIBLES; i < tarjetas.length; i++) {
         tarjetas[i].classList.add('velada');
@@ -431,7 +588,7 @@
     document.body.classList.remove('sin-cuenta');
     var c = document.getElementById('corte-vitrina');
     if (c) c.remove();
-    document.querySelectorAll('.tarjeta.velada').forEach(function (t) {
+    document.querySelectorAll('.tarjeta.velada, .rubro.velada').forEach(function (t) {
       t.classList.remove('velada');
     });
   }

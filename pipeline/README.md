@@ -60,7 +60,63 @@ Cuando una fuente estrene un rubro:
 3. Amarrar sus nombres en `data/alias.json`
 4. Repetir hasta que la lista quede en cero
 
-## Fotos
+## Cómo se muestra el mercado
+
+Una tarjeta por **rubro**, no por oferta. 147 ofertas son 43 rubros: el arroz
+selecto trae 15 y el ají morrón 13, y en lista plana la página repetía "Ají"
+trece veces seguidas.
+
+La tarjeta cerrada carga la decisión completa —mejor precio, cuántas tiendas,
+el rango y el sobreprecio contra el mayorista— y se abre con `<details>`
+nativo, que ya trae semántica de botón y estado para lectores de pantalla sin
+una línea de ARIA. Los rubros de una sola tienda usan la misma cáscara sin
+control, para que no parezcan datos rotos.
+
+Dos ejes sobre los mismos datos, porque son dos preguntas distintas:
+
+- **Por rubro** — "¿a cómo está el ají?" Comparación entre cadenas.
+- **Por vendedor** — "¿qué tiene este vendedor?" Cuando entren productores,
+  una finca con plátano, yuca y ají cae aquí sin cambiar nada.
+
+### Todo se compara por libra
+
+`normalizar.libras_de_titulo()` saca el peso del empaque del nombre del
+producto. Sin eso la comparación miente: la cebolla suelta a RD$46 la libra y
+el saco de 50 lb a RD$10,750 daban un rango de "RD$46 – RD$10,750", como si el
+saco fuera 234 veces más caro. Por libra son RD$46 contra RD$215 — más caro
+igual, pero 4.7 veces.
+
+Cuando el título no dice cuánto trae, devuelve `None` y esa oferta se muestra
+sin comparar. Igual que con las unidades del mayorista: un hueco se ve, un
+supuesto no.
+
+Los porcentajes se reservan para el mayorista, donde son grandes y cuentan la
+historia (+161% el tomate). Entre cadenas la diferencia es de RD$4 a RD$25 y
+ahí va en pesos por libra, porque un "+7%" no dice nada.
+
+## Fotos de cultivo
+
+`python -m pipeline.imagenes` baja una foto por cultivo de Wikimedia Commons
+buscando por **binomio científico**. El banco viejo tenía 16 fotos para 81
+cultivos, así que `habichuela.jpg` salía en 47 tarjetas y `aji.jpg` en 31.
+
+Dos cosas se aprendieron mirando la primera tanda, no leyendo la API:
+
+1. **La categoría no basta.** Con el bono de categoría por encima del castigo,
+   los cuatro aguacates salieron con la misma foto de un árbol lejano.
+   CREDITOS.md pide "el producto de cerca, no el paisaje", así que
+   `tree/plant/field/flower` ahora resta más de lo que cualquier bono suma.
+2. **Hay que deduplicar.** Cuatro aguacates comparten *Persea americana*, así
+   que compartían el primer candidato. Ningún archivo se usa dos veces.
+
+Commons exige un User-Agent con contacto y tumba con 429 al cliente genérico
+de requests; va con pausa de 1.1s y reintento exponencial.
+
+`--hoja` arma una hoja de contactos para revisar a ojo. **Hace falta**: la
+búsqueda por texto devuelve basura con confianza — un candidato de aguacate
+era "Huskies by the Congo River enjoying the shade of the Avocado Tree".
+
+## Fotos de supermercado
 
 Regla: **se espeja fotografía de producto limpia; lo que trae marca de agua o
 logo encima se deja quieto.** Tres capas:

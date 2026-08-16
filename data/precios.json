@@ -2,9 +2,9 @@
   "_meta": {
     "descripcion": "Precios oficiales reales del mercado agrícola dominicano. Todos los números provienen de fuentes oficiales publicadas y son verificables.",
     "fuente_principal": {
-      "nombre": "MERCADOM — Merca Santo Domingo",
-      "edicion": "2026-08-12",
-      "url": "https://mercadom.gob.do/index.php/precios-msd?download=11:precios",
+      "nombre": "Ministerio de Agricultura",
+      "edicion": "2026-08-07",
+      "url": "https://agricultura.gob.do/wp-content/uploads/2026/08/Informe-de-precios-07-de-agosto-2026.pdf",
       "cadencia": "Interdiario (lunes, miércoles, viernes); el viernes se publica el resumen semanal",
       "metodologia": "OIMA"
     },

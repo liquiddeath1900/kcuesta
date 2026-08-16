@@ -154,6 +154,77 @@ def a_numero(texto) -> float | None:
     return -v if negativo else v
 
 
+# ------------------------------------------------------------------
+# Tamaño del empaque leído del título del producto
+# ------------------------------------------------------------------
+# Sin esto la comparación miente. La cadena vende la cebolla suelta por
+# libra a RD$46 y en saco de 50 lb a RD$10,750, y agrupados sin normalizar
+# el rubro dice "RD$46 – RD$10,750", como si el saco fuera 200 veces más
+# caro cuando en realidad sale a RD$215 la libra... más caro igual, pero por
+# 4.7x, no por 234x. Un rango así no se puede leer y además es falso.
+#
+# Se devuelve None cuando no se puede saber. Igual que con las unidades del
+# mayorista: asumir 1 libra mete un error silencioso, y un hueco se ve.
+
+_A_LIBRAS = {
+    "lb": 1.0, "lbs": 1.0, "libra": 1.0, "libras": 1.0,
+    "oz": 1 / 16, "onza": 1 / 16, "onzas": 1 / 16,
+    "kg": 2.20462, "kilo": 2.20462, "kilos": 2.20462,
+    "g": 0.00220462, "gr": 0.00220462, "gramo": 0.00220462, "gramos": 0.00220462,
+}
+
+# '22 lb', 'Aprox. 47–50 lb', '8oz', '1 kg', '500 g'
+_RE_PESO = re.compile(
+    r"(\d+(?:[.,]\d+)?)\s*(?:[-–—a]\s*(\d+(?:[.,]\d+)?)\s*)?"
+    r"(lbs?|libras?|oz|onzas?|kgs?|kilos?|gr?a?m?o?s?)\b",
+    re.I,
+)
+# '6 Packs de 24 oz', '3 x 500 g' — hay que multiplicar
+_RE_MULTI = re.compile(r"(\d+)\s*(?:packs?|paq\w*|x|und|unidades)\s*(?:de\s*)?$", re.I)
+
+# 'Aji Cubanela,Lb', 'Filete De Pechuga Pollo Cibao Lb', '– Libra (Aprox. ...)'
+# La cadena lo vende POR libra y no pone número. Es una libra.
+_RE_POR_LIBRA = re.compile(r"(?:^|[,\s(–-])\s*(?:lbs?|libras?)\b", re.I)
+
+
+def libras_de_titulo(titulo: str) -> float | None:
+    """Cuántas libras trae el empaque, leídas del nombre del producto.
+
+    'Pera Forelle Fresca – Caja 22 lb'            -> 22.0
+    'Papa Fresca – Saco (Aprox. 47–50 lb)'        -> 48.5   (promedio del rango)
+    'Ají Gustoso Fresco – Pack 8oz'               -> 0.5
+    'Papas Gold – Caja Retail (6 Packs de 24 oz)' -> 9.0    (6 × 24 oz)
+    'Limón Verde Tahití – Caja y Malla'           -> None   (no dice cuánto)
+    """
+    if not titulo:
+        return None
+    t = sin_tildes(titulo)
+
+    m = _RE_PESO.search(t)
+    if not m:
+        # Sin número pero con 'Lb' o 'Libra' suelto: se vende por libra.
+        return 1.0 if _RE_POR_LIBRA.search(t) else None
+
+    bajo = float(m.group(1).replace(",", "."))
+    alto = float(m.group(2).replace(",", ".")) if m.group(2) else None
+    cantidad = (bajo + alto) / 2 if alto else bajo
+
+    unidad = m.group(3).lower()
+    factor = next((v for k, v in _A_LIBRAS.items() if unidad.startswith(k)), None)
+    if factor is None:
+        return None
+    libras = cantidad * factor
+
+    # Multiplicador antes del peso: '6 Packs de 24 oz'.
+    mult = _RE_MULTI.search(t[:m.start()])
+    if mult:
+        n = int(mult.group(1))
+        if 1 < n <= 60:                 # más de 60 suele ser el año o un código
+            libras *= n
+
+    return round(libras, 4) if 0.005 <= libras <= 500 else None
+
+
 def _segmentos(categoria: str) -> list[str]:
     """Parte 'Supermercado/Frutas y Vegetales/Víveres' en sus tramos."""
     bruto = re.split(r"[/>|]", sin_tildes(categoria or "").lower())

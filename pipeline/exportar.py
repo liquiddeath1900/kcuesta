@@ -19,8 +19,8 @@ import logging
 from collections import defaultdict
 
 from .catalogo import cultivos
-from .config import ASSETS_JS, DATOS
-from .normalizar import sin_tildes
+from .config import ASSETS_JS, DATOS, RAIZ
+from .normalizar import libras_de_titulo, sin_tildes
 
 log = logging.getLogger("kcuesta.exportar")
 
@@ -39,9 +39,33 @@ FOTOS_CC = {
 }
 
 
-def _foto_cc(cultivo_id: str) -> str:
+def _foto_cc(cultivo_id: str) -> tuple[str, str]:
+    """(ruta, crédito) de la foto del rubro, del mejor origen disponible.
+
+    En orden:
+
+    1. `assets/img/rubros/` — la foto de góndola espejada. Es la mejor con
+       diferencia: la cadena fotografía el producto limpio sobre blanco,
+       que es exactamente lo que la tarjeta necesita.
+    2. `assets/img/cultivos/` — Wikimedia Commons por binomio científico.
+       Sirve de relleno pero rinde poco: las categorías de Commons están
+       curadas para BOTÁNICA, no para comida, así que devuelven la mata, la
+       hoja, la corteza y hasta láminas de herbario. En una tanda de 24
+       salieron un caldero vacío para el arroz y una hoja enferma para la
+       habichuela.
+    3. El banco viejo por categoría, que es el que repetía `habichuela.jpg`
+       en 47 tarjetas.
+    """
+    espejada = RAIZ / "assets" / "img" / "rubros" / f"{cultivo_id}.webp"
+    if espejada.exists():
+        return f"assets/img/rubros/{cultivo_id}.webp", "foto de la cadena"
+
+    propia = RAIZ / "assets" / "img" / "cultivos" / f"{cultivo_id}.webp"
+    if propia.exists():
+        return f"assets/img/cultivos/{cultivo_id}.webp", "Wikimedia Commons (CC)"
+
     base = sin_tildes(cultivo_id).split("-")[0]
-    return f"assets/img/{FOTOS_CC.get(base, 'mercado')}.jpg"
+    return f"assets/img/{FOTOS_CC.get(base, 'mercado')}.jpg", "Wikimedia Commons (CC)"
 
 
 def _serie(db, desde: dt.date) -> dict:
@@ -172,7 +196,8 @@ def _ofertas(db, hoy: dt.date) -> dict:
     productos = db.seleccionar(
         "productos_retail",
         select="id,cadena_id,sku_externo,nombre_externo,cultivo_id,unidad_externa,"
-               "url_producto,foto_url,foto_estado,foto_fuente",
+               "url_producto,foto_url,foto_estado,foto_fuente,foto_origen_url,"
+               "categoria_externa",
         cultivo_id="not.is.null",
         order="id",
         limit="5000",
@@ -209,6 +234,7 @@ def _ofertas(db, hoy: dt.date) -> dict:
 
         # Solo se sirve la foto propia si además fue aprobada a ojo.
         propia = p["foto_estado"] == "aprobada" and p["foto_url"]
+        libras = libras_de_titulo(p["nombre_externo"])
         ofertas.append({
             "id": f"{p['cadena_id']}-{p['sku_externo']}",
             "cultivo": cid,
@@ -219,15 +245,138 @@ def _ofertas(db, hoy: dt.date) -> dict:
             "unidad": p["unidad_externa"] or cult.get("unidad_venta") or "Unidad",
             "mercado_ref_unidad": ref,
             "url": p["url_producto"],
-            "foto": p["foto_url"] if propia else _foto_cc(cid),
+            "foto": p["foto_url"] if propia else _foto_cc(cid)[0],
             "foto_propia": bool(propia),
-            "foto_credito": p["foto_fuente"] if propia else "Wikimedia Commons (CC)",
+            "foto_credito": p["foto_fuente"] if propia else _foto_cc(cid)[1],
+            # Se arrastran para que pipeline.fotos_rubro sepa qué bajar y de
+            # qué góndola vino, sin volver a consultar la base.
+            "foto_origen": p.get("foto_origen_url"),
+            "categoria_externa": p.get("categoria_externa"),
+            "libras": libras,
+            # Precio por libra: la única cifra con la que se pueden comparar
+            # una libra suelta y un saco de 50. None cuando el título no dice
+            # cuánto trae — se muestra el precio a secas y no se compara.
+            "precio_lb": round(pr["precio"] / libras, 2) if libras else None,
             "fecha": pr["fecha"],
         })
 
     ofertas.sort(key=lambda o: (o["cultivo"], o["precio"]))
     cadenas = {c["id"]: c for c in db.seleccionar(
         "cadenas", select="id,nombre,url,tipo", activo="eq.true")}
+
+    # ---- Agrupado por cultivo ----
+    # 147 ofertas son apenas 43 rubros: el arroz selecto solo trae 15 y el
+    # ají morrón 13. Listadas planas, la página repite "Ají" trece veces
+    # seguidas y no se puede escanear. La unidad de la tarjeta pasa a ser el
+    # RUBRO, y las cadenas van adentro — que además es la comparación que
+    # alguien viene a hacer: no "hay un ají", sino "a cómo está el ají".
+    porcultivo: dict[str, list[dict]] = defaultdict(list)
+    for o in ofertas:
+        porcultivo[o["cultivo"]].append(o)
+
+    rubros = []
+    for cid, lista in porcultivo.items():
+        cult = catalogo.get(cid, {})
+
+        # Se ordena y se compara POR LIBRA, no por precio de etiqueta. Sin
+        # esto la cebolla decía "RD$46 – RD$10,750" porque metía la libra
+        # suelta y el saco de 50 en el mismo rango, y el saco salía como si
+        # fuera 234 veces más caro cuando por libra es 4.7 veces.
+        conlb = [o for o in lista if o["precio_lb"]]
+        sinlb = [o for o in lista if not o["precio_lb"]]
+        conlb.sort(key=lambda o: o["precio_lb"])
+        sinlb.sort(key=lambda o: o["precio"])
+        lista = conlb + sinlb           # lo comparable primero
+
+        ref = lista[0]["mercado_ref_unidad"]
+        base = conlb or lista
+        min_lb = base[0].get("precio_lb")
+        max_lb = base[-1].get("precio_lb")
+
+        rubros.append({
+            "cultivo": cid,
+            "nombre": cult.get("nombre", cid),
+            "categoria": cult.get("categoria"),
+            "foto": lista[0]["foto"],
+            "foto_credito": lista[0]["foto_credito"],
+            "mercado_ref_unidad": ref,
+            "n": len(lista),
+            "n_comparables": len(conlb),
+            "precio_min": base[0]["precio"],
+            "precio_max": base[-1]["precio"],
+            "precio_lb_min": min_lb,
+            "precio_lb_max": max_lb,
+            "cadena_min": base[0]["cadena"],
+            # Sobreprecio contra el mayorista, por libra contra libra. Se
+            # mide contra la góndola MÁS BARATA a propósito: escoger la más
+            # cara inflaría el argumento de la casa.
+            "sobreprecio": (round((min_lb - ref) / ref * 100)
+                            if ref and min_lb else None),
+            "ofertas": [{
+                "cadena": o["cadena"], "titulo": o["titulo"], "precio": o["precio"],
+                "precio_lista": o["precio_lista"], "unidad": o["unidad"],
+                "precio_lb": o["precio_lb"], "libras": o["libras"],
+                "url": o["url"], "fecha": o["fecha"],
+                # Solo los usa pipeline.fotos_rubro para decidir qué espejar.
+                "foto_origen": o["foto_origen"],
+                "categoria_externa": o["categoria_externa"],
+            } for o in lista],
+        })
+
+    # Orden por defecto: cuántas cadenas lo cargan, de mayor a menor. Es el
+    # mejor sustituto de "popularidad" que hay sin analítica — si diez
+    # cadenas venden arroz y una vende zapote, es porque el arroz es lo que
+    # la gente compra.
+    #
+    # La tentación era ordenar por sobreprecio, que es el argumento de la
+    # casa. Pero eso pone de primero los rubros exóticos con márgenes raros
+    # y esconde el plátano y el arroz, que es lo que alguien vino a buscar.
+    # El sobreprecio queda como opción de orden, no como default.
+    rubros.sort(key=lambda r: (-r["n"], r["nombre"]))
+
+    # ---- Agrupado por vendedor ----
+    # El mismo problema en el otro eje. Agrupar solo por rubro esconde que
+    # una cadena aparece en cuarenta tarjetas; y cuando entren productores
+    # de verdad, una finca va a publicar plátano, yuca y ají a la vez. Son
+    # dos preguntas distintas y las dos son legítimas:
+    #     "¿a cómo está el ají?"        -> por rubro
+    #     "¿qué tiene esta finca?"      -> por vendedor
+    # Se exportan los dos ejes sobre los mismos datos y la página alterna.
+    porvendedor: dict[str, list[dict]] = defaultdict(list)
+    for o in ofertas:
+        porvendedor[o["cadena"]].append(o)
+
+    vendedores = []
+    for vid, lista in porvendedor.items():
+        cad = cadenas.get(vid, {})
+        lista.sort(key=lambda o: (o["cultivo"], o["precio"]))
+        conref = [o for o in lista if o["mercado_ref_unidad"]]
+        sobre = [round((o["precio"] - o["mercado_ref_unidad"]) / o["mercado_ref_unidad"] * 100)
+                 for o in conref]
+        rubros_vend = sorted({o["cultivo"] for o in lista})
+
+        vendedores.append({
+            "id": vid,
+            "nombre": cad.get("nombre", vid),
+            "tipo": cad.get("tipo", "supermercado"),
+            "url": cad.get("url"),
+            "n": len(lista),
+            "n_rubros": len(rubros_vend),
+            "rubros": rubros_vend,
+            # La mediana, no el promedio: un solo rubro con 400% de
+            # sobreprecio arrastraría el promedio y daría una lectura falsa
+            # de toda la cadena.
+            "sobreprecio_mediana": (sorted(sobre)[len(sobre) // 2] if sobre else None),
+            "articulos": [{
+                "cultivo": o["cultivo"],
+                "nombre": catalogo.get(o["cultivo"], {}).get("nombre", o["cultivo"]),
+                "titulo": o["titulo"], "precio": o["precio"], "unidad": o["unidad"],
+                "mercado_ref_unidad": o["mercado_ref_unidad"],
+                "foto": o["foto"], "url": o["url"],
+            } for o in lista],
+        })
+
+    vendedores.sort(key=lambda v: -v["n"])
 
     return {
         "_meta": {
@@ -240,7 +389,8 @@ def _ofertas(db, hoy: dt.date) -> dict:
             "actualizado": hoy.isoformat(),
             "generado_por": "pipeline/exportar.py",
         },
-        "ofertas": ofertas,
+        "rubros": rubros,
+        "vendedores": vendedores,
         "cadenas": cadenas,
     }
 

@@ -348,6 +348,93 @@ body.con-pie { padding-bottom: 64px; }
 .vacio { border: 1.5px dashed var(--linea-2); border-radius: var(--r-lg);
   padding: 38px 24px; text-align: center; background: var(--arena); }
 
+/* ---------- Tarjeta de rubro (comparación de precios) ----------
+   Una tarjeta por rubro, no por oferta: 147 ofertas eran 43 rubros y la
+   lista plana repetía "Ají" trece veces seguidas.
+
+   La cabecera entera es el control de <summary>, no una flechita: a 56px de
+   alto cumple de sobra el mínimo de 24px de la WCAG 2.5.8 y los 44pt de
+   Apple, y se alcanza con el pulgar de una mano. La flecha va a la derecha
+   pero no es el objetivo tocable.                                          */
+.rejilla:has(.rubro) { display: block; }
+
+.rubro { background: var(--carta); border: 1px solid var(--linea);
+  border-radius: var(--r-lg); margin-bottom: 10px; overflow: hidden; }
+.rubro details > summary { list-style: none; cursor: pointer; }
+.rubro details > summary::-webkit-details-marker { display: none; }
+.rubro summary:focus-visible { outline: 2px solid var(--verde-600); outline-offset: -2px; }
+
+/* Dos filas: producto + precio arriba, la referencia mayorista a todo el
+   ancho abajo. Antes la referencia peleaba por la columna de texto, la
+   dejaba en 111px y la cabecera se estiraba a 218px en un teléfono. */
+.rb-cab { display: grid; position: relative;
+  grid-template-columns: 52px 1fr auto;
+  grid-template-areas: "foto txt precio" "ref ref ref";
+  gap: 4px 12px; align-items: center; padding: 12px 14px; min-height: 56px; }
+.rb-foto { grid-area: foto; }
+.rb-txt { grid-area: txt; }
+.rb-precio { grid-area: precio; }
+.rb-ref { grid-area: ref; }
+.rubro details[open] .rb-cab { border-bottom: 1px solid var(--linea);
+  background: var(--verde-50); }
+
+.rb-foto { width: 52px; height: 52px; border-radius: 8px; overflow: hidden;
+  background: var(--arena); flex: none; }
+.rb-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rb-foto .sin-foto { width: 100%; height: 100%; display: grid; place-items: center;
+  font-weight: 800; color: var(--tinta-3); }
+
+.rb-txt { min-width: 0; }
+.rb-nom { font-weight: 700; line-height: 1.2; }
+.rb-meta { font-size: .78rem; color: var(--tinta-3); margin-top: 2px; }
+.rb-ref { font-size: .74rem; color: var(--tinta-3); margin-top: 3px;
+  display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+
+/* El signo y la palabra cargan el significado; el color solo refuerza.
+   Un "+83%" en rojo tiene que leerse igual sin ver el rojo (WCAG 1.4.1). */
+.marca { font-weight: 700; padding: 1px 6px; border-radius: 999px; font-size: .7rem; }
+.marca.sube { background: var(--sube-bg); color: var(--sube); }
+.marca.baja { background: var(--baja-bg); color: var(--baja); }
+
+.rb-precio { text-align: right; font-weight: 750; line-height: 1.15; white-space: nowrap; }
+.rb-precio .cifra { font-size: 1.02rem; }
+.rb-u { display: block; font-size: .68rem; color: var(--tinta-3); font-weight: 400; }
+
+/* La flecha se saca del flujo: solo indica estado. El objetivo tocable es
+   la cabecera entera, no ella. */
+.rb-flecha { position: absolute; right: 10px; bottom: 10px;
+  color: var(--tinta-3); font-size: .72rem; transition: transform .15s ease; }
+.rubro details[open] .rb-flecha { transform: rotate(180deg); }
+
+.rb-lista { list-style: none; margin: 0; padding: 0; }
+.rb-fila { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+  padding: 10px 14px; border-bottom: 1px solid var(--linea); align-items: center; }
+.rb-fila:last-child { border-bottom: none; }
+.rb-cadena { min-width: 0; }
+.rb-cadena b { font-size: .87rem; }
+.rb-desc { display: block; font-size: .73rem; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.rb-cifras { text-align: right; white-space: nowrap; }
+.rb-p { font-weight: 700; }
+.rb-mejor { display: block; font-size: .66rem; font-weight: 750; color: var(--baja);
+  text-transform: uppercase; letter-spacing: .05em; }
+/* Entre cadenas la diferencia es de RD$4 a RD$25: en pesos dice algo, en
+   porcentaje sería ruido. El % se reserva para el mayorista. */
+.rb-dif { display: block; font-size: .68rem; color: var(--tinta-3); }
+.rb-ir { grid-column: 1 / -1; justify-self: start; font-size: .78rem;
+  color: var(--verde-700); text-decoration: none; font-weight: 650; padding: 2px 0; }
+.rb-ir:hover { text-decoration: underline; }
+.rb-pie { padding: 9px 14px; font-size: .72rem; background: var(--arena); }
+
+.rubro-sola .rb-lista { border-top: 1px solid var(--linea); }
+.pastillas.cadenas { margin-top: 6px; }
+.pastilla.chica { font-size: .76rem; padding: 5px 11px; }
+
+@media (min-width: 700px) {
+  .rb-fila { grid-template-columns: 1fr auto auto; }
+  .rb-ir { grid-column: auto; justify-self: end; }
+}
+
 /* ---------- Lista de precios ----------
    Antes era una <table> de siete columnas con min-width:540px dentro de un
    contenedor con overflow-x. En un teléfono eso obliga a arrastrar la tabla
@@ -573,11 +660,18 @@ html, body { max-width: 100%; overflow-x: hidden; }
   margin-right: auto; }
 
 /* ============ Vitrina: mercado visible, acciones bajo llave ============ */
-.tarjeta.velada { position: relative; pointer-events: none; user-select: none; }
+.tarjeta.velada, .rubro.velada { position: relative; pointer-events: none; user-select: none; }
 .tarjeta.velada .tarjeta-cuerpo { filter: blur(4px); opacity: .55; }
 .tarjeta.velada .tarjeta-foto img { filter: saturate(.6); opacity: .7; }
-.tarjeta.velada::after { content: ''; position: absolute; inset: 0;
+.tarjeta.velada::after, .rubro.velada::after { content: ''; position: absolute; inset: 0;
   background: linear-gradient(180deg, transparent 30%, rgba(251,250,246,.55)); }
+
+/* En la tarjeta de rubro se vela el precio, que es el dato por el que se
+   entra; el nombre y la foto se dejan legibles para que se vea qué hay. */
+.rubro.velada .rb-precio, .rubro.velada .rb-meta, .rubro.velada .rb-ref {
+  filter: blur(4.5px); opacity: .6; }
+.rubro.velada .rb-foto img { filter: saturate(.6); opacity: .72; }
+.rubro.velada .rb-flecha { opacity: .3; }
 
 .corte-vitrina { margin: 26px 0 8px; }
 .corte-caja { text-align: center; background: var(--carta); border: 1px solid var(--linea);
@@ -631,3 +725,7 @@ p.aviso-seg { max-width: 62ch; }
 .acciones-una { grid-template-columns: 1fr; }
 .acciones .boton { white-space: nowrap; }
 @media (max-width: 340px) { .acciones .boton { white-space: normal; } }
+
+/* Precio de etiqueta junto al de por libra: uno es lo que se paga en caja,
+   el otro es el que sirve para comparar. */
+.rb-etiq { display: block; font-size: .66rem; }
