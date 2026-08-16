@@ -277,7 +277,9 @@
 
     // Las acciones de cada tarjeta llevan a la entrada.
     document.querySelectorAll('.tarjeta .acciones').forEach(function (acc) {
-      acc.innerHTML = '<a class="boton" href="entrar.html">Entra para contactar</a>';
+      // Un solo botón: ocupa el ancho completo, si no el texto se parte en dos.
+      acc.className = 'acciones acciones-una';
+      acc.innerHTML = '<a class="boton" href="entrar.html">Entrar para contactar</a>';
     });
 
     // A partir del sexto anuncio: se difumina y aparece la invitación.
