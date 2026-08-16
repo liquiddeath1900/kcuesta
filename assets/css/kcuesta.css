@@ -79,9 +79,30 @@ h3 { font-size: 1.05rem; font-weight: 700; }
 .marca span { color: var(--ambar); }
 
 /* ---------- Cintillo de precios ---------- */
-.cintillo { background: var(--verde-900); color: #fff; overflow: hidden; }
-.cintillo-in { display: flex; gap: 26px; padding: 9px 16px; overflow-x: auto; scrollbar-width: none; }
-.cintillo-in::-webkit-scrollbar { display: none; }
+.cintillo { background: var(--verde-900); color: #fff; overflow: hidden;
+  position: relative; --vel: 60s; }
+/* Difuminado en los bordes para que entren y salgan sin cortarse en seco */
+.cintillo::before, .cintillo::after { content: ''; position: absolute; top: 0; bottom: 0;
+  width: 42px; z-index: 2; pointer-events: none; }
+.cintillo::before { left: 0;  background: linear-gradient(90deg, var(--verde-900), transparent); }
+.cintillo::after  { right: 0; background: linear-gradient(270deg, var(--verde-900), transparent); }
+
+/* Marquesina: dos grupos idénticos desplazados el 50% = bucle sin costura */
+.cintillo-in { display: flex; width: max-content; padding: 9px 0;
+  animation: correr var(--vel) linear infinite; will-change: transform; }
+.cinta-grupo { display: flex; gap: 26px; padding: 0 13px; }
+@keyframes correr { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+
+/* Parar para poder leer un precio */
+.cintillo:hover .cintillo-in,
+.cintillo:focus-within .cintillo-in { animation-play-state: paused; }
+.cintillo.quieto .cintillo-in { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cintillo-in { animation: none; width: 100%; overflow-x: auto; }
+  .cintillo-in::-webkit-scrollbar { display: none; }
+  .cintillo::before, .cintillo::after { display: none; }
+}
 .tick { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; font-size: .82rem; }
 .tick b { font-weight: 650; opacity: .85; font-size: .78rem; }
 .tick .v { font-weight: 750; }
@@ -310,3 +331,228 @@ body.con-pie { padding-bottom: 62px; }
 .av-delta.baja { color: var(--baja); }
 .av-delta.sube { color: var(--sube); }
 .ancla-vivo .silencio { margin: 6px 0 0; }
+
+/* ============ Portada (welcome) ============ */
+.sobretitulo { text-transform: uppercase; letter-spacing: .10em; font-size: .72rem;
+  font-weight: 750; color: var(--verde-600); margin: 0 0 8px; }
+.portada { padding: 32px 0 8px; }
+.portada-in { display: grid; gap: 28px; grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .portada-in { grid-template-columns: 1.05fr .95fr; gap: 44px; padding: 20px 0 30px; } }
+.portada h1 { font-size: 2.6rem; margin-bottom: .25em; }
+@media (min-width: 700px) { .portada h1 { font-size: 3.6rem; } }
+.portada-sub { font-size: 1.08rem; color: var(--tinta-2); max-width: 34em; margin: 0 0 22px; }
+.portada-acc { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 480px) { .portada-acc { grid-template-columns: auto auto; justify-content: start; } }
+.portada-acc .boton { width: auto; min-width: 190px; }
+.portada-acc-centro { justify-content: center; }
+.portada-nota { margin-top: 14px; max-width: 34em; }
+
+.portada-foto { position: relative; }
+.portada-foto img { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover;
+  border-radius: var(--r-lg); }
+.portada-tarjeta { position: absolute; left: 14px; right: 14px; bottom: -18px;
+  background: var(--fondo); border: 1px solid var(--linea); border-radius: var(--r);
+  padding: 13px 15px; box-shadow: var(--sombra-alta); }
+@media (min-width: 560px) { .portada-tarjeta { right: auto; min-width: 290px; } }
+.pt-tit { font-weight: 750; font-size: .92rem; }
+.pt-precio { font-size: 1.6rem; font-weight: 820; letter-spacing: -.03em; line-height: 1.15; }
+.pt-unidad { font-size: .78rem; color: var(--tinta-3); }
+.pt-delta { font-size: .95rem; font-weight: 780; color: var(--baja); margin-top: 5px; }
+.pt-ref { font-size: .75rem; color: var(--tinta-3); }
+
+/* ============ Bloques ============ */
+.bloque { padding: 46px 0; }
+.bloque-alt { background: var(--fondo-2); border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea); }
+.bloque h2 { font-size: 1.6rem; margin-bottom: .7em; max-width: 22em; }
+@media (min-width: 700px) { .bloque h2 { font-size: 2rem; } }
+.bloque p { color: var(--tinta-2); margin: 0 0 12px; max-width: 40em; }
+.dos-col { display: grid; gap: 26px; grid-template-columns: 1fr; }
+@media (min-width: 820px) { .dos-col { grid-template-columns: 1fr 1fr; gap: 40px; } }
+.escalera { align-self: start; }
+
+/* ============ Vías (comprar / vender) ============ */
+.via { margin-bottom: 30px; }
+.via h3 { display: flex; align-items: center; gap: 9px; font-size: 1.15rem; }
+.via-ico { font-size: 1.3rem; }
+.pasos { counter-reset: p; list-style: none; padding: 0; margin: 0; display: grid;
+  gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 780px) { .pasos { grid-template-columns: repeat(3, 1fr); } }
+.pasos li { counter-increment: p; position: relative; padding: 16px 16px 16px 46px;
+  background: var(--fondo); border: 1px solid var(--linea); border-radius: var(--r);
+  font-size: .92rem; color: var(--tinta-2); }
+.pasos li::before { content: counter(p); position: absolute; left: 14px; top: 15px;
+  width: 22px; height: 22px; border-radius: 50%; background: var(--verde-100);
+  color: var(--verde-700); font-weight: 800; font-size: .78rem;
+  display: grid; place-items: center; }
+.pasos li strong { color: var(--tinta); }
+
+/* ============ La joya (índice) ============ */
+.joya { max-width: 46em; }
+.honesto { margin-top: 22px; padding: 20px; background: var(--verde-100);
+  border: 1px solid #c7e8d5; border-radius: var(--r-lg); }
+.honesto h3 { font-size: 1rem; color: var(--verde-700); }
+.honesto ul { margin: 0; padding-left: 20px; }
+.honesto li { font-size: .9rem; color: var(--tinta-2); margin-bottom: 9px; }
+.honesto li strong { color: var(--verde-900); }
+
+/* ============ Confianza ============ */
+.tres-col { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 780px) { .tres-col { grid-template-columns: repeat(3, 1fr); } }
+.conf { padding: 20px; background: var(--fondo); border: 1px solid var(--linea);
+  border-radius: var(--r-lg); }
+.conf-ico { font-size: 1.7rem; margin-bottom: 8px; }
+.conf h3 { font-size: 1rem; }
+.conf p { font-size: .88rem; margin: 0; }
+.aviso-seg { margin-top: 18px; text-align: center; }
+
+/* ============ Cierre ============ */
+.cierre-grande { padding: 54px 0; text-align: center; }
+.cierre-grande h2 { font-size: 1.8rem; margin-bottom: .3em; }
+.cierre-grande p { color: var(--tinta-2); margin-bottom: 20px; }
+
+/* ============ Diálogo de entrada ============ */
+.entrar-acc { display: grid; gap: 9px; margin: 16px 0 4px; }
+
+/* Entrar siempre visible en la cabecera, también en móvil */
+.btn-entrar { width: auto; margin-left: auto; min-height: 44px; padding: 0 16px; font-size: .88rem; }
+
+/* ============ Correcciones móviles ============
+   1. Los hijos de flex no encogen por debajo de su contenido (min-width:auto).
+      El <select> de orden medía 296px dentro de una pantalla de 305px y
+      empujaba la página entera hacia los lados.
+   2. Objetivos táctiles: 44px reales, no 38px.
+   ================================================ */
+.filtro-fila { flex-wrap: wrap; row-gap: 10px; }
+.filtro-ctrl { min-width: 0; flex: 1 1 auto; }
+.filtro-ctrl select { width: 100%; max-width: 100%; min-height: 44px; }
+.cuenta { flex: 0 0 auto; }
+@media (min-width: 520px) {
+  .filtro-ctrl { flex: 0 0 auto; }
+  .filtro-ctrl select { width: auto; }
+}
+
+.pastilla { min-height: 44px; }
+.opcion   { min-height: 44px; }
+
+/* Ninguna página debe desplazarse horizontalmente. Los contenedores que SÍ
+   deben desplazarse (tabla, cintillo, pastillas) ya lo hacen por dentro. */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* Palabras largas en español no deben romper la caja en pantallas de 320px */
+h1, h2, h3, .tarjeta-tit, .pt-tit { overflow-wrap: break-word; }
+
+/* ---------- Sesión en la cabecera ---------- */
+.sesion-env { margin-left: auto; display: flex; align-items: center; }
+.sesion-yo { display: flex; align-items: center; gap: 9px; }
+.sesion-n { font-weight: 700; font-size: .85rem; max-width: 12ch;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.salir { font-family: inherit; font-size: .8rem; font-weight: 650; color: var(--tinta-3);
+  background: none; border: none; cursor: pointer; padding: 10px 4px; min-height: 44px; }
+.salir:hover { color: var(--sube); }
+
+/* ---------- Botón grande de CTA ---------- */
+.boton.grande { min-height: 52px; font-size: 1rem; padding: 0 26px; }
+
+/* ---------- Tres puntos de la portada ---------- */
+.tres-puntos { padding: 40px 0; background: var(--fondo-2);
+  border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+.punto { text-align: center; padding: 6px; }
+.punto-ico { font-size: 1.9rem; margin-bottom: 8px; }
+.punto h2 { font-size: 1.05rem; margin-bottom: .35em; }
+.punto p { font-size: .9rem; color: var(--tinta-2); margin: 0; }
+
+/* ---------- Página de entrada ---------- */
+.pag-entrar { background: var(--fondo-2); }
+.entrar-env { display: grid; place-items: center; padding: 32px 16px 60px; min-height: 70vh; }
+.entrar-caja { width: 100%; max-width: 420px; background: var(--fondo);
+  border: 1px solid var(--linea); border-radius: var(--r-lg);
+  padding: 28px 22px; box-shadow: var(--sombra); }
+.entrar-caja h1 { font-size: 1.7rem; margin-bottom: .25em; }
+.entrar-sub { color: var(--tinta-2); font-size: .93rem; margin: 0 0 22px; }
+.entrar-botones { display: grid; gap: 10px; }
+.prov { background: var(--fondo); color: var(--tinta); border: 1.5px solid var(--linea);
+  justify-content: flex-start; gap: 11px; min-height: 50px; font-size: .95rem; }
+.prov:hover { background: var(--fondo-2); border-color: var(--tinta-3); }
+.prov svg { flex: 0 0 auto; }
+.prov-wa:hover { border-color: #25D366; background: #f2fdf6; }
+
+.entrar-estado { font-size: .85rem; color: var(--verde-700); margin: 14px 0 0; min-height: 1.2em; }
+.entrar-estado.malo { color: var(--sube); }
+
+.wa-paso { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--linea); display: grid; gap: 8px; }
+.wa-paso label { font-weight: 700; font-size: .88rem; }
+.wa-num { display: flex; }
+.wa-pre { display: flex; align-items: center; padding: 0 13px; font-weight: 700; color: var(--tinta-2);
+  background: var(--fondo-2); border: 1px solid var(--linea); border-right: none;
+  border-radius: var(--r) 0 0 var(--r); }
+.wa-num input { flex: 1; min-width: 0; font-family: inherit; font-size: 1rem; padding: 11px 12px;
+  min-height: 48px; border: 1px solid var(--linea); border-radius: 0 var(--r) var(--r) 0; }
+.wa-num input:focus { outline: 2px solid var(--verde-500); outline-offset: 1px; }
+
+.entrar-legal { margin: 20px 0 0; line-height: 1.5; }
+.entrar-volver { margin: 16px 0 0; text-align: center; font-size: .87rem; }
+.entrar-volver a { color: var(--verde-700); font-weight: 650; text-decoration: none; }
+
+/* ---------- Chip de información (fuera del camino) ---------- */
+.info-chip { font-family: inherit; font-size: .8rem; font-weight: 650;
+  color: var(--tinta-3); background: none; border: none; cursor: pointer;
+  padding: 10px 2px; min-height: 44px; white-space: nowrap; }
+.info-chip:hover { color: var(--verde-700); }
+
+/* ---------- Hoja inferior en móvil, diálogo centrado en escritorio ---------- */
+.hoja { max-width: 480px; }
+.hoja h4 { margin: 18px 0 .4em; font-size: .95rem; }
+.hoja .escalera { margin: 12px 0; }
+.hoja-barra { width: 38px; height: 4px; border-radius: 99px; background: var(--linea);
+  margin: 0 auto 14px; }
+.hoja .boton { margin-top: 16px; }
+@media (max-width: 559px) {
+  .hoja { position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+    margin: 0; width: 100%; max-width: 100%; max-height: 88vh; overflow-y: auto;
+    border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 14px 18px 26px; }
+}
+@media (min-width: 560px) { .hoja-barra { display: none; } }
+
+/* El mercado empieza arriba: sin héroe, la primera fila son los filtros */
+.filtros { padding-top: 14px; }
+.filtro-fila { align-items: center; }
+
+/* ---------- Sesión: nombre con inicial, lleva a la cuenta ---------- */
+.sesion-yo { display: flex; align-items: center; gap: 8px; text-decoration: none;
+  padding: 6px 10px 6px 6px; border-radius: 999px; border: 1px solid var(--linea);
+  min-height: 44px; }
+.sesion-yo:hover { background: var(--fondo-2); border-color: var(--verde-500); }
+.sesion-ini { width: 30px; height: 30px; border-radius: 50%; flex: 0 0 auto;
+  background: var(--verde-700); color: #fff; display: grid; place-items: center;
+  font-weight: 800; font-size: .85rem; }
+
+/* ---------- Mi cuenta ---------- */
+.pag-perfil { background: var(--fondo-2); }
+.perfil-cab { display: flex; align-items: center; gap: 14px; padding: 24px 0 6px; }
+.perfil-avatar { width: 54px; height: 54px; border-radius: 50%; flex: 0 0 auto;
+  background: var(--verde-700); color: #fff; display: grid; place-items: center;
+  font-size: 1.5rem; font-weight: 800; }
+.perfil-cab h1 { font-size: 1.4rem; margin: 0 0 2px; }
+.pag-perfil .form { background: var(--fondo); border: 1px solid var(--linea);
+  border-radius: var(--r-lg); padding: 20px; }
+.aviso-completar { background: var(--ambar-bg); border: 1px solid #f0dcbb; color: #7a4a0d;
+  border-radius: var(--r); padding: 12px 14px; font-size: .87rem; margin: 14px 0; }
+.solo-vendedor { border-top: 1px dashed var(--linea); padding-top: 16px; margin-top: 4px; }
+.perfil-pie { background: var(--fondo); border: 1px solid var(--linea);
+  border-radius: var(--r-lg); padding: 18px 20px; margin: 16px 0 30px; }
+.perfil-dato { display: flex; justify-content: space-between; align-items: baseline;
+  gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--linea); font-size: .89rem; }
+.perfil-pie .boton { margin-top: 16px; }
+
+/* ---------- Dos niveles de precio: por mayor y al detalle ---------- */
+.nivel { padding: 8px 0; }
+.nivel-mayor { border-bottom: 1px dashed var(--linea); padding-bottom: 9px; }
+.nivel-et { display: block; font-size: .68rem; font-weight: 750; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--tinta-3); margin-bottom: 2px; }
+.nivel-detalle .det-linea { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.nivel-detalle .det-linea b { font-size: 1.1rem; font-weight: 780; letter-spacing: -.02em; }
+.det-min { font-size: .74rem; color: var(--tinta-3); background: var(--fondo-2);
+  padding: 2px 8px; border-radius: 999px; }
+.vacio-det .det-linea { font-size: .82rem; }
+.det-sep { color: var(--tinta-3); }

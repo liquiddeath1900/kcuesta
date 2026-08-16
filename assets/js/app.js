@@ -46,8 +46,10 @@
 
   function pintarCintillo() {
     var destacados = P.cultivos.filter(function (c) { return c.destacado; });
-    var resto = P.cultivos.filter(function (c) { return !c.destacado; }).slice(0, 8);
-    var html = destacados.concat(resto).map(function (c) {
+    var resto = P.cultivos.filter(function (c) { return !c.destacado; });
+    var todos = destacados.concat(resto);
+
+    var html = todos.map(function (c) {
       var d = c.cambio_semanal_mayorista || 0;
       var cls = d > 0 ? 'up' : (d < 0 ? 'down' : 'flat');
       var flecha = d > 0 ? '▲' : (d < 0 ? '▼' : '–');
@@ -57,7 +59,20 @@
         '<span class="silencio">/' + esc(c.unidad_mayorista) + '</span>' +
         '<span class="d ' + cls + '">' + flecha + ' ' + signo + '</span></span>';
     }).join('');
-    document.getElementById('cintillo').innerHTML = html;
+
+    // Dos copias idénticas: al desplazar exactamente el 50% el salto es invisible.
+    var pista = document.getElementById('cintillo');
+    pista.innerHTML = '<div class="cinta-grupo">' + html + '</div>' +
+                      '<div class="cinta-grupo" aria-hidden="true">' + html + '</div>';
+
+    // La duración depende del ancho real: velocidad constante, no importa
+    // cuántos rubros haya ni el tamaño de la pantalla.
+    requestAnimationFrame(function () {
+      var g = pista.querySelector('.cinta-grupo');
+      if (!g) return;
+      var px = g.getBoundingClientRect().width;
+      if (px > 0) pista.style.setProperty("--vel", Math.round(px / 45) + "s");
+    });
   }
 
   /* ---------- filtros por categoría ---------- */
@@ -112,14 +127,31 @@
         '</div>' +
 
         '<div class="ancla">' +
-          '<div class="ancla-precio">' +
-            '<span class="n cifra">' + rd(an.precio) + '</span>' +
-            '<span class="u">/ ' + esc(an.unidad_venta) + '</span>' +
+          '<div class="nivel nivel-mayor">' +
+            '<span class="nivel-et">Por mayor</span>' +
+            '<div class="ancla-precio">' +
+              '<span class="n cifra">' + rd(an.precio) + '</span>' +
+              '<span class="u">/ ' + esc(an.unidad_venta) + '</span>' +
+            '</div>' +
+            (b ? '<div class="delta ' + b.cls + '">' + b.txt + '</div>' : '') +
           '</div>' +
-          (b ? '<div class="delta ' + b.cls + '">' + b.txt + '</div>' : '') +
+          (an.detalle && an.detalle.disponible
+            ? '<div class="nivel nivel-detalle">' +
+                '<span class="nivel-et">Al detalle</span>' +
+                '<div class="det-linea">' +
+                  '<b class="cifra">' + rd(an.detalle.precio, an.detalle.precio % 1 ? 2 : 0) + '</b>' +
+                  '<span class="u">/ ' + esc(an.detalle.unidad) + '</span>' +
+                  '<span class="det-sep">·</span>' +
+                  '<span class="det-min">mínimo ' + esc(an.detalle.minimo) + ' ' +
+                    esc(an.detalle.unidad.toLowerCase()) + 's</span>' +
+                '</div>' +
+              '</div>'
+            : '<div class="nivel nivel-detalle vacio-det">' +
+                '<span class="nivel-et">Al detalle</span>' +
+                '<div class="det-linea silencio">Solo vende por mayor</div>' +
+              '</div>') +
           '<div class="ancla-ref">' +
-            'Mercado Nuevo hoy: <strong class="cifra">' + rd(an.mercado_ref_unidad, 2) + '</strong> por unidad · ' +
-            'este anuncio: <strong class="cifra">' + rd(an.precio_por_unidad, 2) + '</strong>' +
+            'Mercado Nuevo hoy: <strong class="cifra">' + rd(an.mercado_ref_unidad, 2) + '</strong> por unidad' +
           '</div>' +
         '</div>' +
 
@@ -198,4 +230,22 @@
   pintarCintillo();
   pintarPastillas();
   render();
+
+  /* Hoja informativa: la explicación a un toque, fuera del camino. */
+  var dlgInfo = document.getElementById('dlg-info');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#btn-info') && dlgInfo && dlgInfo.showModal) dlgInfo.showModal();
+    if (e.target.closest('#btn-info-cerrar') && dlgInfo) dlgInfo.close();
+  });
+  if (dlgInfo) dlgInfo.addEventListener('click', function (e) {
+    if (e.target === dlgInfo) dlgInfo.close();   // tocar fuera cierra
+  });
+
+
+  /* Tocar la cinta la detiene, para poder leer un precio en el teléfono. */
+  var cinta = document.querySelector('.cintillo');
+  if (cinta) {
+    cinta.addEventListener('click', function () { cinta.classList.toggle('quieto'); });
+  }
+
 })();

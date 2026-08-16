@@ -3,7 +3,8 @@
     "aviso": "PROTOTIPO. Los productores, fincas y cantidades de esta lista son ilustrativos y no corresponden a personas reales. Los precios de referencia del mercado SÍ son oficiales y verificables (ver data/precios.json).",
     "logica_precio": "Cada anuncio se ancla al precio mayorista oficial del Mercado Nuevo. El precio del anuncio se sitúa entre lo que hoy paga el intermediario en finca (≈50% del mayorista) y lo que cobra el mayorista — de modo que el productor recibe más y el comprador paga menos.",
     "referencia_intermediacion": "https://hoy.com.do/economia/intermediarios-van-a-fincas-de-productores_212963.html",
-    "fotos": "Fotografías con licencia libre de Wikimedia Commons. Créditos en assets/img/CREDITOS.md. Son ilustrativas del rubro, no fotos de las fincas mencionadas."
+    "fotos": "Fotografías con licencia libre de Wikimedia Commons. Créditos en assets/img/CREDITOS.md. Son ilustrativas del rubro, no fotos de las fincas mencionadas.",
+    "precios_dos_niveles": "Cada anuncio cotiza en dos niveles, como en el comercio dominicano real: 'al por mayor' por el empaque completo (millar, quintal, huacal) y 'al detalle' por unidad o libra con una cantidad mínima. El precio que se compara contra el mercado oficial es siempre el de por mayor."
   },
   "anuncios": [
     {
@@ -29,7 +30,13 @@
       "nota": "Segunda a 90% del precio. La rabiza va aparte.",
       "vendedor": "v01",
       "publicado": "2026-08-15",
-      "foto": "assets/img/platano.jpg"
+      "foto": "assets/img/platano.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 16,
+        "minimo": 100
+      }
     },
     {
       "id": "a002",
@@ -50,7 +57,13 @@
       "nota": "Yuca mocana de primera. La rabiza se vende aparte a RD$1,200 el quintal.",
       "vendedor": "v02",
       "publicado": "2026-08-14",
-      "foto": "assets/img/yuca.jpg"
+      "foto": "assets/img/yuca.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 26,
+        "minimo": 25
+      }
     },
     {
       "id": "a003",
@@ -71,7 +84,13 @@
       "nota": "Campo abierto, riego de Ysura. Se puede despachar en dos tandas.",
       "vendedor": "v03",
       "publicado": "2026-08-16",
-      "foto": "assets/img/aji.jpg"
+      "foto": "assets/img/aji.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 24,
+        "minimo": 10
+      }
     },
     {
       "id": "a004",
@@ -96,7 +115,13 @@
       "nota": "Ambiente controlado. Huacal de 45 lb, calibre parejo.",
       "vendedor": "v04",
       "publicado": "2026-08-15",
-      "foto": "assets/img/invernad.jpg"
+      "foto": "assets/img/tomate.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 22,
+        "minimo": 20
+      }
     },
     {
       "id": "a005",
@@ -118,7 +143,13 @@
       "urgente": true,
       "vendedor": "v05",
       "publicado": "2026-08-16",
-      "foto": "assets/img/finca.jpg"
+      "foto": "assets/img/zanahoria.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 16,
+        "minimo": 25
+      }
     },
     {
       "id": "a006",
@@ -139,7 +170,13 @@
       "nota": "Grano limpio, ya secado. Saco de 100 libras.",
       "vendedor": "v06",
       "publicado": "2026-08-13",
-      "foto": "assets/img/habichuela.jpg"
+      "foto": "assets/img/habichuela.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 70,
+        "minimo": 10
+      }
     },
     {
       "id": "a007",
@@ -160,7 +197,13 @@
       "nota": "Fruta de mata, tamaño parejo.",
       "vendedor": "v07",
       "publicado": "2026-08-14",
-      "foto": "assets/img/aguacate.jpg"
+      "foto": "assets/img/aguacate.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 24,
+        "minimo": 25
+      }
     },
     {
       "id": "a008",
@@ -184,7 +227,14 @@
       "pago": "Al contado",
       "nota": "MD2 con inducción floral, corte parejo todo el mes.",
       "vendedor": "v08",
-      "publicado": "2026-08-16"
+      "publicado": "2026-08-16",
+      "foto": "assets/img/pina.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 92,
+        "minimo": 10
+      }
     },
     {
       "id": "a009",
@@ -205,7 +255,13 @@
       "nota": "Batata tifey de primera, sin rechazo.",
       "vendedor": "v09",
       "publicado": "2026-08-15",
-      "foto": "assets/img/finca.jpg"
+      "foto": "assets/img/batata.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 14,
+        "minimo": 25
+      }
     },
     {
       "id": "a010",
@@ -226,7 +282,13 @@
       "nota": "Macho x hembra. Segunda disponible a 90%.",
       "vendedor": "v10",
       "publicado": "2026-08-14",
-      "foto": "assets/img/platano.jpg"
+      "foto": "assets/img/platano.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 11,
+        "minimo": 100
+      }
     },
     {
       "id": "a011",
@@ -247,7 +309,13 @@
       "nota": "Saco de 180 unidades, aproximadamente 125 lb.",
       "vendedor": "v03",
       "publicado": "2026-08-16",
-      "foto": "assets/img/tomate.jpg"
+      "foto": "assets/img/berenjena.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 16,
+        "minimo": 20
+      }
     },
     {
       "id": "a012",
@@ -268,7 +336,13 @@
       "nota": "Red Lady grande. También hay mediana.",
       "vendedor": "v11",
       "publicado": "2026-08-15",
-      "foto": "assets/img/mercado.jpg"
+      "foto": "assets/img/lechosa.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 62,
+        "minimo": 10
+      }
     },
     {
       "id": "a013",
@@ -289,7 +363,13 @@
       "nota": "Ñame mina, pieza grande.",
       "vendedor": "v12",
       "publicado": "2026-08-13",
-      "foto": "assets/img/mercado.jpg"
+      "foto": "assets/img/name.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Libra",
+        "precio": 55,
+        "minimo": 10
+      }
     },
     {
       "id": "a014",
@@ -310,7 +390,13 @@
       "nota": "Racimo de 60 lb aprox. Volumen disponible todas las semanas.",
       "vendedor": "v13",
       "publicado": "2026-08-16",
-      "foto": "assets/img/guineo.jpg"
+      "foto": "assets/img/guineo.jpg",
+      "detalle": {
+        "disponible": true,
+        "unidad": "Unidad",
+        "precio": 5.5,
+        "minimo": 100
+      }
     }
   ],
   "vendedores": {

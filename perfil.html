@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi cuenta — Kcuesta</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="assets/css/kcuesta.css">
+</head>
+<body class="con-pie pag-perfil">
+
+<header class="barra">
+  <div class="env barra-in">
+    <a href="index.html" class="marca">k<span>cuesta</span></a>
+    <nav class="nav-esc">
+      <a href="mercado.html">Mercado</a>
+      <a href="precios.html">Precios</a>
+      <a href="vender.html">Vender</a>
+    </nav>
+    <span id="sesion" class="sesion-env"></span>
+  </div>
+</header>
+
+<main class="env" style="max-width:640px">
+
+  <div id="cargando" class="vacio" style="margin-top:24px">
+    <p class="silencio">Cargando tu cuenta…</p>
+  </div>
+
+  <div id="sin-sesion" class="vacio" style="margin-top:24px" hidden>
+    <h3>Necesitas entrar</h3>
+    <p class="silencio">Entra para ver y editar tu cuenta.</p>
+    <a href="entrar.html" class="boton" style="max-width:240px;margin:12px auto 0">Entrar</a>
+  </div>
+
+  <div id="cuenta" hidden>
+
+    <section class="perfil-cab">
+      <div class="perfil-avatar" id="avatar">?</div>
+      <div>
+        <h1 id="perfil-nombre">Mi cuenta</h1>
+        <p class="silencio" id="perfil-email"></p>
+      </div>
+    </section>
+
+    <div class="aviso-completar" id="aviso" hidden>
+      <strong>Completa tu perfil.</strong>
+      <span id="aviso-txt"></span>
+    </div>
+
+    <form class="form" id="form-perfil">
+
+      <div class="campo">
+        <label>¿Qué haces en Kcuesta?</label>
+        <div class="opciones" id="tipo">
+          <button type="button" class="opcion" data-tipo="comprador">Compro</button>
+          <button type="button" class="opcion" data-tipo="vendedor">Vendo</button>
+          <button type="button" class="opcion" data-tipo="ambos">Las dos</button>
+        </div>
+        <p class="ayuda">Para publicar una cosecha tienes que marcar "Vendo" o "Las dos".</p>
+      </div>
+
+      <div class="campo">
+        <label for="nombre">Tu nombre</label>
+        <input type="text" id="nombre" required maxlength="80" autocomplete="name">
+      </div>
+
+      <div class="campo">
+        <label for="negocio">Nombre de la finca o negocio <span class="silencio">(opcional)</span></label>
+        <input type="text" id="negocio" maxlength="90" placeholder="Ej: Finca La Esperanza">
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono / WhatsApp</label>
+        <div class="wa-num">
+          <span class="wa-pre">+1</span>
+          <input type="tel" id="telefono" inputmode="tel" placeholder="809 000 0000" autocomplete="tel">
+        </div>
+        <p class="ayuda">Solo se muestra a quien entre con cuenta y toque «Ver teléfono».
+          Nunca aparece para visitantes sin sesión.</p>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="provincia">Provincia</label>
+          <select id="provincia"><option value="">Elige…</option></select>
+        </div>
+        <div class="campo">
+          <label for="municipio">Municipio o sección</label>
+          <input type="text" id="municipio" maxlength="80" placeholder="Ej: Tamayo">
+        </div>
+      </div>
+
+      <div class="solo-vendedor" id="solo-vendedor" hidden>
+        <div class="campo-fila">
+          <div class="campo">
+            <label for="tareas">Tareas que trabajas <span class="silencio">(opcional)</span></label>
+            <input type="number" id="tareas" min="0" max="100000" inputmode="numeric" placeholder="Ej: 65">
+          </div>
+          <div class="campo">
+            <label for="cultivos">¿Qué siembras? <span class="silencio">(opcional)</span></label>
+            <input type="text" id="cultivos" maxlength="140" placeholder="Plátano, yuca, ñame">
+          </div>
+        </div>
+        <p class="ayuda">Separa los rubros con comas. Esto ayuda al comprador a encontrarte.</p>
+      </div>
+
+      <button type="submit" class="boton" id="btn-guardar">Guardar cambios</button>
+      <p class="entrar-estado" id="estado" role="status"></p>
+    </form>
+
+    <section class="perfil-pie">
+      <div class="perfil-dato">
+        <span class="silencio">Entraste con</span>
+        <strong id="metodo">—</strong>
+      </div>
+      <div class="perfil-dato">
+        <span class="silencio">Miembro desde</span>
+        <strong id="desde">—</strong>
+      </div>
+      <button class="boton fantasma" id="btn-salir-2">Cerrar sesión</button>
+    </section>
+
+  </div>
+</main>
+
+<nav class="pie-nav">
+  <a href="mercado.html"><span class="ico">🛒</span>Mercado</a>
+  <a href="precios.html"><span class="ico">📊</span>Precios</a>
+  <a href="vender.html"><span class="ico">➕</span>Vender</a>
+  <a href="perfil.html" class="on"><span class="ico">👤</span>Cuenta</a>
+</nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/perfil.js"></script>
+</body>
+</html>
