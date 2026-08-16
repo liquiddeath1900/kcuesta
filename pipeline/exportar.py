@@ -407,6 +407,36 @@ def _ofertas(db, hoy: dt.date) -> dict:
     }
 
 
+def _portada(ofertas: dict, hoy: dt.date) -> dict:
+    """Tres rubros para la muestra de la portada.
+
+    Se escogen por sobreprecio, que es lo que la portada tiene que contar,
+    pero solo entre los que traen VARIAS tiendas: un rubro con una sola
+    oferta da un porcentaje llamativo y ninguna comparación que enseñar, que
+    es justo lo que la portada promete.
+    """
+    candidatos = [r for r in ofertas["rubros"]
+                  if r["sobreprecio"] is not None and r["n"] >= 3]
+    candidatos.sort(key=lambda r: -r["sobreprecio"])
+
+    return {
+        "_meta": {
+            "actualizado": hoy.isoformat(),
+            "nota": "Recorte de ofertas.json para la portada. Generado por pipeline/exportar.py",
+        },
+        "total": len(ofertas["rubros"]),
+        "cadenas": ofertas["cadenas"],
+        "rubros": [{
+            "cultivo": r["cultivo"], "nombre": r["nombre"], "foto": r["foto"],
+            "n": r["n"], "precio_lb_min": r["precio_lb_min"],
+            "precio_lb_max": r["precio_lb_max"],
+            "mercado_ref_unidad": r["mercado_ref_unidad"],
+            "sobreprecio": r["sobreprecio"],
+            "cadena_min": r["cadena_min"],
+        } for r in candidatos[:3]],
+    }
+
+
 def exportar(db, hoy: dt.date | None = None) -> str:
     hoy = hoy or dt.date.today()
 
@@ -417,6 +447,14 @@ def exportar(db, hoy: dt.date | None = None) -> str:
         json.dump(precios, f, ensure_ascii=False, indent=2)
     with open(DATOS / "ofertas.json", "w", encoding="utf-8") as f:
         json.dump(ofertas, f, ensure_ascii=False, indent=2)
+
+    # Recorte para la portada. La portada NO carga datos.js: son 149 KB para
+    # enseñar tres tarjetas, y a 384 Kbps eso son tres segundos antes de que
+    # aparezca nada. Con este archivo de ~2 KB la muestra es real y sigue
+    # siendo real mañana, sin pegarle el mercado entero a quien solo pasaba
+    # a ver qué es esto.
+    with open(DATOS / "portada.json", "w", encoding="utf-8") as f:
+        json.dump(_portada(ofertas, hoy), f, ensure_ascii=False, indent=2)
 
     with open(DATOS / "anuncios.json", encoding="utf-8") as f:
         anuncios = json.load(f)

@@ -20,7 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=4">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=5">
 </head>
 <body>
 
@@ -79,71 +79,31 @@
     <div class="env muestra-in">
       <div class="muestra-txt">
         <p class="sobretitulo">Así se ve el mercado</p>
-        <h2>Cada anuncio dice todo lo que hace falta para cerrar</h2>
+        <h2>Lo que cuesta en la góndola, al lado de lo que cuesta al por mayor</h2>
         <p>
-          Qué es, cuánto hay, en qué empaque, de dónde sale y cuándo se corta.
-          El precio va en dos niveles — <strong>por mayor</strong> y <strong>al detalle</strong> —
-          y siempre al lado del precio oficial del Mercado Nuevo, para que nadie
-          tenga que adivinar si está bien puesto.
+          Cada rubro trae el precio de todas las cadenas que publican su catálogo,
+          <strong>normalizado por libra</strong> —para que un saco de 50 libras y una
+          libra suelta se puedan comparar de verdad— y al lado el precio mayorista
+          oficial del mismo día.
         </p>
         <ul class="muestra-lista">
-          <li><b>Por mayor</b> en el empaque del rubro: millar, quintal, huacal, saco.</li>
-          <li><b>Al detalle</b> por libra o unidad, con una cantidad mínima.</li>
-          <li><b>Contra el mercado</b>: la diferencia se calcula sola.</li>
-          <li><b>Con fecha</b>: sabes de cuándo es el precio, no solo cuál es.</li>
+          <li><b>Por libra</b> siempre, sin importar el empaque en que se venda.</li>
+          <li><b>Contra el mayorista</b>: la diferencia se calcula sola.</li>
+          <li><b>Todas las tiendas</b> del rubro en una tarjeta, sin repetir el mismo producto.</li>
+          <li><b>Con fuente y fecha</b>: sabes de cuándo es el precio, no solo cuál es.</li>
         </ul>
         <a class="enlace-suave" href="entrar.html">Entra para ver todo el mercado →</a>
       </div>
 
-      <!-- Tarjeta real, mismo componente del mercado -->
+      <!-- Mismo componente del mercado, con datos de verdad.
+           Se pinta desde data/portada.json (~2.5 KB) y no desde datos.js,
+           que son 149 KB: la portada no puede tardar tres segundos en
+           mostrar tres tarjetas en un teléfono del campo. -->
       <div class="muestra-tarjeta">
-        <article class="tarjeta">
-          <div class="tarjeta-foto">
-            <img src="assets/img/aguacate.jpg" width="480" height="360" loading="lazy"
-                 alt="Aguacate criollo puesto en venta">
-            <span class="flota chip verificado">✓ Verificado</span>
-          </div>
-          <div class="tarjeta-cuerpo">
-            <div>
-              <div class="tarjeta-tit">Aguacate criollo</div>
-              <div class="tarjeta-meta">Primera · 45 Cientos</div>
-            </div>
-            <div class="linea-meta">
-              <span>📍 Sabaneta, San Juan</span>
-              <span>🗓 Se baja el viernes</span>
-            </div>
-            <div class="ancla">
-              <div class="nivel nivel-mayor">
-                <span class="nivel-et">Por mayor</span>
-                <div class="ancla-precio">
-                  <span class="n cifra">RD$ 1,850</span><span class="u">/ Ciento</span>
-                </div>
-                <div class="delta baja">26% bajo el precio del mercado</div>
-              </div>
-              <div class="nivel nivel-detalle">
-                <span class="nivel-et">Al detalle</span>
-                <div class="det-linea">
-                  <b class="cifra">RD$ 24</b><span class="u">/ Unidad</span>
-                  <span class="det-sep">·</span>
-                  <span class="det-min">mínimo 25 unidades</span>
-                </div>
-              </div>
-              <div class="ancla-ref">Mercado Nuevo hoy: <strong class="cifra">RD$ 25.00</strong> por unidad</div>
-            </div>
-            <div class="entrega">
-              <span class="chip">Puesto en finca</span><span class="chip">Al contado</span>
-            </div>
-            <div class="vend">
-              <div class="vend-n">Finca El Cerro</div>
-              <div class="silencio">L. Guzmán · 55 tareas · Hace 2 días</div>
-            </div>
-            <div class="acciones">
-              <a class="boton" href="entrar.html">Contactar</a>
-              <a class="boton fantasma" href="entrar.html">Ver teléfono</a>
-            </div>
-          </div>
-        </article>
-        <p class="silencio muestra-pie">Ejemplo. El teléfono solo lo ve quien tiene cuenta.</p>
+        <div id="muestra-rubros" class="muestra-rubros"></div>
+        <p class="silencio muestra-pie" id="muestra-pie">
+          Precios reales de supermercado. Cargando…
+        </p>
       </div>
     </div>
   </section>
@@ -241,7 +201,73 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=4"></script>
-<script src="assets/js/auth.js?v=4"></script>
+<script src="assets/js/config.js?v=5"></script>
+<script src="assets/js/auth.js?v=5"></script>
+<script>
+/* Muestra de portada: el mismo componente de tarjeta del mercado, con los
+   precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
+   son 149 KB. La portada tiene que abrir rápido en un teléfono con señal
+   mala; bajarle el mercado entero a quien solo pasaba a ver qué es esto
+   sería cobrarle tres segundos por nada. */
+(function () {
+  'use strict';
+  var caja = document.getElementById('muestra-rubros');
+  if (!caja) return;
+
+  function rd(n, d) {
+    return 'RD$ ' + Number(n).toLocaleString('es-DO',
+      { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  fetch('data/portada.json?v=5')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var cadenas = d.cadenas || {};
+      caja.innerHTML = (d.rubros || []).map(function (r) {
+        var marca = r.sobreprecio === null ? '' :
+          '<span class="marca ' + (r.sobreprecio > 0 ? 'sube' : 'baja') + '">' +
+            (r.sobreprecio > 0 ? '+' : '') + r.sobreprecio + '% sobre mayorista</span>';
+        var cad = (cadenas[r.cadena_min] || {});
+        var rango = r.precio_lb_max > r.precio_lb_min
+          ? rd(r.precio_lb_min, 2) + ' – ' + rd(r.precio_lb_max, 2) + '/lb'
+          : (cad.corto || cad.nombre || '');
+
+        return '<article class="rubro">' +
+          '<div class="rb-cab">' +
+            '<div class="rb-foto"><img src="' + esc(r.foto) + '" alt="' + esc(r.nombre) +
+              '" loading="lazy" width="136" height="136"></div>' +
+            '<div class="rb-txt">' +
+              '<div class="rb-nom">' + esc(r.nombre) + '</div>' +
+              '<div class="rb-meta">' + r.n + ' tiendas · ' + rango + '</div>' +
+            '</div>' +
+            '<div class="rb-precio"><span class="cifra">' + rd(r.precio_lb_min, 2) +
+              '</span><span class="rb-u">/lb</span></div>' +
+            (r.mercado_ref_unidad
+              ? '<div class="rb-ref">Mayorista ' + rd(r.mercado_ref_unidad, 2) + '/lb ' + marca + '</div>'
+              : '') +
+          '</div>' +
+        '</article>';
+      }).join('');
+
+      var pie = document.getElementById('muestra-pie');
+      if (pie) {
+        pie.textContent = 'Precios reales de supermercado, capturados el ' +
+          ((d._meta || {}).actualizado || 'día de hoy') +
+          (d.total ? '. Entra para ver los ' + d.total + ' rubros.' : '.');
+      }
+    })
+    .catch(function () {
+      // Si el archivo no está, se quita el bloque en vez de dejar un
+      // "Cargando…" eterno en la portada.
+      var t = document.querySelector('.muestra-tarjeta');
+      if (t) t.remove();
+    });
+})();
+</script>
 </body>
 </html>

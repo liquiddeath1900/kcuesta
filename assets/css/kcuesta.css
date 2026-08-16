@@ -472,8 +472,12 @@ body.con-pie { padding-bottom: 64px; }
   text-overflow: ellipsis; white-space: nowrap; }
 .rb-cifras { text-align: right; white-space: nowrap; }
 .rb-p { font-weight: 700; }
-.rb-mejor { display: block; font-size: .66rem; font-weight: 750; color: var(--baja);
-  text-transform: uppercase; letter-spacing: .05em; }
+/* Aquí vivía .rb-mejor, la insignia de "Mejor precio". Se quitó a
+   propósito: premiar al más barato es la guerra de precios convertida en
+   trofeo, y esta misma lista va a traer productores. Ver ESCALA.md.
+   La lista sigue ordenada de menor a mayor, así que quien busca el más
+   barato lo tiene de primero sin que el sitio premie rebajar. */
+
 /* Entre cadenas la diferencia es de RD$4 a RD$25: en pesos dice algo, en
    porcentaje sería ruido. El % se reserva para el mayorista. */
 .rb-dif { display: block; font-size: .68rem; color: var(--tinta-3); }
@@ -689,8 +693,17 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .muestra-lista li::before { content: '✓'; position: absolute; left: 0; top: 0;
   color: var(--verde-600); font-weight: 800; }
 .muestra-lista b { color: var(--tinta); }
-.muestra-tarjeta { max-width: 400px; width: 100%; margin: 0 auto; }
+.muestra-tarjeta { max-width: 440px; width: 100%; margin: 0 auto; }
 .muestra-tarjeta .tarjeta { box-shadow: var(--s-3); }
+
+/* La muestra usa el MISMO componente del mercado, no una copia parecida.
+   Si la portada enseña una tarjeta que ya no existe adentro, promete algo
+   que el sitio no da — que es lo que pasaba con la del productor
+   inventado. */
+.muestra-rubros .rubro { box-shadow: var(--s-2); margin-bottom: 12px; }
+.muestra-rubros .rubro:last-child { margin-bottom: 0; }
+.muestra-rubros .rb-cab { cursor: default; }
+.muestra-pie { text-align: center; margin-top: 14px; }
 .muestra-pie { text-align: center; margin-top: 12px; }
 
 /* ============ Tres pasos ============ */

@@ -288,11 +288,18 @@
       // Entre cadenas la diferencia va en PESOS por libra. En porcentaje
       // sería ruido: son RD$4 a RD$25. El porcentaje se guarda para el
       // mayorista, donde es +161% y sí cuenta algo.
+      // No hay insignia de "más barato", ni siquiera para las cadenas.
+      // Premiar visualmente al precio más bajo es la guerra de precios
+      // convertida en trofeo, y el día que esta lista traiga productores
+      // —que son los usuarios de Kcuesta— ese trofeo los pone a competir a
+      // la baja entre ellos. Ver ESCALA.md. La lista ya viene de menor a
+      // mayor: quien busca el más barato lo tiene de primero igual, sin que
+      // el sitio le diga a nadie que rebajar es lo que se premia.
       var etiqueta;
       if (!o.precio_lb) {
         etiqueta = '<span class="rb-dif">empaque sin peso declarado</span>';
       } else if (i === 0) {
-        etiqueta = '<span class="rb-mejor">Mejor precio</span>';
+        etiqueta = '';
       } else {
         var dif = o.precio_lb - base;
         etiqueta = '<span class="rb-dif">+' + rd(dif, 2) + '/lb</span>';

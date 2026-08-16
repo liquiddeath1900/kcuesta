@@ -1,0 +1,100 @@
+{
+  "_meta": {
+    "actualizado": "2026-08-16",
+    "nota": "Recorte de ofertas.json para la portada. Generado por pipeline/exportar.py"
+  },
+  "total": 43,
+  "cadenas": {
+    "sirena": {
+      "id": "sirena",
+      "nombre": "La Sirena",
+      "url": "https://www.sirena.do",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "Sirena"
+    },
+    "nacional": {
+      "id": "nacional",
+      "nombre": "Supermercados Nacional",
+      "url": "https://supermercadosnacional.com",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "Nacional"
+    },
+    "fruttissimo": {
+      "id": "fruttissimo",
+      "nombre": "Fruttissimo Market",
+      "url": "https://fruttissimodr.com",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "Fruttissimo"
+    },
+    "jumbo": {
+      "id": "jumbo",
+      "nombre": "Jumbo",
+      "url": "https://www.jumbo.com.do",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "Jumbo"
+    },
+    "plaza-lama": {
+      "id": "plaza-lama",
+      "nombre": "Plaza Lama",
+      "url": "https://www.plazalama.com.do",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "Plaza Lama"
+    },
+    "pricesmart": {
+      "id": "pricesmart",
+      "nombre": "PriceSmart",
+      "url": "https://www.pricesmart.com/es-do",
+      "tipo": "supermercado",
+      "activo": true,
+      "corto": "PriceSmart"
+    },
+    "agroexpress": {
+      "id": "agroexpress",
+      "nombre": "AgroExpress RD",
+      "url": "https://agroexpressrd.com",
+      "tipo": "mayorista_online",
+      "activo": true,
+      "corto": "AgroExpress"
+    }
+  },
+  "rubros": [
+    {
+      "cultivo": "tomate-bugalu",
+      "nombre": "Tomate bugalú",
+      "foto": "assets/img/rubros/tomate-bugalu.webp",
+      "n": 5,
+      "precio_lb_min": 47.0,
+      "precio_lb_max": 65.0,
+      "mercado_ref_unidad": 18.0,
+      "sobreprecio": 161,
+      "cadena_min": "sirena"
+    },
+    {
+      "cultivo": "tomate-ensalada",
+      "nombre": "Tomate de ensalada",
+      "foto": "assets/img/rubros/tomate-ensalada.webp",
+      "n": 5,
+      "precio_lb_min": 47.0,
+      "precio_lb_max": 65.0,
+      "mercado_ref_unidad": 25.0,
+      "sobreprecio": 88,
+      "cadena_min": "sirena"
+    },
+    {
+      "cultivo": "aji-cubanela",
+      "nombre": "Ají cubanela",
+      "foto": "assets/img/rubros/aji-cubanela.webp",
+      "n": 3,
+      "precio_lb_min": 54.95,
+      "precio_lb_max": 59.0,
+      "mercado_ref_unidad": 30.0,
+      "sobreprecio": 83,
+      "cadena_min": "nacional"
+    }
+  ]
+}

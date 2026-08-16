@@ -2232,50 +2232,6 @@
       ]
     },
     {
-      "cultivo": "mango-gota-oro",
-      "nombre": "Mango gota de oro",
-      "categoria": "frutas",
-      "foto": "assets/img/rubros/mango-gota-oro.webp",
-      "foto_credito": "foto de la cadena",
-      "mercado_ref_unidad": null,
-      "n": 2,
-      "n_comparables": 0,
-      "precio_min": 34.0,
-      "precio_max": 34.0,
-      "precio_lb_min": null,
-      "precio_lb_max": null,
-      "cadena_min": "sirena",
-      "sobreprecio": null,
-      "ofertas": [
-        {
-          "cadena": "sirena",
-          "titulo": "Mango Gota De Oro Und",
-          "precio": 34.0,
-          "precio_lista": 34.0,
-          "unidad": "un",
-          "precio_lb": null,
-          "libras": null,
-          "url": "https://www.sirena.do/mango-gota-de-oro-und-1653504/p",
-          "fecha": "2026-08-16",
-          "foto_origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161899/1-und-00055.png?v=639096165622000000",
-          "categoria_externa": "/Supermercado/Frutas y Vegetales/Frutas Frescas/"
-        },
-        {
-          "cadena": "nacional",
-          "titulo": "Mango Grano De Oro, Und",
-          "precio": 34.0,
-          "precio_lista": 34.0,
-          "unidad": "Unidad",
-          "precio_lb": null,
-          "libras": null,
-          "url": "https://supermercadosnacional.com/mango-grano-de-oro-und-2800779.html",
-          "fecha": "2026-08-16",
-          "foto_origen": "https://supermercadosnacional.com/media/catalog/product/2/8/2800779-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=",
-          "categoria_externa": "Frutas y Vegetales / Frutas / Frutas Tropicales y Exóticas"
-        }
-      ]
-    },
-    {
       "cultivo": "zanahoria",
       "nombre": "Zanahoria",
       "categoria": "vegetales",
@@ -2316,37 +2272,6 @@
           "fecha": "2026-08-16",
           "foto_origen": "https://i0.wp.com/fruttissimodr.com/wp-content/uploads/2020/10/ZANAHORIA.jpg?fit=1024%2C1024&ssl=1",
           "categoria_externa": "Vegetales Frescos"
-        }
-      ]
-    },
-    {
-      "cultivo": "aguacate-popenoe",
-      "nombre": "Aguacate popenoe",
-      "categoria": "frutas",
-      "foto": "assets/img/rubros/aguacate-popenoe.webp",
-      "foto_credito": "foto de la cadena",
-      "mercado_ref_unidad": null,
-      "n": 1,
-      "n_comparables": 0,
-      "precio_min": 59.0,
-      "precio_max": 59.0,
-      "precio_lb_min": null,
-      "precio_lb_max": null,
-      "cadena_min": "nacional",
-      "sobreprecio": null,
-      "ofertas": [
-        {
-          "cadena": "nacional",
-          "titulo": "Aguacate Popenoe, Und",
-          "precio": 59.0,
-          "precio_lista": 59.0,
-          "unidad": "Unidad",
-          "precio_lb": null,
-          "libras": null,
-          "url": "https://supermercadosnacional.com/aguacate-popenoe-und-2129505.html",
-          "fecha": "2026-08-16",
-          "foto_origen": "https://supermercadosnacional.com/media/catalog/product/2/1/2129505-1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=",
-          "categoria_externa": "Frutas y Vegetales / Frutas / Frutas Tropicales y Exóticas"
         }
       ]
     },
@@ -2470,6 +2395,37 @@
           "url": "https://www.sirena.do/chinola-lb-1046428/p",
           "fecha": "2026-08-16",
           "foto_origen": "https://gruporamos.vteximg.com.br/arquivos/ids/175622/1-lb-02245.webp?v=639160986009430000",
+          "categoria_externa": "/Supermercado/Frutas y Vegetales/Frutas Frescas/"
+        }
+      ]
+    },
+    {
+      "cultivo": "mango-gota-oro",
+      "nombre": "Mango gota de oro",
+      "categoria": "frutas",
+      "foto": "assets/img/rubros/mango-gota-oro.webp",
+      "foto_credito": "foto de la cadena",
+      "mercado_ref_unidad": null,
+      "n": 1,
+      "n_comparables": 0,
+      "precio_min": 34.0,
+      "precio_max": 34.0,
+      "precio_lb_min": null,
+      "precio_lb_max": null,
+      "cadena_min": "sirena",
+      "sobreprecio": null,
+      "ofertas": [
+        {
+          "cadena": "sirena",
+          "titulo": "Mango Gota De Oro Und",
+          "precio": 34.0,
+          "precio_lista": 34.0,
+          "unidad": "un",
+          "precio_lb": null,
+          "libras": null,
+          "url": "https://www.sirena.do/mango-gota-de-oro-und-1653504/p",
+          "fecha": "2026-08-16",
+          "foto_origen": "https://gruporamos.vteximg.com.br/arquivos/ids/161899/1-und-00055.png?v=639096165622000000",
           "categoria_externa": "/Supermercado/Frutas y Vegetales/Frutas Frescas/"
         }
       ]
@@ -3441,10 +3397,9 @@
       "nombre": "Supermercados Nacional",
       "tipo": "supermercado",
       "url": "https://supermercadosnacional.com",
-      "n": 51,
-      "n_rubros": 30,
+      "n": 49,
+      "n_rubros": 28,
       "rubros": [
-        "aguacate-popenoe",
         "aji-cubanela",
         "aji-morron",
         "arroz-selecto",
@@ -3462,7 +3417,6 @@
         "habichuela-roja",
         "leche-liquida",
         "lechuga",
-        "mango-gota-oro",
         "melon-cantaloupe",
         "name-mina",
         "naranja-agria",
@@ -3477,16 +3431,6 @@
       ],
       "sobreprecio_mediana": 111,
       "articulos": [
-        {
-          "cultivo": "aguacate-popenoe",
-          "nombre": "Aguacate popenoe",
-          "titulo": "Aguacate Popenoe, Und",
-          "precio": 59.0,
-          "unidad": "Unidad",
-          "mercado_ref_unidad": null,
-          "foto": "assets/img/rubros/aguacate-popenoe.webp",
-          "url": "https://supermercadosnacional.com/aguacate-popenoe-und-2129505.html"
-        },
         {
           "cultivo": "aji-cubanela",
           "nombre": "Ají cubanela",
@@ -3846,16 +3790,6 @@
           "mercado_ref_unidad": 40.0,
           "foto": "assets/img/rubros/lechuga.webp",
           "url": "https://supermercadosnacional.com/lechuga-repollada-lb-peso-aprox-2-libra-2800128.html"
-        },
-        {
-          "cultivo": "mango-gota-oro",
-          "nombre": "Mango gota de oro",
-          "titulo": "Mango Grano De Oro, Und",
-          "precio": 34.0,
-          "unidad": "Unidad",
-          "mercado_ref_unidad": null,
-          "foto": "assets/img/rubros/mango-gota-oro.webp",
-          "url": "https://supermercadosnacional.com/mango-grano-de-oro-und-2800779.html"
         },
         {
           "cultivo": "melon-cantaloupe",
