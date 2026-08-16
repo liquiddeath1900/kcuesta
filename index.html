@@ -21,6 +21,10 @@
 <header class="barra">
   <div class="env barra-in">
     <a href="index.html" class="marca">k<span>cuesta</span></a>
+    <nav class="nav-esc">
+      <a href="mercado.html">Mercado</a>
+      <a href="precios.html">Precios</a>
+    </nav>
     <span id="sesion" class="sesion-env">
       <a class="boton btn-entrar" href="entrar.html">Entrar</a>
     </span>
@@ -29,23 +33,26 @@
 
 <main>
 
+  <!-- ============ Portada ============ -->
   <section class="portada">
     <div class="env portada-in">
       <div class="portada-txt">
-        <h1>¿A cómo está?</h1>
+        <p class="sobretitulo">República Dominicana</p>
+        <h1>¿A cómo <em>está</em>?</h1>
         <p class="portada-sub">
-          El mercado agrícola dominicano, en tu teléfono. Mira quién tiene mercancía
-          hoy y a cómo la da — con el precio oficial al lado.
+          El mercado agrícola dominicano, en tu teléfono. Mira quién tiene mercancía hoy,
+          a cómo la da, y cómo se compara con el precio oficial.
         </p>
         <div class="portada-acc">
           <a class="boton grande" href="entrar.html">Comenzar</a>
-          <a class="boton fantasma" href="mercado.html">Ver el mercado</a>
         </div>
-        <p class="silencio portada-nota">Gratis para comprar y para vender.</p>
+        <p class="portada-nota silencio">
+          Gratis para comprar y para vender · <a class="enlace-suave" href="mercado.html">o mira el mercado primero</a>
+        </p>
       </div>
 
       <div class="portada-foto">
-        <img src="assets/img/platano.jpg" width="640" height="480"
+        <img src="assets/img/platano.jpg" width="640" height="512"
              alt="Campo de plátano en La Joya, República Dominicana" fetchpriority="high">
         <div class="portada-tarjeta">
           <div class="pt-tit">Plátano barahonero</div>
@@ -58,38 +65,158 @@
     </div>
   </section>
 
-  <section class="tres-puntos">
+  <!-- ============ Cómo se ve un anuncio ============ -->
+  <section class="muestra">
+    <div class="env muestra-in">
+      <div class="muestra-txt">
+        <p class="sobretitulo">Así se ve el mercado</p>
+        <h2>Cada anuncio dice todo lo que hace falta para cerrar</h2>
+        <p>
+          Qué es, cuánto hay, en qué empaque, de dónde sale y cuándo se corta.
+          El precio va en dos niveles — <strong>por mayor</strong> y <strong>al detalle</strong> —
+          y siempre al lado del precio oficial del Mercado Nuevo, para que nadie
+          tenga que adivinar si está bien puesto.
+        </p>
+        <ul class="muestra-lista">
+          <li><b>Por mayor</b> en el empaque del rubro: millar, quintal, huacal, saco.</li>
+          <li><b>Al detalle</b> por libra o unidad, con una cantidad mínima.</li>
+          <li><b>Contra el mercado</b>: la diferencia se calcula sola.</li>
+          <li><b>Con fecha</b>: sabes de cuándo es el precio, no solo cuál es.</li>
+        </ul>
+        <a class="enlace-suave" href="mercado.html">Ver todos los anuncios →</a>
+      </div>
+
+      <!-- Tarjeta real, mismo componente del mercado -->
+      <div class="muestra-tarjeta">
+        <article class="tarjeta">
+          <div class="tarjeta-foto">
+            <img src="assets/img/aguacate.jpg" width="480" height="360" loading="lazy"
+                 alt="Aguacate criollo puesto en venta">
+            <span class="flota chip verificado">✓ Verificado</span>
+          </div>
+          <div class="tarjeta-cuerpo">
+            <div>
+              <div class="tarjeta-tit">Aguacate criollo</div>
+              <div class="tarjeta-meta">Primera · 45 Cientos</div>
+            </div>
+            <div class="linea-meta">
+              <span>📍 Sabaneta, San Juan</span>
+              <span>🗓 Se baja el viernes</span>
+            </div>
+            <div class="ancla">
+              <div class="nivel nivel-mayor">
+                <span class="nivel-et">Por mayor</span>
+                <div class="ancla-precio">
+                  <span class="n cifra">RD$ 1,850</span><span class="u">/ Ciento</span>
+                </div>
+                <div class="delta baja">26% bajo el precio del mercado</div>
+              </div>
+              <div class="nivel nivel-detalle">
+                <span class="nivel-et">Al detalle</span>
+                <div class="det-linea">
+                  <b class="cifra">RD$ 24</b><span class="u">/ Unidad</span>
+                  <span class="det-sep">·</span>
+                  <span class="det-min">mínimo 25 unidades</span>
+                </div>
+              </div>
+              <div class="ancla-ref">Mercado Nuevo hoy: <strong class="cifra">RD$ 25.00</strong> por unidad</div>
+            </div>
+            <div class="entrega">
+              <span class="chip">Puesto en finca</span><span class="chip">Al contado</span>
+            </div>
+            <div class="vend">
+              <div class="vend-n">Finca El Cerro</div>
+              <div class="silencio">L. Guzmán · 55 tareas · Hace 2 días</div>
+            </div>
+            <div class="acciones">
+              <a class="boton" href="entrar.html">Contactar</a>
+              <a class="boton fantasma" href="entrar.html">Ver teléfono</a>
+            </div>
+          </div>
+        </article>
+        <p class="silencio muestra-pie">Ejemplo. El teléfono solo lo ve quien tiene cuenta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Tres pasos ============ -->
+  <section class="pasos-sec">
+    <div class="env">
+      <p class="sobretitulo">Cómo se hace un trato</p>
+      <h2>Tres pasos, sin intermediario en el medio</h2>
+
+      <ol class="pasos-3">
+        <li>
+          <span class="paso-n">1</span>
+          <h3>Abre tu cuenta</h3>
+          <p>Con Google o con tu WhatsApp. Pones tu nombre, tu provincia y tu teléfono —
+             una sola vez.</p>
+        </li>
+        <li>
+          <span class="paso-n">2</span>
+          <h3>Publica o busca</h3>
+          <p>Si vendes: qué rubro, cuánto tienes, en qué empaque y a cómo lo das.
+             Si compras: filtras por rubro y provincia y comparas con el precio oficial.</p>
+        </li>
+        <li>
+          <span class="paso-n">3</span>
+          <h3>Se ponen de acuerdo</h3>
+          <p>Hablan por el chat o por WhatsApp, acuerdan cantidad, precio y entrega,
+             y cierran el trato entre ustedes.</p>
+        </li>
+      </ol>
+
+      <div class="nota-futuro">
+        <h4>Más adelante</h4>
+        <p>
+          La idea es llegar a un pago dentro de la plataforma, para que el productor cobre
+          seguro y el comprador tenga respaldo. Todavía no existe: <strong>hoy el pago se
+          acuerda entre las dos partes, fuera de Kcuesta</strong>, y así se dice claro en
+          cada anuncio.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Trato justo ============ -->
+  <section class="justo">
     <div class="env">
       <div class="tres-col">
         <div class="punto">
-          <div class="punto-ico">📊</div>
-          <h2>El precio oficial, al lado</h2>
-          <p>Cada anuncio se compara con el precio del Mercado Nuevo. Sabes al instante
-             si está bien puesto.</p>
+          <div class="punto-ico">⚖️</div>
+          <h2>Sin comisión</h2>
+          <p>Kcuesta no cobra por publicar ni se queda con parte del trato. El precio que
+             acuerdan es el precio que se paga.</p>
         </div>
         <div class="punto">
-          <div class="punto-ico">🤝</div>
-          <h2>Directo al productor</h2>
-          <p>Sin intermediario en el medio. Hablas con quien sembró, por el chat o por WhatsApp.</p>
+          <div class="punto-ico">📄</div>
+          <h2>Precios con fuente</h2>
+          <p>La referencia sale del Ministerio de Agricultura y de Merca Santo Domingo,
+             con su fecha y su documento a la vista.</p>
         </div>
         <div class="punto">
-          <div class="punto-ico">🌱</div>
-          <h2>Publicar es gratis</h2>
-          <p>Pon lo que tienes, di a cómo lo das. Kcuesta no cobra comisión.</p>
+          <div class="punto-ico">🔒</div>
+          <h2>Cuentas reales</h2>
+          <p>Se entra con Google o teléfono verificado. El número del vendedor no se
+             muestra a visitantes sin cuenta.</p>
         </div>
       </div>
+
+      <p class="silencio aviso-seg">
+        Kcuesta no interviene en las transacciones ni garantiza la calidad de lo ofrecido.
+        Por tu seguridad, no realices pagos por adelantado: revisa la mercancía y haz el
+        trato personalmente en un lugar seguro.
+      </p>
     </div>
   </section>
 
   <section class="cierre-grande">
     <div class="env">
       <h2>Entra y mira a cómo está</h2>
+      <p>Gratis para comprar y para vender.</p>
       <div class="portada-acc portada-acc-centro">
         <a class="boton grande" href="entrar.html">Comenzar</a>
       </div>
-      <p class="silencio" style="margin-top:16px">
-        Precios de referencia del Ministerio de Agricultura y MERCADOM, sujetos a variación.
-      </p>
     </div>
   </section>
 
@@ -99,8 +226,8 @@
   <div class="env">
     <p><strong>Kcuesta</strong> — ¿A cómo está?</p>
     <p class="silencio">
-      Kcuesta no interviene en las transacciones ni garantiza la calidad de lo ofrecido.
-      Por tu seguridad, no realices pagos por adelantado.
+      Precios de referencia tomados de publicaciones oficiales del Ministerio de Agricultura
+      y de Mercados Dominicanos de Abasto Agropecuario (MERCADOM). Sujetos a variación.
     </p>
   </div>
 </footer>
