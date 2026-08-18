@@ -61,6 +61,10 @@ def rd(n, dec=2):
     return "RD$ " + ("{:,.%df}" % dec).format(float(n))
 
 
+
+def num_es(n, dec=2):
+    return ("{:,.%df}" % dec).format(float(n))
+
 def rango(a, b, dec=0):
     if a == b:
         return rd(a, dec)
@@ -218,13 +222,113 @@ def bloque_gremio():
     return tabla, ld, m.get("actualizado", m["fecha"])
 
 
+# ---------------------------------------------------------------- mercado
+def bloque_mercado():
+    """La vitrina, para el que no ejecuta JavaScript.
+
+    Solo salen las ofertas de GONDOLA (`data/ofertas.json`), que son precios
+    reales capturados de las cadenas que publican catalogo. Los anuncios de
+    productor de `data/anuncios.json` son ILUSTRATIVOS mientras no haya
+    productores publicando, y meterlos aqui seria darle a Google una tienda
+    inventada como si fuera un mercado con gente vendiendo.
+
+    Tampoco se ordena por precio ni se corona la cadena mas barata: se
+    ensena la banda del mercado (p25-p75) y cada rubro contra ella. Un
+    ranking por precio no mide quien vende mejor, mide quien esta mas
+    desesperado.
+    """
+    o = leer("data/ofertas.json")
+    meta, rubros = o["_meta"], o["rubros"]
+
+    filas = []
+    for r in sorted(rubros, key=lambda r: r["nombre"]):
+        banda = ("%s – %s" % (rd(r["p25_lb"], 2), num_es(r["p75_lb"], 2))
+                 if r.get("p25_lb") is not None and r.get("p75_lb") is not None else "—")
+        # La referencia mayorista NUNCA sale sin decir quien la midio ni
+        # cuando. Es media pagina del argumento del sitio: la gondola
+        # cuesta X y el mostrador mayorista cuesta Y, segun esta fuente,
+        # medido este dia.
+        ref = "—"
+        if r.get("mercado_ref_unidad") is not None:
+            ref = "%s/lb · %s" % (rd(r["mercado_ref_unidad"], 2),
+                                  esc(r.get("mercado_ref_fuente") or "fuente sin declarar"))
+            if r.get("mercado_ref_fecha"):
+                ref += " · %s" % esc(r["mercado_ref_fecha"])
+        filas.append(
+            "<tr><th scope=\"row\">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (
+                esc(r["nombre"]),
+                rango(r["precio_lb_min"], r["precio_lb_max"], 2) + "/lb"
+                    if r.get("precio_lb_min") is not None else "no se vende por peso",
+                banda, ref,
+                ("+%d%%" % r["sobreprecio"]) if r.get("sobreprecio") else "—"))
+
+    tabla = (
+        '<table class="tabla-estatica">'
+        '<caption>Precio de góndola de %d rubros agrícolas en supermercados '
+        'dominicanos que publican su catálogo, comparado contra el mostrador '
+        'mayorista. %s Actualizado el %s. La banda es el rango normal del '
+        'mercado (p25–p75), no un ranking: no se corona la cadena más barata.'
+        '</caption>'
+        '<thead><tr><th scope="col">Rubro</th>'
+        '<th scope="col">En góndola</th><th scope="col">Banda del mercado</th>'
+        '<th scope="col">Referencia mayorista</th>'
+        '<th scope="col">Sobreprecio</th></tr></thead>'
+        '<tbody>%s</tbody></table>'
+    ) % (len(rubros), esc(meta.get("descripcion", "")),
+         esc(fecha_larga(meta["actualizado"])), "".join(filas))
+
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Precios de góndola de supermercados dominicanos frente al mercado mayorista",
+        "description": meta.get("descripcion", ""),
+        "url": BASE + "mercado.html",
+        "inLanguage": "es-DO",
+        "isAccessibleForFree": True,
+        "dateModified": meta.get("actualizado"),
+        "spatialCoverage": {"@type": "Country", "name": "República Dominicana"},
+        "variableMeasured": "Precio al consumidor por libra, banda de mercado y sobreprecio sobre el mayorista",
+        "creator": {"@type": "Organization", "name": "Kcuesta", "url": BASE},
+    }
+    return tabla, ld, meta.get("actualizado")
+
+
+# --------------------------------------------------------------- portada
+def bloque_portada():
+    """La muestra de la portada.
+
+    Sin JavaScript el bloque decia, literalmente, "Precios reales de
+    supermercado. Cargando...". Ese era el unico texto con forma de precio
+    en la pagina de prioridad 1.0 del sitio, y por tanto el candidato a
+    salir de resumen en Google.
+    """
+    p = leer("data/portada.json")
+    filas = "".join(
+        "<tr><th scope=\"row\">%s</th><td>%s/lb</td><td>%s/lb</td><td>%s</td></tr>" % (
+            esc(r["nombre"]),
+            rango(r["precio_lb_min"], r["precio_lb_max"], 2),
+            rd(r["mercado_ref_unidad"], 2) if r.get("mercado_ref_unidad") is not None else "—",
+            ("+%d%%" % r["sobreprecio"]) if r.get("sobreprecio") else "—")
+        for r in p["rubros"])
+    return (
+        '<table class="tabla-estatica">'
+        '<caption>Muestra de %d de los %d rubros comparados, al %s.</caption>'
+        '<thead><tr><th scope="col">Rubro</th><th scope="col">En góndola</th>'
+        '<th scope="col">Mayorista</th><th scope="col">Sobreprecio</th>'
+        '</tr></thead><tbody>%s</tbody></table>'
+    ) % (len(p["rubros"]), p.get("total", len(p["rubros"])),
+         esc(fecha_larga(p["_meta"]["actualizado"])), filas)
+
 # ---------------------------------------------------------------- escribir
-def inyectar(archivo, marca_tabla, tabla, ld):
+def inyectar(archivo, marca_tabla, tabla, ld=None):
     ruta = os.path.join(RAIZ, archivo)
     h = open(ruta, encoding="utf-8").read()
     h = entre_marcas(h, marca_tabla, tabla)
-    h = entre_marcas(h, "ld", '<script type="application/ld+json">%s</script>'
-                     % json.dumps(ld, ensure_ascii=False, separators=(",", ":")))
+    # La portada ya trae su @graph escrito a mano; solo se le rellena la
+    # muestra de precios.
+    if ld is not None:
+        h = entre_marcas(h, "ld", '<script type="application/ld+json">%s</script>'
+                         % json.dumps(ld, ensure_ascii=False, separators=(",", ":")))
     open(ruta, "w", encoding="utf-8").write(h)
 
 
@@ -244,7 +348,7 @@ def sitemap(fechas):
     hoy = datetime.date.today().isoformat()
     paginas = [
         ("", "daily", "1.0", fechas.get("gremio", hoy)),
-        ("mercado.html", "daily", "0.9", fechas.get("precios", hoy)),
+        ("mercado.html", "daily", "0.9", fechas.get("mercado", hoy)),
         ("gremio.html", "daily", "0.9", fechas.get("gremio", hoy)),
         ("precios.html", "daily", "0.8", fechas.get("precios", hoy)),
         # El IPC sale una vez al mes: su lastmod es el del dato, no el de hoy.
@@ -264,7 +368,10 @@ def sitemap(fechas):
 if __name__ == "__main__":
     tp, ldp, fp = bloque_precios()
     tg, ldg, fg = bloque_gremio()
+    tm, ldm, fm = bloque_mercado()
     inyectar("precios.html", "tabla-precios", tp, ldp)
     inyectar("gremio.html", "tabla-gremio", tg, ldg)
-    sitemap({"precios": fp, "gremio": fg, "ipc": _fecha_ipc()})
-    print("precios.html + gremio.html + sitemap.xml regenerados")
+    inyectar("mercado.html", "tabla-mercado", tm, ldm)
+    inyectar("index.html", "tabla-portada", bloque_portada())
+    sitemap({"precios": fp, "gremio": fg, "mercado": fm, "ipc": _fecha_ipc()})
+    print("precios + gremio + mercado + portada + sitemap regenerados")

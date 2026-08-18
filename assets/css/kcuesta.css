@@ -1126,7 +1126,17 @@ p.aviso-seg { max-width: 62ch; }
 .tabla-estatica{
   display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;
   width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 24px;
+  /* Sin `min-width:0` la tabla no cabe en una rejilla. El mínimo
+     automático de un elemento de grid es su ancho de contenido mínimo, así
+     que la tabla de la portada estiraba su columna a 440px dentro de una
+     pantalla de 320 y se llevaba por delante el texto de al lado, que
+     quedaba recortado sin manera de desplazarlo. El `overflow-x` de arriba
+     no basta: primero hay que dejar que la caja pueda encogerse. */
+  min-width:0; max-width:100%;
 }
+/* Misma razón, del lado del contenedor: la rejilla de la portada tiene que
+   poder achicar sus columnas por debajo del contenido que lleven dentro. */
+.muestra-in > *, .muestra-tarjeta{ min-width:0; }
 .tabla-estatica caption{
   caption-side:top; text-align:left; padding:0 0 12px;
   font-size:14px; line-height:1.5; color:var(--tinta-3);
@@ -1148,3 +1158,12 @@ p.aviso-seg { max-width: 62ch; }
   color:var(--tinta-3); border-bottom-width:2px;
 }
 .tabla-estatica tbody th{font-weight:600; white-space:normal; min-width:11ch}
+
+/* Título de página. `mercado.html` no tenía h1 en ninguna parte y el de
+   `gremio.html` lo inyectaba el JavaScript dentro del contenedor que se
+   queda vacío sin él: la señal más fuerte de la página desaparecía justo
+   ante quien no ejecuta scripts. Va en el HTML, siempre. */
+.titulo-pagina{
+  font-size:clamp(1.32rem,4.6vw,1.72rem); line-height:1.22;
+  letter-spacing:-.01em; margin:4px 0 18px; max-width:26ch;
+}

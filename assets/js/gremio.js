@@ -231,7 +231,7 @@
       '<div class="gr-id">' +
         '<div class="gr-avatar" aria-hidden="true">🤝</div>' +
         '<div class="gr-txt">' +
-          '<h1 class="gr-nom">' + esc(m.fuente) + '</h1>' +
+          '<p class="gr-nom">' + esc(m.fuente) + '</p>' +
           // El rótulo que evita la mentira. No vende: reporta.
           '<div class="gr-tipo"><span class="etiq-reporta">Reporta la plaza</span>' +
             '<span class="silencio"> · no vende</span></div>' +
