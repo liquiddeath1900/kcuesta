@@ -241,11 +241,19 @@
      traen `mercado_ref_fuente`. En ese caso NO se inventa un mercado: se
      dice lo único que es cierto de todos, que son los mayoristas de Santo
      Domingo. Vago, pero no falso. */
+  /* Se nombra QUIÉN lo midió, no solo dónde.
+
+     El sitio ahora tiene tres cosas distintas que hablan del Mercado
+     Nuevo: el sondeo del Ministerio, el parte de la Asociación Mercaderes
+     Unidos, y MERCADOM que es otra plaza. Con "Mercado Nuevo, Santo
+     Domingo" a secas, el precio mayorista del arroz —que sale de un PDF
+     del gobierno— se leía como si viniera del WhatsApp del gremio.
+     El lugar no basta para saber de dónde salió un número. */
   var MERCADO_DE = {
-    'Ministerio de Agricultura': 'Mercado Nuevo, Santo Domingo',
-    'MERCADO NUEVO': 'Mercado Nuevo, Santo Domingo',
-    'MERCADOM — Merca Santo Domingo': 'Merca Santo Domingo (MERCADOM)',
-    'MERCADOM': 'Merca Santo Domingo (MERCADOM)'
+    'Ministerio de Agricultura': 'Ministerio de Agricultura · Mercado Nuevo',
+    'MERCADO NUEVO': 'Ministerio de Agricultura · Mercado Nuevo',
+    'MERCADOM — Merca Santo Domingo': 'MERCADOM · Merca Santo Domingo',
+    'MERCADOM': 'MERCADOM · Merca Santo Domingo'
   };
   var SEDE_GENERICA = 'mayoristas de Santo Domingo';
 

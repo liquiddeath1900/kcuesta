@@ -23,7 +23,7 @@
   // precio y la foto. Publicar el parte de mañana es escribir un archivo de
   // precios; no hay que volver a tocar nombres, unidades ni fotos, y los
   // partes viejos quedan intactos porque nadie los reescribe.
-  var V = '?v=9';
+  var V = '?v=10';
   var INDICE = 'data/partes.json' + V;
   var CATALOGO = 'data/gremio-rubros.json' + V;
 
@@ -208,7 +208,10 @@
       if (pct <= 0) return '';
       return '<div class="gr-contraste">' +
         'En góndola: <b>' + rd(g, 2) + '/lb</b> ' +
-        '<span class="marca sube">+' + pct + '% sobre el mayorista</span>' +
+        // "sobre el mayorista" a secas se confundía con la referencia del
+        // Ministerio que enseña el mercado. Aquí el mayorista es ESTE
+        // gremio, y conviene decirlo.
+        '<span class="marca sube">+' + pct + '% sobre la plaza</span>' +
         (conGrado ? '' : '<span class="gr-aviso-grado silencio">' +
           'el gremio no declaró grado; el supermercado vende primera</span>') +
         '</div>';
@@ -263,7 +266,7 @@
         // tarjeta de la chinola, que trae tres grados, le da a la foto
         // ~150px sin ocupar más pantalla que antes.
         (r.foto
-          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=9" alt="' + esc(r.nombre) +
+          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=10" alt="' + esc(r.nombre) +
               '" loading="lazy" width="280" height="373">' +
               (r.foto_credito === 'foto de la asociación'
                 ? '<span class="gr-foto-sello" title="Foto de la Asociación Mercaderes Unidos, tomada en el Mercado Nuevo">🤝</span>'

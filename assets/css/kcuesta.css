@@ -942,3 +942,10 @@ p.aviso-seg { max-width: 62ch; }
 .pt-ejemplo { display: inline-block; font-size: .64rem; text-transform: uppercase;
   letter-spacing: .07em; background: rgba(0,0,0,.06); border-radius: 999px;
   padding: 2px 8px; margin-bottom: 6px; }
+
+/* Tres cosas distintas hablan del Mercado Nuevo en este sitio —el sondeo
+   del Ministerio, MERCADOM (que es otra plaza) y el parte del gremio— y
+   confundirlas era fácil. La lista las separa. */
+.lista-fuentes-corta { list-style: none; margin: 8px 0; padding: 0; }
+.lista-fuentes-corta li { font-size: .85rem; line-height: 1.45; padding: 7px 0 7px 12px;
+  border-left: 2px solid var(--linea); margin-bottom: 4px; }

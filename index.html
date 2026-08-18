@@ -20,7 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=9">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=10">
 </head>
 <body>
 
@@ -30,7 +30,7 @@
 
 <header class="barra">
   <div class="env barra-in">
-    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=9" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=10" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
     <nav class="nav-esc">
       <a href="precios.html">Precios oficiales</a>
       <a href="gremio.html">Mercado Nuevo</a>
@@ -203,8 +203,8 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=9"></script>
-<script src="assets/js/auth.js?v=9"></script>
+<script src="assets/js/config.js?v=10"></script>
+<script src="assets/js/auth.js?v=10"></script>
 <script>
 /* Muestra de portada: el mismo componente de tarjeta del mercado, con los
    precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
@@ -226,7 +226,7 @@
     });
   }
 
-  fetch('data/portada.json?v=9')
+  fetch('data/portada.json?v=10')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var cadenas = d.cadenas || {};
@@ -263,9 +263,9 @@
             // dato se dice lo único cierto de todas.
             ? '<div class="rb-ref">Referencia: mayorista ' + rd(r.mercado_ref_unidad, 2) +
                 '/lb · ' + esc(r.mercado_ref_fuente === 'Ministerio de Agricultura'
-                  ? 'Mercado Nuevo, Santo Domingo'
+                  ? 'Ministerio de Agricultura · Mercado Nuevo'
                   : r.mercado_ref_fuente
-                    ? 'Merca Santo Domingo (MERCADOM)'
+                    ? 'MERCADOM · Merca Santo Domingo'
                     : 'mayoristas de Santo Domingo') + ' ' + marca + '</div>'
             : '') +
         '</article>';
