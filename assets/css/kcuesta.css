@@ -1059,6 +1059,57 @@ p.aviso-seg { max-width: 62ch; }
   border: 1px solid var(--naranja-100); font-weight: 600;
   white-space: normal; }
 
+/* ---------- ¿ESTÁ MÁS CARO? (IPC) ----------
+   Una tarjeta por rubro. El orden dentro de la tarjeta es el orden en que
+   se lee: nombre, la frase en palabras, la línea de dos años, y de último
+   —en gris y pequeño— el índice, que es lo único que un vecino no
+   entiende de un vistazo. */
+.inf-titular { margin: 22px 0 18px; display: flex; align-items: baseline;
+  flex-wrap: wrap; gap: 6px 14px; }
+.inf-grande { font-family: var(--display); font-size: clamp(2.6rem, 11vw, 4.2rem);
+  line-height: 1; margin: 0; color: var(--neutro); }
+.inf-grande.sube { color: var(--sube); }
+.inf-grande.baja { color: var(--baja); }
+.inf-grande-txt { margin: 0; font-size: 1.05rem; color: var(--tinta-2); max-width: 22ch; }
+
+.inf-extremos { display: grid; gap: 16px; margin: 26px 0 30px; }
+@media (min-width: 620px) { .inf-extremos { grid-template-columns: 1fr 1fr; } }
+.inf-col { background: var(--carta); border: 1px solid var(--linea);
+  border-radius: var(--r); padding: 16px 18px; box-shadow: var(--s-1); }
+.inf-col h2 { font-size: 1rem; margin: 0 0 10px; }
+.inf-lista { list-style: none; margin: 0; padding: 0; }
+.inf-lista li { display: flex; justify-content: space-between; gap: 12px;
+  padding: 7px 0; border-top: 1px solid var(--linea); font-size: .95rem; }
+.inf-lista li:first-child { border-top: 0; }
+.inf-lista b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.inf-lista b.sube { color: var(--sube); }
+.inf-lista b.baja { color: var(--baja); }
+.inf-extremos-pie { margin: 0; font-size: .85rem; }
+@media (min-width: 620px) { .inf-extremos-pie { grid-column: 1 / -1; } }
+
+.inf-rejilla { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .inf-rejilla { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .inf-rejilla { grid-template-columns: repeat(3, 1fr); } }
+
+.inf-carta { background: var(--carta); border: 1px solid var(--linea);
+  border-radius: var(--r); padding: 16px 18px 14px; box-shadow: var(--s-1);
+  display: flex; flex-direction: column; gap: 10px; }
+.inf-cab { display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; }
+.inf-cab h3 { font-size: 1.12rem; margin: 0; }
+/* La frase entera va dentro del chip, así que aquí sí puede partir en dos
+   líneas; los chips cortos del resto del sitio no. */
+.inf-aa { white-space: normal; text-align: right; }
+
+.inf-graf { color: var(--neutro); }
+.inf-graf.sube { color: var(--sube); }
+.inf-graf.baja { color: var(--baja); }
+.inf-linea { display: block; width: 100%; height: 40px; opacity: .85; }
+
+.inf-pie { display: flex; gap: 8px; flex-wrap: wrap; min-height: 0; }
+.inf-temporada { margin: 0; font-size: .92rem; color: var(--tinta-2); }
+.inf-nota { margin: 0; font-size: .78rem; line-height: 1.45; }
+
 /* ---------------------------------------------------------------
    Tabla estática — lo que se ve antes de que llegue el JSON, y lo
    único que ve un robot que no ejecuta JavaScript.

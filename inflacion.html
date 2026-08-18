@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Está más caro? La comida en un año — Kcuesta</title>
+<meta name="description" content="Cuánto subió o bajó cada rubro agrícola en República Dominicana en el último año, y en qué meses suele estar más barato. Dato oficial del Banco Central.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/icono-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/brand/icono-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/brand/icono-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1D4A33">
+<meta property="og:title" content="¿Está más caro? — Kcuesta">
+<meta property="og:description" content="Cuánto subió o bajó cada rubro en el último año, y en qué meses suele estar más barato. Dato oficial del Banco Central.">
+<meta property="og:site_name" content="Kcuesta">
+<meta property="og:locale" content="es_DO">
+<meta property="og:image" content="https://kcuesta.com/assets/brand/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kcuesta.com/inflacion.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://kcuesta.com/inflacion.html">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=12">
+</head>
+<body class="con-pie">
+
+<div class="aviso-demo"><strong>Prototipo.</strong> Los números de esta página son oficiales y verificables.</div>
+
+<header class="barra">
+  <div class="env barra-in">
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=12" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <nav class="nav-esc">
+      <a href="mercado.html">Mercado</a>
+      <a href="precios.html">Precios</a>
+      <a href="inflacion.html" class="on">¿Está más caro?</a>
+      <a href="gremio.html">Mercado Nuevo</a>
+      <a href="vender.html">Vender</a>
+    </nav>
+    <span id="sesion" class="sesion-env"><a class="boton btn-entrar" href="entrar.html">Entrar</a></span>
+  </div>
+</header>
+
+<main class="env">
+
+  <section class="hero">
+    <h1>¿Está más caro?</h1>
+    <p class="hero-sub">Lo que subió y lo que bajó en el último año, rubro por rubro. Y en qué
+      meses cada cosa suele estar más barata.</p>
+    <div class="inf-titular" id="titular"></div>
+    <div class="fuente" id="fuente"></div>
+  </section>
+
+  <!-- Las dos listas van antes de las tarjetas a propósito: es la pregunta
+       que la gente trae de la calle ("¿qué fue lo que se disparó?") y se
+       contesta de un vistazo, sin filtrar ni buscar. -->
+  <section class="inf-extremos">
+    <div class="inf-col">
+      <h2>Lo que más subió</h2>
+      <ol id="subieron" class="inf-lista"></ol>
+    </div>
+    <div class="inf-col">
+      <h2>Lo que más bajó</h2>
+      <ol id="bajaron" class="inf-lista"></ol>
+    </div>
+    <p class="silencio inf-extremos-pie">Comparado con el mismo mes del año pasado.</p>
+  </section>
+
+  <section class="filtros">
+    <div class="filtro-fila">
+      <div class="cuenta" id="cuenta">— rubros</div>
+      <div class="filtro-ctrl">
+        <label class="sr" for="orden">Ordenar</label>
+        <select id="orden">
+          <option value="nombre">Por nombre</option>
+          <option value="sube">Los que más subieron</option>
+          <option value="baja">Los que más bajaron</option>
+          <option value="peso">Los que más pesan en el gasto</option>
+        </select>
+      </div>
+    </div>
+    <div class="pastillas" id="pastillas"></div>
+  </section>
+
+  <section>
+    <div class="inf-rejilla" id="rejilla"></div>
+  </section>
+
+  <section class="nota-metodo">
+    <h2>Cómo leer esto</h2>
+    <ul>
+      <li><strong>Esto no es un precio.</strong> Es un índice: dice cuánto <em>cambió</em> el
+        precio, no cuánto cuesta la libra. Para el precio del día está
+        <a href="precios.html">Precios oficiales</a>.</li>
+      <li><strong>Es precio de colmado y supermercado</strong>, promedio de todo el país. No es
+        mayorista ni de finca, así que no se puede restar contra el parte del
+        <a href="gremio.html">Mercado Nuevo</a>: son dos varas distintas.</li>
+      <li><strong>Sale una vez al mes</strong>, unos diez días después de cerrar el mes. Aquí
+        siempre verás de qué mes es el dato.</li>
+      <li><strong>Un rubro, no una variedad.</strong> El Banco Central mide «Ajíes» completo; Kcuesta
+        separa cachucha, cubanela, gustoso y morrón. El número de esta página es el del
+        rubro entero y no se le puede colgar a una variedad sola.</li>
+      <li><strong>La temporada es la forma, no el decimal.</strong> Son seis años de historia: un año
+        raro mueve mucho un mes. Sirve para saber cuándo entra la cosecha y afloja el
+        precio, no para apostar a una fecha.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="pie"><div class="env">
+  <p><strong>Kcuesta</strong> — ¿A cómo está?</p>
+  <div class="fuentes-lista">
+    <h3>De dónde sale este número</h3>
+    <ul>
+      <li><b>Banco Central de la República Dominicana</b> — Índice de Precios al Consumidor por
+        artículos, base octubre 2019 – septiembre 2020 = 100.
+        <span class="silencio">Oficial, mensual, en Excel. De los 364 artículos de la canasta
+        aquí solo entran los que son cosecha.</span></li>
+    </ul>
+    <p class="silencio">Kcuesta no interviene en las transacciones.</p>
+  </div>
+</div></footer>
+
+<nav class="pie-nav">
+  <a href="mercado.html"><span class="ico">🛒</span>Mercado</a>
+  <a href="precios.html"><span class="ico">📊</span>Precios</a>
+  <a href="vender.html"><span class="ico">➕</span>Vender</a>
+  <a href="perfil.html"><span class="ico">👤</span>Cuenta</a>
+</nav>
+
+<script src="assets/js/config.js?v=12"></script>
+<script src="assets/js/auth.js?v=12"></script>
+<script src="assets/js/inflacion.js?v=12"></script>
+</body>
+</html>

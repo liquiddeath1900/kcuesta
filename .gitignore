@@ -9,3 +9,11 @@ __pycache__/
 .playwright-mcp/
 revision-fotos.html
 captura.log
+
+# El Excel del IPC del Banco Central (834 KB al mes). Se archiva en disco
+# como todo lo demás, pero NO se versiona: a diferencia de MERCADOM, que
+# sobrescribe su único archivo y se pierde si no se guarda ese día, este
+# vive en una URL fija y se puede volver a bajar cuando haga falta. El
+# repositorio es el sitio: 10 MB al año de un archivo recuperable no van ahí.
+archivo/bcrd/
+archivo/**/bcrd_ipc_articulos.xlsx

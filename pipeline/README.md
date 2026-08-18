@@ -25,6 +25,34 @@ se guarda en disco *antes* de intentar interpretarlo.
 Ninguna publica **precio en finca**. Ese hueco es el producto: cada cosecha
 que se publique en Kcuesta es un dato que no existe en ningún otro lado.
 
+### Aparte: el IPC del Banco Central
+
+`pipeline/ipc.py` no entra en `pipeline.run` y no toca ninguna tabla de
+precios. Baja el Excel mensual del **Índice de Precios al Consumidor por
+artículos** y escribe `data/ipc.json`, que solo lee `inflacion.html`.
+
+Corre aparte porque **no es un precio**: es un índice base octubre 2019 –
+septiembre 2020 = 100, de precio al **consumidor** (colmado y supermercado,
+promedio nacional). Si entrara por el mismo camino que MERCADOM, tarde o
+temprano un 228.5 de yuca acabaría pintado como RD$228.50 en una tarjeta.
+Tampoco se puede restar contra el parte del Mercado Nuevo: son dos varas.
+
+Lo que sí aporta: la tendencia larga (seis años), la temporada de cada rubro
+—en qué meses suele aflojar el precio— y la **ponderación**, que dice cuánto
+pesa cada rubro en el gasto del hogar dominicano y por lo tanto a cuáles
+conviene darles los mejores datos primero.
+
+De los 364 artículos de la canasta solo entran los ~35 que son cosecha, con
+un mapa escrito a mano por la misma razón que el de cultivos: el IPC tiene
+un solo «Ajíes» donde Kcuesta tiene cuatro ajíes, y un solo «Aguacate» donde
+tenemos benny, carla, criollo y popenoe. Por eso el número es del rubro
+entero y **no se le puede colgar a una variedad**.
+
+```bash
+python -m pipeline.ipc            # baja el Excel y regenera data/ipc.json
+python -m pipeline.ipc --local    # reusa el que ya está en archivo/bcrd/
+```
+
 ## Uso
 
 ```bash

@@ -228,6 +228,16 @@ def inyectar(archivo, marca_tabla, tabla, ld):
     open(ruta, "w", encoding="utf-8").write(h)
 
 
+def _fecha_ipc():
+    """El mes del último dato del Banco Central, como fecha. Si el archivo
+    todavía no existe, se deja que el sitemap use la fecha de hoy."""
+    try:
+        with open(os.path.join(RAIZ, "data", "ipc.json"), encoding="utf-8") as f:
+            return json.load(f)["_meta"]["ultimo_mes"] + "-01"
+    except (OSError, KeyError, ValueError):
+        return None
+
+
 def sitemap(fechas):
     # lastmod real, sacado del dato. Escrito a mano envejece mal y le
     # ensena a Google que las fechas de este sitio no son de fiar.
@@ -237,6 +247,8 @@ def sitemap(fechas):
         ("mercado.html", "daily", "0.9", fechas.get("precios", hoy)),
         ("gremio.html", "daily", "0.9", fechas.get("gremio", hoy)),
         ("precios.html", "daily", "0.8", fechas.get("precios", hoy)),
+        # El IPC sale una vez al mes: su lastmod es el del dato, no el de hoy.
+        ("inflacion.html", "monthly", "0.8", fechas.get("ipc") or hoy),
         ("vender.html", "monthly", "0.5", hoy),
     ]
     filas = "\n".join(
@@ -254,5 +266,5 @@ if __name__ == "__main__":
     tg, ldg, fg = bloque_gremio()
     inyectar("precios.html", "tabla-precios", tp, ldp)
     inyectar("gremio.html", "tabla-gremio", tg, ldg)
-    sitemap({"precios": fp, "gremio": fg})
+    sitemap({"precios": fp, "gremio": fg, "ipc": _fecha_ipc()})
     print("precios.html + gremio.html + sitemap.xml regenerados")
