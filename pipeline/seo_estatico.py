@@ -188,6 +188,9 @@ def bloque_gremio():
     CAT = leer("data/gremio-rubros.json")["rubros"]
     m = parte["_meta"]
 
+    # Unidades que son una pieza, no un bulto: no tienen peso que declarar.
+    PIEZA = {"Unidad"}
+
     ETIQ = {"premium": "Prímium", "primera": "Primera", "segunda": "Segunda",
             "tercera": "Tercera", "regular": "Regular",
             "inferior": "Inferiores y viejos"}
@@ -199,9 +202,15 @@ def bloque_gremio():
         # se cotiza en dos empaques el mismo dia. Misma regla que gremio.js.
         unidad = i["unidad"] if "unidad" in i else c.get("unidad")
         libras = i["libras_unidad"] if "libras_unidad" in i else c.get("libras_unidad")
+        # Tres huecos distintos, no dos. La lechoza suelta se vende POR PIEZA y
+        # no hay libra a la cual convertir; el quintal de ñame SI es peso, lo
+        # que falta es cuantas libras trae. Rotular el quintal "no se vende por
+        # peso" decia una mentira sobre como se vende el ñame. Misma regla en
+        # gremio.js.
         por_lb = ("%s/lb" % rango(round(i["precio_min"] / libras, 2),
                                   round(i["precio_max"] / libras, 2), 2)) if libras else \
-                 ("no se vende por peso" if unidad else "sin unidad declarada")
+                 ("no se vende por peso" if unidad in PIEZA else
+                  "libras no declaradas" if unidad else "sin unidad declarada")
         filas.append(
             "<tr><th scope=\"row\">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (
                 esc(c.get("nombre") or i["cultivo"]),

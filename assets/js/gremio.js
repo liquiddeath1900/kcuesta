@@ -23,7 +23,11 @@
   // precio y la foto. Publicar el parte de mañana es escribir un archivo de
   // precios; no hay que volver a tocar nombres, unidades ni fotos, y los
   // partes viejos quedan intactos porque nadie los reescribe.
-  var V = '?v=12';
+  // Sube cuando cambia cualquiera de los tres JSON. Sin esto el que ya
+  // visitó la página sigue viendo el parte de ayer desde su caché.
+  var V = '?v=13';
+  // Unidades que son una pieza y no un bulto: no tienen peso que declarar.
+  var PIEZA = { 'Unidad': 1 };
   var INDICE = 'data/partes.json' + V;
   var CATALOGO = 'data/gremio-rubros.json' + V;
 
@@ -144,6 +148,10 @@
         libras_unidad: libras,
         unidad_confianza: c.unidad_confianza,
         nota: i.nota || c.nota_unidad,
+        // El parte puede declarar que un renglón NO se compara con el
+        // anterior aunque la llave calce. Ver `cambio()`.
+        no_comparar: i.no_comparar || false,
+        no_comparar_motivo: i.no_comparar_motivo || null,
         precio_min: i.precio_min,
         precio_max: i.precio_max,
         // Se normaliza AQUÍ y no en el archivo: el precio por libra es una
@@ -409,6 +417,18 @@
             'grado hoy">Precio del ' + esc(fechaLarga(f.fecha_origen)) + '</span>'
           : '';
       }
+      // El punto medio no sabe leer. El maduro fue 150–200 el 17 y 15–18 el
+      // 18: la llave calza —mismo rubro, mismo grado, las dos veces sin
+      // unidad— y la resta escupe un −91% que sería la cifra más grande de
+      // la página y también la más falsa. O cambió el empaque o alguien
+      // tecleó un cero. Cuando la propia fuente deja esa duda, el parte lo
+      // dice con `no_comparar` y aquí se respeta: el hueco se enseña, no se
+      // rellena con una flecha.
+      if (f.no_comparar) {
+        return '<span class="gr-cambio sin-base" title="' +
+               esc(f.no_comparar_motivo || 'El parte declara que este renglón no se compara con el anterior') +
+               '">sin comparación</span>';
+      }
       if (!ANT) return '';
       var ant = PREV[llave(f)];
       if (!ant) {
@@ -467,11 +487,17 @@
           // unidad —se vende por unidad— lo que no tiene es peso, así que
           // no hay libra a la cual convertir. Rotularla "sin unidad
           // declarada" era falso y hacía dudar de un dato que está bien.
+          // Y son TRES huecos, no dos. El quintal de ñame es peso: lo que no
+          // dijeron es de cuántas libras. Meterlo en "no se vende por peso"
+          // afirmaba que el ñame se vende por pieza, que es falso, y tapaba
+          // la única pregunta que hay que hacerle al gremio.
           (porLb
             ? '<span class="gr-lb">' + rango(f.precio_lb_min, f.precio_lb_max, 2) + '/lb</span>'
-            : f.unidad
+            : PIEZA[f.unidad]
               ? '<span class="gr-lb silencio">no se vende por peso</span>'
-              : '<span class="gr-lb silencio">sin unidad declarada</span>') +
+              : f.unidad
+                ? '<span class="gr-lb silencio">libras no declaradas</span>'
+                : '<span class="gr-lb silencio">sin unidad declarada</span>') +
         '</div>' +
       '</li>';
     }
