@@ -845,7 +845,7 @@ p.aviso-seg { max-width: 62ch; }
 .gr-cab { display: flex; justify-content: space-between; align-items: baseline;
   gap: 8px; padding: 12px 15px 8px; }
 .gr-rubro-nom { font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
-.gr-flag { font-size: .66rem; color: var(--tinta-3); border: 1px dashed var(--linea);
+.gr-flag { font-size: .7rem; color: var(--tinta-3); border: 1px dashed var(--linea);
   border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
 .gr-lista { list-style: none; margin: 0; padding: 0; }
 /* En una columna de ~250px el grado y el precio no caben en la misma
@@ -1051,5 +1051,10 @@ p.aviso-seg { max-width: 62ch; }
 /* Renglón viejo dentro de una tarjeta que SÍ tiene precio de hoy. Mismo
    color de aviso que el sello de la tarjeta completa, para que se lea igual
    en los dos casos. */
+/* Este es el único chip con una fecha larga adentro ("Precio del 17 de
+   agosto 2026"). En 320px no cabe en una línea dentro de la columna del
+   grado, así que se le deja partir; los demás chips siguen en una sola
+   línea porque son cortos. */
 .gr-cambio.viejo { background: var(--naranja-50); color: var(--naranja-700);
-  border: 1px solid var(--naranja-100); font-weight: 600; }
+  border: 1px solid var(--naranja-100); font-weight: 600;
+  white-space: normal; }
