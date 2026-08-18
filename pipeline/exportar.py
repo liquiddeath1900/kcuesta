@@ -20,9 +20,51 @@ from collections import defaultdict
 
 from .catalogo import cultivos
 from .config import ASSETS_JS, DATOS, RAIZ
-from .normalizar import libras_de_titulo, sin_tildes
+from .normalizar import libras_de_titulo, sin_tildes, unidad_canonica
 
 log = logging.getLogger("kcuesta.exportar")
+
+def resumen_valor(precios_lb: list[float], fuentes: int) -> dict:
+    """El valor de referencia de un rubro: la MEDIANA de lo que cobran las
+    fuentes, no el mínimo.
+
+    Kcuesta no es un directorio de tiendas — es la foto del mercado. Quien
+    llega no viene a saber cuál góndola está más barata hoy; viene a saber a
+    cómo está la cosa, que es la pregunta que le da nombre al sitio. Poner
+    el mínimo de titular contesta otra pregunta y además premia al más
+    barato, que es justo lo que ESCALA.md prohíbe el día que los que
+    publiquen sean productores.
+
+    Mediana y no promedio: un saco mal etiquetado o una oferta de liquidación
+    arrastran el promedio y no mueven la mediana. Con dos fuentes la mediana
+    es el punto medio de las dos, que es lo honesto cuando no hay más.
+
+    p25/p75 salen de aquí para que la banda del rubro sea la MISMA cuenta que
+    la banda contra la que se compara un productor. Dos formas distintas de
+    medir 'lo normal' en el mismo sitio se contradicen tarde o temprano.
+    """
+    xs = sorted(x for x in precios_lb if x)
+    if not xs:
+        return {"valor_lb": None, "p25_lb": None, "p75_lb": None, "n_fuentes": fuentes}
+
+    def cuantil(q: float) -> float:
+        # Interpolación lineal, igual que numpy: con 2 y 3 datos el método
+        # 'más cercano' salta y la banda se ve escalonada entre rubros.
+        if len(xs) == 1:
+            return xs[0]
+        pos = q * (len(xs) - 1)
+        bajo = int(pos)
+        alto = min(bajo + 1, len(xs) - 1)
+        return round(xs[bajo] + (xs[alto] - xs[bajo]) * (pos - bajo), 2)
+
+    return {
+        "valor_lb":  cuantil(0.50),
+        "p25_lb":    cuantil(0.25),
+        "p75_lb":    cuantil(0.75),
+        "n_fuentes": fuentes,
+    }
+
+
 
 # Banco Creative Commons ya presente en el repo (créditos en
 # assets/img/CREDITOS.md). Es el respaldo cuando no hay foto propia
@@ -242,7 +284,13 @@ def _ofertas(db, hoy: dt.date) -> dict:
             "cadena": p["cadena_id"],
             "precio": pr["precio"],
             "precio_lista": pr["precio_lista"],
-            "unidad": p["unidad_externa"] or cult.get("unidad_venta") or "Unidad",
+            # NO se cae a cult["unidad_venta"]: esa es la unidad MAYORISTA
+            # del catálogo —el plátano se cotiza por millar, la yuca por
+            # quintal— y aquí estamos en góndola. Cuando la cadena no
+            # declaraba unidad, el plátano verde de Nacional salía como
+            # "RD$18 / Millar": 18 pesos por mil plátanos. Un SKU de
+            # supermercado se vende de uno en uno; el default es Unidad.
+            "unidad": unidad_canonica(p["unidad_externa"]),
             "mercado_ref_unidad": ref,
             "url": p["url_producto"],
             "foto": p["foto_url"] if propia else _foto_cc(cid)[0],
@@ -262,7 +310,7 @@ def _ofertas(db, hoy: dt.date) -> dict:
 
     ofertas.sort(key=lambda o: (o["cultivo"], o["precio"]))
     cadenas = {c["id"]: c for c in db.seleccionar(
-        "cadenas", select="id,nombre,url,tipo", activo="eq.true")}
+        "cadenas", select="id,nombre,url,tipo,sede,alcance", activo="eq.true")}
 
     # Nombre corto para las pastillas de filtro. "Supermercados Nacional"
     # es lo que empujaba la fila fuera de la pantalla; en un chip basta
@@ -305,6 +353,28 @@ def _ofertas(db, hoy: dt.date) -> dict:
         min_lb = base[0].get("precio_lb")
         max_lb = base[-1].get("precio_lb")
 
+        # El valor de referencia sale solo de lo comparable por libra. Meter
+        # el empaque sin peso declarado ensucia la mediana con números que
+        # no son del mismo grano.
+        valor = resumen_valor([o["precio_lb"] for o in conlb],
+                              len({o["cadena"] for o in conlb}))
+
+        # Siete rubros no se venden por peso y nunca se van a poder pesar:
+        # el plátano y la piña van por unidad, la leche por litro. Sin esta
+        # rama sus tarjetas salen sin titular, como si faltara el dato,
+        # cuando el dato está y lo que cambia es la unidad. Solo se agrupan
+        # si TODAS las ofertas comparten unidad — mezclar "Unidad" con
+        # "Litro" en una mediana no significa nada.
+        valor_und = None
+        if valor["valor_lb"] is None:
+            unidades = {o["unidad"] for o in lista}
+            if len(unidades) == 1:
+                v = resumen_valor([o["precio"] for o in lista],
+                                  len({o["cadena"] for o in lista}))
+                valor_und = {"valor_unidad": v["valor_lb"],
+                             "unidad_valor": unidades.pop(),
+                             "n_fuentes": v["n_fuentes"]}
+
         rubros.append({
             "cultivo": cid,
             "nombre": cult.get("nombre", cid),
@@ -319,11 +389,30 @@ def _ofertas(db, hoy: dt.date) -> dict:
             "precio_lb_min": min_lb,
             "precio_lb_max": max_lb,
             "cadena_min": base[0]["cadena"],
+            # Valor de referencia del rubro (mediana) + la banda p25/p75.
+            # Es el titular de la tarjeta; min/max quedan como el rango.
+            "valor_lb": valor["valor_lb"],
+            "p25_lb": valor["p25_lb"],
+            "p75_lb": valor["p75_lb"],
+            "valor_unidad": (valor_und or {}).get("valor_unidad"),
+            "unidad_valor": (valor_und or {}).get("unidad_valor"),
+            "n_fuentes": (valor_und or valor)["n_fuentes"],
             # Sobreprecio contra el mayorista, por libra contra libra. Se
             # mide contra la góndola MÁS BARATA a propósito: escoger la más
             # cara inflaría el argumento de la casa.
-            "sobreprecio": (round((min_lb - ref) / ref * 100)
-                            if ref and min_lb else None),
+            # Dos lecturas, a propósito:
+            #   sobreprecio      — el VALOR de referencia contra el mayorista.
+            #                      Es lo que la tarjeta enseña, porque el
+            #                      titular ya es el valor y mezclar bases
+            #                      haría que el % no cuadre con la cifra.
+            #   sobreprecio_min  — la góndola más barata contra el mayorista.
+            #                      Conservador; es el que usa la portada,
+            #                      donde el número es un argumento y conviene
+            #                      que sea el piso y no el centro.
+            "sobreprecio": (round((valor["valor_lb"] - ref) / ref * 100)
+                            if ref and valor["valor_lb"] else None),
+            "sobreprecio_min": (round((min_lb - ref) / ref * 100)
+                                if ref and min_lb else None),
             "ofertas": [{
                 "cadena": o["cadena"], "titulo": o["titulo"], "precio": o["precio"],
                 "precio_lista": o["precio_lista"], "unidad": o["unidad"],
@@ -414,9 +503,19 @@ def _portada(ofertas: dict, hoy: dt.date) -> dict:
     pero solo entre los que traen VARIAS tiendas: un rubro con una sola
     oferta da un porcentaje llamativo y ninguna comparación que enseñar, que
     es justo lo que la portada promete.
+
+    Usa el MISMO valor de referencia y el MISMO sobreprecio que el mercado.
+    Se probó dejar aquí el conservador —la góndola más barata contra el
+    mayorista, que como argumento es más difícil de discutir— y no sirve:
+    el mismo rubro salía con un porcentaje en la portada y otro adentro, y
+    eso no se lee como prudencia, se lee como un bug. Una sola definición
+    en todo el sitio vale más que un par de puntos de margen.
+
+    `sobreprecio_min` se sigue exportando en ofertas.json por si hace falta
+    la lectura conservadora, pero no se pinta en ninguna parte.
     """
     candidatos = [r for r in ofertas["rubros"]
-                  if r["sobreprecio"] is not None and r["n"] >= 3]
+                  if r.get("sobreprecio") is not None and r["n"] >= 3]
     candidatos.sort(key=lambda r: -r["sobreprecio"])
 
     return {
@@ -432,6 +531,8 @@ def _portada(ofertas: dict, hoy: dt.date) -> dict:
             "precio_lb_max": r["precio_lb_max"],
             "mercado_ref_unidad": r["mercado_ref_unidad"],
             "sobreprecio": r["sobreprecio"],
+            "valor_lb": r["valor_lb"],
+            "n_fuentes": r["n_fuentes"],
             "cadena_min": r["cadena_min"],
         } for r in candidatos[:3]],
     }

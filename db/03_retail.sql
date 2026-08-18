@@ -18,6 +18,12 @@ create table cadenas (
   tipo            text not null check (tipo in ('supermercado','mayorista_online')),
   url             text not null,
   metodo          text not null check (metodo in ('api','firecrawl')),
+  -- De DÓNDE sale el precio, para poder citarlo en la tarjeta. Ninguna de
+  -- estas cadenas publica precio por sucursal: lo que se captura es su
+  -- tienda en línea, que cotiza un solo precio para todo el país. Escribir
+  -- "Naco" o "Santiago" al lado de una de estas cifras sería inventarlo.
+  sede            text not null default 'Tienda en línea',
+  alcance         text not null default 'Precio nacional, sin sucursal',
   activo          boolean not null default true,
   creado          timestamptz not null default now()
 );
@@ -25,14 +31,21 @@ comment on column cadenas.metodo is
   'api = endpoint JSON abierto y estable. firecrawl = requiere render de '
   'navegador; cuesta créditos y se rompe con cada rediseño.';
 
-insert into cadenas (id, nombre, tipo, url, metodo) values
-  ('sirena',      'La Sirena',                'supermercado',     'https://www.sirena.do',            'api'),
-  ('nacional',    'Supermercados Nacional',   'supermercado',     'https://supermercadosnacional.com','api'),
-  ('fruttissimo', 'Fruttissimo Market',       'supermercado',     'https://fruttissimodr.com',        'api'),
-  ('jumbo',       'Jumbo',                    'supermercado',     'https://www.jumbo.com.do',         'firecrawl'),
-  ('plaza-lama',  'Plaza Lama',               'supermercado',     'https://www.plazalama.com.do',     'firecrawl'),
-  ('pricesmart',  'PriceSmart',               'supermercado',     'https://www.pricesmart.com/es-do', 'firecrawl'),
-  ('agroexpress', 'AgroExpress RD',           'mayorista_online', 'https://agroexpressrd.com',        'firecrawl');
+insert into cadenas (id, nombre, tipo, url, metodo, sede, alcance) values
+  ('sirena',      'La Sirena',                'supermercado',     'https://www.sirena.do',            'api',
+     'Tienda en línea',           'Precio nacional, sin sucursal'),
+  ('nacional',    'Supermercados Nacional',   'supermercado',     'https://supermercadosnacional.com','api',
+     'Tienda en línea',           'Precio nacional, sin sucursal'),
+  ('fruttissimo', 'Fruttissimo Market',       'supermercado',     'https://fruttissimodr.com',        'api',
+     'Tienda en línea',           'Precio nacional, sin sucursal'),
+  ('jumbo',       'Jumbo',                    'supermercado',     'https://www.jumbo.com.do',         'firecrawl',
+     'Tienda en línea',           'Precio nacional, sin sucursal'),
+  ('plaza-lama',  'Plaza Lama',               'supermercado',     'https://www.plazalama.com.do',     'firecrawl',
+     'Tienda en línea',           'Precio nacional, sin sucursal'),
+  ('pricesmart',  'PriceSmart',               'supermercado',     'https://www.pricesmart.com/es-do', 'firecrawl',
+     'Tienda en línea (socios)',  'Precio nacional, sin sucursal'),
+  ('agroexpress', 'AgroExpress RD',           'mayorista_online', 'https://agroexpressrd.com',        'firecrawl',
+     'Mayorista en línea',        'Precio nacional, sin sucursal');
 
 -- ------------------------------------------------------------
 -- ALIAS DE CULTIVO — el punto donde todo se cae si se hace mal.

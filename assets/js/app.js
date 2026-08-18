@@ -210,6 +210,48 @@
      diferencia es de RD$4 a RD$25 y ahí un "+7%" no dice nada, así que va
      en pesos. */
 
+
+  /* ---------- cita de fuente ----------
+     Los enlaces "Ver →" salieron de la vista pública. Mandaban a la ficha
+     de la cadena, que es la góndola de otro: el sitio terminaba siendo un
+     embudo hacia el supermercado en vez de la foto del mercado que dice
+     ser, y encima con seis destinos distintos por tarjeta.
+
+     Lo que sí hace falta es poder AUDITAR la cifra, y para eso no hace
+     falta un enlace: hace falta decir de dónde salió y qué clase de precio
+     es. Ninguna de estas cadenas publica precio por sucursal —lo que se
+     captura es su tienda en línea, un solo precio para todo el país— así
+     que la "ubicación" honesta es justo esa, y no un barrio inventado.
+
+     Las URL siguen en los datos, sin pintarse. Son la herramienta de
+     verificación de la casa, no un botón para el visitante. */
+
+  var SEDE_MAYORISTA = ((O.ofertas && O.ofertas._meta) || {}).sede_mayorista
+                       || 'Mercado Nuevo, Santo Domingo';
+
+  function cita(id) {
+    var c = O.cadenas[id] || {};
+    return '<b>' + esc(c.nombre || id) + '</b>' +
+           '<span class="rb-sede"> · ' + esc(c.sede || 'Tienda en línea') +
+             (c.alcance ? ' · ' + esc(c.alcance) : '') + '</span>';
+  }
+
+  // Dentro de una tarjeta el "de dónde" es el MISMO en todas las filas:
+  // trece veces "Tienda en línea · Precio nacional, sin sucursal" convertía
+  // la tarjeta en un muro y cada fila pasaba de una línea a cuatro. La
+  // procedencia se dice una sola vez, en el rótulo de la lista; la fila se
+  // queda con el nombre, que es lo único que cambia de una a otra.
+  function rotuloFuentes(r) {
+    var sedes = {};
+    r.ofertas.forEach(function (o) {
+      var c = O.cadenas[o.cadena] || {};
+      sedes[(c.sede || 'Tienda en línea') + ' · ' + (c.alcance || '')] = 1;
+    });
+    var claves = Object.keys(sedes);
+    return 'De dónde sale este número' +
+      (claves.length === 1 ? ' — ' + esc(claves[0].replace(/ · $/, '')) : '');
+  }
+
   function tarjetaRubro(r) {
     var cad = function (id) { return (O.cadenas[id] || {}).nombre || id; };
     var mejor = r.ofertas[0];
@@ -228,6 +270,23 @@
       : '<span class="marca ' + (r.sobreprecio > 0 ? 'sube' : 'baja') + '">' +
           (r.sobreprecio > 0 ? '+' : '') + r.sobreprecio + '% sobre mayorista</span>';
 
+    // TITULAR = VALOR DE REFERENCIA, no el más barato.
+    //
+    // Antes encabezaba `precio_lb_min`. Eso contesta "¿dónde está más
+    // barato hoy?", que es la pregunta de un directorio de tiendas. Kcuesta
+    // no es eso: la información pública que se captura sirve para dibujar
+    // cómo está el mercado, y lo que alguien viene a saber es a cómo está
+    // la cosa. Encabezar el mínimo además premia al más barato, que es lo
+    // que ESCALA.md prohíbe para el día que quien publique sea un
+    // productor. La mediana no premia a nadie.
+    //
+    // El dónde no va aquí. Estas cifras son de la tienda EN LÍNEA de cada
+    // cadena —un precio nacional, sin sucursal— así que poner una
+    // ubicación sería inventarla. La ubicación llega cuando publique gente
+    // de verdad y la ponga en su perfil.
+    var valor  = porLb ? r.valor_lb : r.valor_unidad;
+    var unidad = porLb ? '/lb' : '/' + esc(r.unidad_valor || mejor.unidad);
+
     // Encabezado: nombre a la izquierda, precio a la derecha en la misma
     // línea base. Es la franja que se escanea con el pulgar.
     // La referencia mayorista va en su PROPIA fila, a todo el ancho. Metida
@@ -237,20 +296,35 @@
       '<div class="rb-foto">' + foto + '</div>' +
       '<div class="rb-txt">' +
         '<div class="rb-nom">' + esc(r.nombre) + '</div>' +
-        '<div class="rb-meta">' +
-          (hayVarias ? r.n + ' tiendas' : '1 tienda') +
-          (rango ? ' · ' + rd(r.precio_lb_min, 2) + ' – ' + rd(r.precio_lb_max, 2) + '/lb'
-                 : ' · ' + esc(cad(mejor.cadena))) +
-        '</div>' +
+      '</div>' +
+      // El meta sale de la columna de texto y se lleva el ancho completo.
+      // Encajonado entre la foto y el precio le quedaban ~110px y "Valor de
+      // referencia · 2 fuentes" se partía en tres líneas.
+      '<div class="rb-meta">' +
+          // Con una sola fuente no hay mediana ni valor de mercado: hay
+          // un precio visto una vez. Llamarlo "valor de referencia" le
+          // daría un peso que no tiene, y el sitio vive de que el número
+          // se pueda defender.
+          (r.n_fuentes === 1
+            ? 'Un solo precio observado'
+            : 'Valor de referencia · ' + r.n_fuentes + ' fuentes') +
+          (rango ? '<span class="rb-rango"> · ' + rd(r.precio_lb_min, 2) +
+                   ' – ' + rd(r.precio_lb_max, 2) + '/lb</span>' : '') +
       '</div>' +
       '<div class="rb-precio">' +
-        '<span class="cifra">' +
-          rd(porLb ? r.precio_lb_min : r.precio_min, 2) + '</span>' +
-        '<span class="rb-u">' + (porLb ? '/lb' : '/' + esc(mejor.unidad)) + '</span>' +
+        '<span class="cifra">' + rd(valor, 2) + '</span>' +
+        '<span class="rb-u">' + unidad + '</span>' +
       '</div>' +
-      (r.mercado_ref_unidad && porLb
-        ? '<div class="rb-ref">Mayorista ' + rd(r.mercado_ref_unidad, 2) + '/lb ' + marca + '</div>'
-        : '<div class="rb-ref silencio">Sin referencia comparable</div>');
+      '';
+
+    // La referencia mayorista baja al PIE de la tarjeta. Arriba competía
+    // con el valor por la atención y la tarjeta arrancaba con dos cifras
+    // distintas en la misma pantalla. El orden ahora es el del argumento:
+    // primero cuánto vale la cosa, y de último contra qué se está midiendo.
+    var pieRef = (r.mercado_ref_unidad && porLb)
+      ? '<div class="rb-ref">Referencia: mayorista ' + rd(r.mercado_ref_unidad, 2) +
+          '/lb · ' + esc(SEDE_MAYORISTA) + ' ' + marca + '</div>'
+      : '<div class="rb-ref silencio">Sin referencia mayorista comparable</div>';
 
     // Un solo precio no necesita desplegable: se dibuja la misma cáscara
     // sin control, para que los rubros de una sola tienda no parezcan
@@ -262,11 +336,9 @@
     // rescata el enlace a la tienda.
     if (!hayVarias) {
       return '<article class="rubro rubro-sola">' +
-        '<div class="rb-cab">' + cabecera +
-          (mejor.url
-            ? '<a class="rb-ir" href="' + esc(mejor.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>'
-            : '') +
-        '</div>' +
+        '<div class="rb-cab">' + cabecera + '</div>' +
+        '<div class="rb-fuente-una silencio">Fuente: ' + cita(mejor.cadena) + '</div>' +
+        pieRef +
       '</article>';
     }
 
@@ -277,6 +349,7 @@
         '</summary>' +
         filasOfertas(r) +
       '</details>' +
+      pieRef +
     '</article>';
   }
 
@@ -284,7 +357,12 @@
     var cad = function (id) { return (O.cadenas[id] || {}).nombre || id; };
     var base = r.precio_lb_min;
 
-    return '<ul class="rb-lista">' + r.ofertas.map(function (o, i) {
+    // La lista dejó de ser una góndola y pasó a ser la evidencia: de dónde
+    // sale el valor del titular. Por eso se rotula. Sin rótulo, abrir la
+    // tarjeta parecía "escoge dónde comprar", que no es lo que el sitio
+    // hace ni lo que puede prometer con precios en línea sin sucursal.
+    return '<div class="rb-fuente-tit silencio">' + rotuloFuentes(r) + '</div>' +
+      '<ul class="rb-lista">' + r.ofertas.map(function (o, i) {
       // Entre cadenas la diferencia va en PESOS por libra. En porcentaje
       // sería ruido: son RD$4 a RD$25. El porcentaje se guarda para el
       // mayorista, donde es +161% y sí cuenta algo.
@@ -323,12 +401,10 @@
             : '') + rebaja +
           etiqueta +
         '</div>' +
-        (o.url
-          ? '<a class="rb-ir" href="' + esc(o.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>'
-          : '') +
       '</li>';
     }).join('') + '</ul>' +
     '<div class="rb-pie silencio">Precio al consumidor, no de finca · ' +
+      'tienda en línea, precio nacional sin sucursal · ' +
       esc(diasDesde(r.ofertas[0].fecha)) + ' · foto: ' + esc(r.foto_credito) + '</div>';
   }
 
@@ -363,7 +439,6 @@
               '<span class="cifra rb-p">' + rd(a.precio, a.precio % 1 ? 2 : 0) + '</span>' +
               '<span class="rb-u">/' + esc(a.unidad) + '</span>' +
             '</div>' +
-            (a.url ? '<a class="rb-ir" href="' + esc(a.url) + '" target="_blank" rel="noopener nofollow">Ver →</a>' : '') +
           '</li>';
         }).join('') + '</ul>' +
       '</details>' +
@@ -573,13 +648,9 @@
       acc.innerHTML = '<a class="boton" href="entrar.html">Entrar para contactar</a>';
     });
 
-    // En las tarjetas de rubro no hay bloque de acciones: lo que saca de la
-    // página es el enlace "Ver →" de cada cadena. Sin cuenta lleva a entrar.
-    document.querySelectorAll('.rubro .rb-ir').forEach(function (a) {
-      a.setAttribute('href', 'entrar.html');
-      a.removeAttribute('target');
-      a.textContent = 'Entrar para ver →';
-    });
+    // Las tarjetas de rubro ya no llevan enlace a la cadena —salieron de la
+    // vista pública— así que aquí no queda nada que redirigir. El corte de
+    // la vitrina más abajo sigue aplicando igual.
 
     // A partir de la sexta tarjeta: se difumina y aparece la invitación.
     // Sirve para los dos tipos, anuncio de productor y rubro.

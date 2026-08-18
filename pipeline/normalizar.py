@@ -290,3 +290,35 @@ def foto_elegible(categoria: str) -> bool:
     from .config import CABEZAS_FOTO
 
     return _califica(categoria, CABEZAS_FOTO)
+
+# ------------------------------------------------------------------
+# UNIDAD CANÓNICA
+#
+# Cada cadena escribe la misma unidad a su manera: La Sirena manda "un",
+# Nacional y Fruttissimo mandan "Unidad". Son la misma cosa, pero como
+# cadenas de texto distintas rompían el agrupado — el plátano, el melón y
+# el coco se quedaban sin valor de referencia porque el rubro "mezclaba
+# unidades" que en realidad eran una sola.
+#
+# Se normaliza SOLO lo que es sinónimo evidente. Litro y libra no entran
+# aquí: convertir entre ellas necesita la densidad del producto y eso es
+# un supuesto, no una traducción.
+# ------------------------------------------------------------------
+_UNIDADES = {
+    "un": "Unidad", "und": "Unidad", "unid": "Unidad", "u": "Unidad",
+    "unidad": "Unidad", "unidades": "Unidad", "c/u": "Unidad",
+    "lb": "Libra", "lbs": "Libra", "libra": "Libra", "libras": "Libra",
+    "lt": "Litro", "l": "Litro", "litro": "Litro", "litros": "Litro",
+    "kg": "Kilo", "kilo": "Kilo", "kilos": "Kilo",
+    "gr": "Gramo", "g": "Gramo", "gramo": "Gramo", "gramos": "Gramo",
+    "oz": "Onza", "onza": "Onza", "onzas": "Onza",
+}
+
+
+def unidad_canonica(unidad: str | None) -> str:
+    """"un" y "Unidad" son la misma unidad; como texto suelto, no."""
+    if not unidad:
+        return "Unidad"
+    limpia = sin_tildes(unidad.strip().lower()).rstrip(".")
+    return _UNIDADES.get(limpia, unidad.strip())
+

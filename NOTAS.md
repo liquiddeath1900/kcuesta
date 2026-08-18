@@ -180,3 +180,87 @@ Pro, ~660,000 fotos) desde el primer día.
       escribir? Hoy la vitrina pide cuenta para todo.
 - [ ] ¿Se cobra algo alguna vez? Si sí, **no puede ser por aparecer más
       arriba** (ver ESCALA.md).
+
+---
+
+## 2026-08-17 — La tarjeta pasó de góndola a valuación
+
+### Lo que cambió
+
+El titular de la tarjeta era `precio_lb_min`: el más barato. Eso contesta
+"¿dónde está más barato hoy?", que es la pregunta de un directorio de
+tiendas. Kcuesta no es eso. La información pública que se captura está para
+dibujar **cómo está el mercado**, y el titular ahora es el **valor de
+referencia** — la mediana por libra de lo que cobran las fuentes — con el
+rango debajo y la **referencia mayorista al pie**, no en la cabecera.
+
+Mediana y no promedio: un saco mal etiquetado mueve el promedio y no mueve
+la mediana. Con la cebolla real (46.00 / 46.75 / 229.00 por libra) el
+promedio da RD$107 y la mediana da RD$46.75.
+
+Se guardan dos lecturas del sobreprecio a propósito:
+
+- `sobreprecio` — el VALOR contra el mayorista. Es el que enseña la
+  tarjeta, porque el titular ya es el valor y mezclar bases haría que el
+  porcentaje no cuadre con la cifra de al lado.
+- `sobreprecio_min` — la góndola más barata contra el mayorista. Es el que
+  usa la **portada**, donde el número es un argumento delante de alguien
+  que todavía no confía en el sitio: si hasta el más barato está +X%, no
+  hay discusión. Dentro del mercado manda el otro, que describe en vez de
+  argumentar.
+
+### Los enlaces a la cadena salieron de la vista pública
+
+Mandaban a la ficha del supermercado. El sitio terminaba siendo un embudo
+hacia la góndola de otro —con seis destinos distintos por tarjeta— en vez
+de la foto del mercado que dice ser.
+
+**Las URL siguen en los datos, sin pintarse.** Son la herramienta de
+verificación de la casa: sirven para auditar una cifra rara, no son un
+botón para el visitante. Si alguna vez se pintan otra vez, que sea detrás
+de sesión y para el dueño.
+
+En su lugar cada tarjeta **cita la fuente**: qué cadena, de qué clase de
+tienda y con qué alcance. Se dice UNA vez por tarjeta y no por fila —
+repetir "Tienda en línea · Precio nacional, sin sucursal" trece veces
+convertía la tarjeta en un muro y cada fila pasaba de una línea a cuatro.
+
+### Por qué no hay sucursal (y no la va a haber por este camino)
+
+Ninguna de estas cadenas publica precio por sucursal. Lo que se captura es
+su **tienda en línea**, que cotiza un solo precio para todo el país.
+Ponerle "Naco" o "Santiago" a esa cifra sería inventarlo. Se agregaron
+`cadenas.sede` y `cadenas.alcance` para poder decir eso en la tarjeta en
+vez de callarlo.
+
+La única fuente con lugar físico real es la referencia mayorista: el
+mostrador del **Mercado Nuevo, Santo Domingo**. Ya se cita al pie.
+
+**La ubicación de verdad llega con los usuarios reales**, que la ponen en su
+perfil. Eso está fuera de este cambio.
+
+## Pendiente — identidad y ubicación cuando entren usuarios
+
+Hay que resolverlo **antes** de abrir la publicación. Después de que haya
+cuentas creadas es una migración.
+
+- [ ] **Dos negocios con el mismo nombre.** Nada impide que entren tres
+      "Finca El Cerro". Hoy `perfiles` tiene `nombre`, `negocio`,
+      `provincia`, `municipio` y `verificado`, pero ninguna restricción de
+      unicidad y nada que obligue a llenar la provincia. Las tres piezas
+      que se discutieron: mostrar siempre provincia · municipio debajo del
+      nombre, un identificador único permanente por vendedor con su propia
+      página, y el badge de `verificado` — que existe en la tabla y hoy no
+      lo pone nadie.
+- [ ] **Puntos de venta compartidos.** Mucha gente no vende desde su finca
+      sino desde un mercado donde vende **mucha gente a la vez** — el
+      Mercado Nuevo en Santo Domingo es el caso obvio. Eso no es un campo
+      de texto libre: si cada quien lo escribe a su manera, "Mercado
+      Nuevo", "mercado nuevo SD" y "M. Nuevo" salen como tres lugares
+      distintos y el filtro por ubicación deja de servir. Necesita una
+      lista de plazas conocidas, con el mismo criterio que el mapa de
+      alias de cultivos: escrita a mano, no adivinada.
+- [ ] **Un vendedor puede estar en varios sitios.** Finca en Yamasá, puesto
+      en el Mercado Nuevo los sábados. Un solo par provincia/municipio en
+      `perfiles` no lo aguanta; probablemente sea una tabla aparte de
+      puntos de venta.

@@ -36,7 +36,7 @@ query ($texto: String!, $pagina: Int!, $tam: Int!) {
   products(search: $texto, pageSize: $tam, currentPage: $pagina) {
     total_count
     items {
-      name sku url_key
+      name sku url_key url_suffix
       small_image { url }
       stock_status
       categories { name }
@@ -119,7 +119,13 @@ def capturar(hoy: dt.date | None = None) -> Resultado:
                         precio_lista=float(regular) if regular else None,
                         fecha=hoy, categoria=categoria or None,
                         disponible=(p.get("stock_status") == "IN_STOCK"),
-                        url_producto=f"{BASE}/{p['url_key']}.html" if p.get("url_key") else None,
+                        # El sufijo lo dicta Magento por tienda, no es
+                        # siempre ".html": Nacional lo tiene VACÍO y colgarle
+                        # ".html" a mano devolvía 404 en los 100 enlaces.
+                        url_producto=(
+                            f"{BASE}/{p['url_key']}{p.get('url_suffix') or ''}"
+                            if p.get("url_key") else None
+                        ),
                         foto_origen_url=(p.get("small_image") or {}).get("url"),
                     ))
 

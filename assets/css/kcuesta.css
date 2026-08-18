@@ -424,12 +424,12 @@ body.con-pie { padding-bottom: 64px; }
    cuatro o cinco rubros en un teléfono. */
 .rb-cab { display: grid; position: relative;
   grid-template-columns: 68px 1fr auto;
-  grid-template-areas: "foto txt precio" "ref ref ref";
+  grid-template-areas: "foto txt precio" "foto meta meta";
   gap: 6px 13px; align-items: center; padding: 14px 16px; min-height: 68px; }
 .rb-foto { grid-area: foto; }
 .rb-txt { grid-area: txt; }
-.rb-precio { grid-area: precio; }
-.rb-ref { grid-area: ref; }
+.rb-precio { grid-area: precio; align-self: start; }
+.rb-meta { grid-area: meta; }
 .rubro details[open] .rb-cab { border-bottom: 1px solid var(--linea);
   background: var(--verde-50); }
 
@@ -442,8 +442,11 @@ body.con-pie { padding-bottom: 64px; }
 .rb-txt { min-width: 0; }
 .rb-nom { font-weight: 700; line-height: 1.2; font-size: 1.04rem;
   letter-spacing: -.01em; }
-.rb-meta { font-size: .79rem; color: var(--tinta-3); margin-top: 3px; }
-.rb-ref { font-size: .74rem; color: var(--tinta-3); margin-top: 3px;
+.rb-meta { font-size: .78rem; color: var(--tinta-3); margin-top: 1px; }
+/* La referencia mayorista es ahora el PIE de la tarjeta, no una fila del
+   encabezado: primero cuánto vale la cosa, de último contra qué se mide. */
+.rb-ref { font-size: .74rem; color: var(--tinta-3);
+  padding: 8px 16px; border-top: 1px solid var(--linea);
   display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
 
 /* El signo y la palabra cargan el significado; el color solo refuerza.
@@ -462,6 +465,12 @@ body.con-pie { padding-bottom: 64px; }
   color: var(--tinta-3); font-size: .72rem; transition: transform .15s ease; }
 .rubro details[open] .rb-flecha { transform: rotate(180deg); }
 
+.rb-fuente-tit {
+  padding: 8px 14px 2px;
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
 .rb-lista { list-style: none; margin: 0; padding: 0; }
 .rb-fila { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
   padding: 10px 14px; border-bottom: 1px solid var(--linea); align-items: center; }
@@ -481,21 +490,19 @@ body.con-pie { padding-bottom: 64px; }
 /* Entre cadenas la diferencia es de RD$4 a RD$25: en pesos dice algo, en
    porcentaje sería ruido. El % se reserva para el mayorista. */
 .rb-dif { display: block; font-size: .68rem; color: var(--tinta-3); }
-.rb-ir { grid-column: 1 / -1; justify-self: start; font-size: .78rem;
-  color: var(--verde-700); text-decoration: none; font-weight: 650; padding: 2px 0; }
-.rb-ir:hover { text-decoration: underline; }
 .rb-pie { padding: 9px 14px; font-size: .72rem; background: var(--arena); }
 
-/* En la tarjeta de una sola tienda el enlace va en la cabecera, alineado
-   con la referencia mayorista de la segunda fila. */
-.rubro-sola .rb-cab { grid-template-areas: "foto txt precio" "ref ref ir"; }
-.rubro-sola .rb-ir { grid-area: ir; justify-self: end; }
+/* La tarjeta de una sola fuente usa la misma cáscara: cabecera, la cita de
+   dónde salió el precio, y el pie de referencia. Sin control de abrir,
+   porque no hay nada que desplegar. */
+.rb-fuente-una { padding: 0 16px 10px; font-size: .74rem; }
+
+.rb-sede { color: var(--tinta-3); font-weight: 400; }
 .pastillas.cadenas { margin-top: 6px; }
 .pastilla.chica { font-size: .76rem; padding: 5px 11px; }
 
 @media (min-width: 700px) {
-  .rb-fila { grid-template-columns: 1fr auto auto; }
-  .rb-ir { grid-column: auto; justify-self: end; }
+  .rb-fila { grid-template-columns: 1fr auto; }
 }
 
 /* ---------- Lista de precios ----------

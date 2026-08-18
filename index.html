@@ -20,7 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=5">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=6">
 </head>
 <body>
 
@@ -30,7 +30,7 @@
 
 <header class="barra">
   <div class="env barra-in">
-    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=5" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=6" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
     <nav class="nav-esc">
       <a href="precios.html">Precios oficiales</a>
     </nav>
@@ -201,8 +201,8 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=5"></script>
-<script src="assets/js/auth.js?v=5"></script>
+<script src="assets/js/config.js?v=6"></script>
+<script src="assets/js/auth.js?v=6"></script>
 <script>
 /* Muestra de portada: el mismo componente de tarjeta del mercado, con los
    precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
@@ -224,7 +224,7 @@
     });
   }
 
-  fetch('data/portada.json?v=5')
+  fetch('data/portada.json?v=6')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var cadenas = d.cadenas || {};
@@ -243,14 +243,21 @@
               '" loading="lazy" width="136" height="136"></div>' +
             '<div class="rb-txt">' +
               '<div class="rb-nom">' + esc(r.nombre) + '</div>' +
-              '<div class="rb-meta">' + r.n + ' tiendas · ' + rango + '</div>' +
             '</div>' +
-            '<div class="rb-precio"><span class="cifra">' + rd(r.precio_lb_min, 2) +
+            // Mismo titular que el mercado: el VALOR de referencia, no el
+            // más barato. Si la portada enseña una cifra y adentro se ve
+            // otra para el mismo rubro, no se lee como matiz, se lee como
+            // que el sitio no cuadra sus propios números.
+            '<div class="rb-meta">Valor de referencia · ' +
+              (r.n_fuentes === 1 ? '1 fuente' : r.n_fuentes + ' fuentes') +
+              (rango ? '<span class="rb-rango"> · ' + rango + '</span>' : '') + '</div>' +
+            '<div class="rb-precio"><span class="cifra">' + rd(r.valor_lb, 2) +
               '</span><span class="rb-u">/lb</span></div>' +
-            (r.mercado_ref_unidad
-              ? '<div class="rb-ref">Mayorista ' + rd(r.mercado_ref_unidad, 2) + '/lb ' + marca + '</div>'
-              : '') +
           '</div>' +
+          (r.mercado_ref_unidad
+            ? '<div class="rb-ref">Referencia: mayorista ' + rd(r.mercado_ref_unidad, 2) +
+                '/lb · Mercado Nuevo, Santo Domingo ' + marca + '</div>'
+            : '') +
         '</article>';
       }).join('');
 
