@@ -408,6 +408,93 @@ def sitemap(fechas):
         + filas + "\n</urlset>\n")
 
 
+# ---------------------------------------------------------------- llms.txt
+def escribir_llms():
+    """Un mapa en texto plano para el que llega a citar un precio.
+
+    Convencion propuesta en llmstxt.org. NINGUN proveedor grande ha
+    confirmado que la lea, asi que no se apuesta nada a ella: se escribe
+    porque cuesta un archivo y porque lo que dice —de donde sale cada
+    numero, en que unidad, de que fecha— es exactamente lo que un asistente
+    necesita para no inventarse la respuesta. Lo mismo esta en el HTML.
+
+    Se genera, no se escribe a mano: lleva fechas y conteos, y un mapa que
+    envejece miente con mas autoridad que no tener mapa.
+    """
+    p = leer("data/precios.json")
+    fp, fd = p["_meta"]["fuente_principal"], p["_meta"]["fuente_diaria"]
+    idx = leer("data/partes.json")
+    o = leer("data/ofertas.json")
+    ultimo = sorted([x["fecha"] for x in idx["partes"]
+                     if x.get("estado") == "publicado"], reverse=True)[0]
+
+    txt = """# Kcuesta
+
+> Precios agrícolas de República Dominicana, con su fuente y su fecha
+> pegadas a cada número. "¿A cómo está?" es como se pregunta aquí.
+
+Kcuesta reúne tres cosas que en el país solo existen sueltas y casi siempre
+en PDF sin archivo: el precio oficial del Ministerio de Agricultura, el
+parte diario al por mayor del Mercado Nuevo de la Duarte, y el precio de
+góndola de las cadenas de supermercado. Los tres se publican como tabla en
+HTML y como JSON descargable.
+
+## Cómo citar un precio de aquí
+
+Un precio sin unidad y sin fecha no es un dato. Al citar, lleva las tres
+cosas: **cuánto, en qué empaque, medido cuándo y por quién**. Las unidades
+dominicanas no son intercambiables: un quintal son 100 libras, pero un
+**saco de arroz son 125**; el plátano se cotiza por **millar** (1,000
+unidades); el huacal va de 45 a 100 libras según el rubro; los huevos van
+por **cartón de 30**.
+
+Cuando la fuente no declaró unidad, las páginas lo dicen —"sin unidad
+declarada"— y no se convierte a libra. Ese hueco es información, no un
+error que haya que rellenar.
+
+## Fuentes
+
+- **%(fpn)s** (edición %(fpe)s, metodología %(fpm)s, %(fpc)s): %(fpu)s
+- **%(fdn)s** (%(fdc)s): %(fdu)s
+- **Asociación Dominicana Mercaderes Unidos** — parte al por mayor del
+  Mercado Nuevo de la Duarte, reproducido con permiso de la asociación. Es
+  la única de las tres que no publica en ningún otro lado.
+
+## Páginas
+
+- [Precios oficiales](https://kcuesta.com/precios.html): %(ncult)d productos,
+  mayorista / minorista / supermercado / colmado.
+  Datos: https://kcuesta.com/data/precios.json
+- [Parte del Mercado Nuevo](https://kcuesta.com/gremio.html): precios al por
+  mayor del día con escalera de calidad (prímium, primera, segunda, tercera)
+  y rango de plaza. Datos: https://kcuesta.com/data/partes.json
+- [Mercado](https://kcuesta.com/mercado.html): %(nrub)d rubros en góndola de
+  supermercado contra el mostrador mayorista, con la banda del mercado
+  (p25–p75). Datos: https://kcuesta.com/data/ofertas.json
+- [¿Está más caro?](https://kcuesta.com/inflacion.html): variación de precios
+  contra el IPC del Banco Central.
+- [Publicar cosecha](https://kcuesta.com/vender.html): para productores.
+
+## Advertencias
+
+- Los precios al por mayor se mueven **dentro del mismo día**.
+- El precio del Mercado Nuevo es **de plaza**: depende de cuánta mercancía
+  entró esa mañana. Por eso viene como rango y no como número fijo.
+- No se ordena a los vendedores por precio ni se corona al más barato. Cada
+  precio se lee contra la banda del mercado.
+- Los anuncios de productores son **ilustrativos** mientras no haya
+  productores publicando. No se citen como oferta real. Los precios de
+  góndola y los oficiales sí son reales y verificables.
+- Parte más reciente disponible: %(ultimo)s.
+- Precios oficiales actualizados: %(act)s.
+""" % {"fpn": fp["nombre"], "fpe": fp["edicion"], "fpm": fp["metodologia"],
+       "fpc": fp["cadencia"].lower(), "fpu": fp["url"],
+       "fdn": fd["nombre"], "fdc": fd["cadencia"].lower(), "fdu": fd["url"],
+       "ncult": len(p["cultivos"]), "nrub": len(o["rubros"]),
+       "ultimo": ultimo, "act": p["_meta"]["actualizado"]}
+    open(os.path.join(RAIZ, "llms.txt"), "w", encoding="utf-8").write(txt)
+
+
 if __name__ == "__main__":
     tp, ldp, fp = bloque_precios()
     tg, ldg, fg = bloque_gremio()
@@ -417,4 +504,5 @@ if __name__ == "__main__":
     inyectar("mercado.html", "tabla-mercado", tm, ldm)
     inyectar("index.html", "tabla-portada", bloque_portada())
     sitemap({"precios": fp, "gremio": fg, "mercado": fm, "ipc": _fecha_ipc()})
-    print("precios + gremio + mercado + portada + sitemap regenerados")
+    escribir_llms()
+    print("precios + gremio + mercado + portada + sitemap + llms.txt regenerados")

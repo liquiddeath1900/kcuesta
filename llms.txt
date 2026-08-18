@@ -1,0 +1,59 @@
+# Kcuesta
+
+> Precios agrícolas de República Dominicana, con su fuente y su fecha
+> pegadas a cada número. "¿A cómo está?" es como se pregunta aquí.
+
+Kcuesta reúne tres cosas que en el país solo existen sueltas y casi siempre
+en PDF sin archivo: el precio oficial del Ministerio de Agricultura, el
+parte diario al por mayor del Mercado Nuevo de la Duarte, y el precio de
+góndola de las cadenas de supermercado. Los tres se publican como tabla en
+HTML y como JSON descargable.
+
+## Cómo citar un precio de aquí
+
+Un precio sin unidad y sin fecha no es un dato. Al citar, lleva las tres
+cosas: **cuánto, en qué empaque, medido cuándo y por quién**. Las unidades
+dominicanas no son intercambiables: un quintal son 100 libras, pero un
+**saco de arroz son 125**; el plátano se cotiza por **millar** (1,000
+unidades); el huacal va de 45 a 100 libras según el rubro; los huevos van
+por **cartón de 30**.
+
+Cuando la fuente no declaró unidad, las páginas lo dicen —"sin unidad
+declarada"— y no se convierte a libra. Ese hueco es información, no un
+error que haya que rellenar.
+
+## Fuentes
+
+- **Ministerio de Agricultura** (edición 2026-08-07, metodología OIMA, interdiario (lunes, miércoles, viernes); el viernes se publica el resumen semanal): https://agricultura.gob.do/wp-content/uploads/2026/08/Informe-de-precios-07-de-agosto-2026.pdf
+- **Merca Santo Domingo — Precios de Prensa** (diaria (un solo archivo, se sobreescribe — sin archivo histórico)): https://www.mercadom.gob.do/index.php/precios-msd?download=11:precios
+- **Asociación Dominicana Mercaderes Unidos** — parte al por mayor del
+  Mercado Nuevo de la Duarte, reproducido con permiso de la asociación. Es
+  la única de las tres que no publica en ningún otro lado.
+
+## Páginas
+
+- [Precios oficiales](https://kcuesta.com/precios.html): 79 productos,
+  mayorista / minorista / supermercado / colmado.
+  Datos: https://kcuesta.com/data/precios.json
+- [Parte del Mercado Nuevo](https://kcuesta.com/gremio.html): precios al por
+  mayor del día con escalera de calidad (prímium, primera, segunda, tercera)
+  y rango de plaza. Datos: https://kcuesta.com/data/partes.json
+- [Mercado](https://kcuesta.com/mercado.html): 43 rubros en góndola de
+  supermercado contra el mostrador mayorista, con la banda del mercado
+  (p25–p75). Datos: https://kcuesta.com/data/ofertas.json
+- [¿Está más caro?](https://kcuesta.com/inflacion.html): variación de precios
+  contra el IPC del Banco Central.
+- [Publicar cosecha](https://kcuesta.com/vender.html): para productores.
+
+## Advertencias
+
+- Los precios al por mayor se mueven **dentro del mismo día**.
+- El precio del Mercado Nuevo es **de plaza**: depende de cuánta mercancía
+  entró esa mañana. Por eso viene como rango y no como número fijo.
+- No se ordena a los vendedores por precio ni se corona al más barato. Cada
+  precio se lee contra la banda del mercado.
+- Los anuncios de productores son **ilustrativos** mientras no haya
+  productores publicando. No se citen como oferta real. Los precios de
+  góndola y los oficiales sí son reales y verificables.
+- Parte más reciente disponible: 2026-08-18.
+- Precios oficiales actualizados: 2026-08-16.
