@@ -35,11 +35,11 @@
   "lechoza": {
    "nombre": "Lechoza",
    "unidad": "Quintal",
-   "libras_unidad": 100,
+   "libras_unidad": 110,
    "unidad_confianza": "verificada",
    "foto": "assets/img/gremio/lechoza.webp",
    "foto_credito": "foto de la asociación",
-   "nota_unidad": "Un solo número, no un rango: así lo publicaron."
+   "nota_unidad": "El quintal del gremio es de 110 lb, no 100: lo declaró dos veces el 18 de agosto (yautía coco y yuca). La lechoza se cotiza en dos empaques a la vez —el quintal en bulto y la fruta suelta por unidad— y el renglón del día dice cuál."
   },
   "platano-verde": {
    "nombre": "Plátano blanco",
@@ -90,19 +90,19 @@
    "nombre": "Yuca pecho rojo",
    "unidad": "Libra",
    "libras_unidad": 1,
-   "unidad_confianza": "inferida",
+   "unidad_confianza": "verificada",
    "foto": "assets/img/gremio/yuca.webp",
    "foto_credito": "foto de la asociación",
-   "nota_unidad": "Unidad no declarada. Se lee por libra porque el Ministerio cotiza la yuca a RD$2,800 el quintal, que son exactamente RD$28/lb."
+   "nota_unidad": "El 18 de agosto el gremio la cotizó «quintal 110 libras» a 2,800–3,000, que son 25.45–27.27 la libra. Confirma que los 28–30 del 17 eran por libra. El renglón del día trae su propia unidad cuando la cotizan por quintal."
   },
   "auyama": {
    "nombre": "Auyama",
    "unidad": "Kilo",
-   "libras_unidad": null,
-   "unidad_confianza": "a confirmar",
+   "libras_unidad": 2.20462,
+   "unidad_confianza": "verificada",
    "foto": "assets/img/gremio/auyama.webp",
    "foto_credito": "foto de la asociación",
-   "nota_unidad": "Único rubro cotizado en kilo; todo lo demás va en libra. No se normaliza hasta confirmarlo."
+   "nota_unidad": "El 18 de agosto la cotizaron por quintal a 4,000–4,500. El quintal del gremio es de 110 lb = 49.9 kg, así que son 80–90 el kilo: exactamente los 80–90 del 17. Confirma el kilo y confirma el quintal; era la única inferencia suelta que quedaba. El kilo se convierte a libra con la equivalencia exacta (1 kg = 2.20462 lb); no es una inferencia sobre el empaque."
   },
   "cilantro": {
    "nombre": "Cilantro",
@@ -171,10 +171,10 @@
    "nombre": "Papa",
    "unidad": "Saco/50 lb",
    "libras_unidad": 50,
-   "unidad_confianza": "inferida",
+   "unidad_confianza": "verificada",
    "foto": "assets/img/gremio/papa.webp",
    "foto_credito": "foto de la asociación",
-   "nota_unidad": "El mensaje no dijo qué producto era, solo “entre 1600 y 1200 saco de 50lbs”. Se identificó por la foto: papa en malla amarilla. Confirmar con el gremio."
+   "nota_unidad": "El 18 de agosto lo declararon completo: «Papa / Por saco de 50lbs». Confirma también la identificación por foto del 17."
   },
   "pepino": {
    "nombre": "Pepino",
@@ -202,6 +202,51 @@
    "foto": "assets/img/rubros/aji-gustoso.webp",
    "foto_credito": "foto de góndola",
    "nota_unidad": "NO es el ají cubanela ni el morrón: el gremio lo cotiza en renglón aparte y a otro orden de magnitud (6,000 contra 900 el de saco). Unidad no declarada."
+  },
+  "yautia-blanca": {
+   "nombre": "Yautía blanca",
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/yautia-blanca.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Dijeron «quintal» sin libras. El mismo día declararon 110 lb en la yautía coco y en la yuca; extenderlo aquí es razonable y por eso hay que preguntarlo, no asumirlo."
+  },
+  "yautia-coco": {
+   "nombre": "Yautía coco",
+   "unidad": "Quintal/110 lb",
+   "libras_unidad": 110,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/rubros/yautia-coco.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "«Yautia coco quintal 110 libras», textual. Es el renglón que fijó que el quintal del gremio es de 110 lb y no de 100."
+  },
+  "name-mina": {
+   "nombre": "Ñame mina",
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/name-mina.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Dijeron «quintal» sin libras."
+  },
+  "coco-seco": {
+   "nombre": "Coco seco",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/coco-seco.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "«Coco seco entre 40 y 50», sin unidad. Se lee por pieza porque es lo único que cuadra, pero no lo declararon."
+  },
+  "mango-ki": {
+   "nombre": "Mango ki",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": null,
+   "foto_credito": null,
+   "nota_unidad": "«Mango ki entre 10 15 y 20 dependiendo el tamaño», sin unidad. Se lee por pieza: el precio cambia con el tamaño de la fruta, que solo tiene sentido vendiendo fruta suelta. Sin foto propia: la única de mango en el repo es de gota de oro, otra variedad, y ponerla aquí sería enseñar una fruta por otra."
   }
  }
 }

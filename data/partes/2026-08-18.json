@@ -19,11 +19,12 @@
    "nota": "Permiso verbal del administrador, no un acuerdo escrito. Se registra aquí con fecha para que quede claro de quién vino. La asociación va acreditada en cada pantalla donde salgan sus números. Si piden retirarlo, el campo `estado` pasa a 'retirado' y desaparece del sitio."
   },
   "catalogo": "data/gremio-rubros.json",
-  "nota_plaza": "Plaza full berenjenas, morrones, ensaladas regulares y ajíes regulares cubanelas.",
-  "nota_plaza_fuente": "Encabezado del parte, textual",
-  "nota_cobertura": "Este día solo llegó la lista de la Asociación de Mayoristas de Vegetales. El administrador no publicó su tanda —chinola, plátano, cebolla, ajo, zanahoria, apio, remolacha, yuca, auyama, cilantro, lechoza, maíz y papa— ni mandó fotos nuevas. Esos rubros siguen abajo con su último precio y la fecha en que se cotizó, no como precio de hoy.",
-  "nota_unidades": "Ni un solo renglón cotizado este día declaró unidad. Se publican tal cual y no se convierten a libra.",
-  "miembros_canal": 203
+  "nota_plaza": "Plaza full berenjenas, morrones, ensaladas regulares y ajíes regulares cubanelas. Y a mediodía, sobre el plátano: «A esta hora hay mucho plátano todavía».",
+  "nota_plaza_fuente": "Lo primero, encabezado del parte de los mayoristas; lo segundo, el administrador a las 12:26 PM. Ambos textuales.",
+  "nota_cobertura": "Este día llegaron dos tandas. Primero la lista reenviada de la Asociación de Mayoristas de Vegetales —tomate, pepino, ají, gustoso, berenjena, morrón, limón—, sin unidad en ningún renglón. Después, en la tarde, el administrador publicó su propia tanda caminando el mercado: plátano, papa, cebolla, lechoza, yuca, auyama, ñame, yautía, coco y mango, casi toda con unidad declarada. Lo que no se cotizó ninguna de las dos veces —chinola, ajo, zanahoria, apio, remolacha, maíz— sigue abajo con su último precio y la fecha en que se cotizó, no como precio de hoy.",
+  "nota_unidades": "Ni un renglón de la lista de mayoristas declaró unidad; se publican tal cual y no se convierten a libra. La tanda del administrador sí: el quintal de este gremio es de 110 libras, declarado en la yautía coco y en la yuca. Eso cerró dos inferencias viejas —la auyama por kilo y la yuca por libra— porque los precios por quintal de hoy caen exactos sobre los del 17. Siguen sin unidad las verduras de hoja, el plátano, el coco y el mango.",
+  "miembros_canal": 203,
+  "nota_pendiente": "«Verduras: de primera 50, de segunda 40, de tercera 30» (9:19 AM, con foto de cilantro) NO se publica. La palabra que usaron es «verduras», no «cilantro», y aunque el 17 el cilantro llevó la misma escalera de tres grados, la hoja en general y el cilantro no son el mismo renglón. Está archivado con la pregunta hecha; entra el día que la contesten."
  },
  "items": [
   {
@@ -182,6 +183,224 @@
    "libras_unidad": null,
    "detalle": "inferiores y viejos",
    "nota": "Ayer el morrón se cotizó «regular, la caja» a 300–500. Hoy es otro grado y sin unidad: 25 no puede ser una caja. Son dos cosas distintas, no una caída de precio, y por eso no se compara con ayer."
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 800,
+   "precio_max": 1000,
+   "unidad": "Quintal",
+   "libras_unidad": 110,
+   "detalle": "por quintal",
+   "nota": "Textual: «Lechoza reley quintal 800 1000 y 1200 precio de venta al por mayor». Son tres números para dos casillas; se publican los dos primeros como la banda y no se inventa qué es el 1200. Falta preguntar si es el precio de reventa."
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 40,
+   "precio_max": 50,
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "detalle": "la fruta suelta",
+   "nota": "El mismo día la cotizaron por quintal en bulto y por unidad la fruta suelta. Son dos empaques, no dos precios del mismo bulto."
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 25,
+   "precio_max": 35,
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "detalle": "la fruta suelta"
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 14,
+   "precio_max": 16,
+   "nota": "Publicado como «plátanos blancos osea plátanos Barahoneros Azuanos y maeños». Unidad no declarada, igual que el 17."
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 10,
+   "precio_max": 13
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 5,
+   "precio_max": 7,
+   "nota": "Publicados como «las rabisas»."
+  },
+  {
+   "cultivo": "papa",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 1800,
+   "precio_max": 1900,
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "detalle": "por saco",
+   "nota": "«Papa / Por saco de 50lbs», declarado completo. El 17 la unidad se había identificado por la foto; hoy la dijeron."
+  },
+  {
+   "cultivo": "papa",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 1700,
+   "precio_max": 1700,
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "detalle": "por saco",
+   "nota": "Un solo número, no un rango: así lo publicaron."
+  },
+  {
+   "cultivo": "papa",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 1500,
+   "precio_max": 1600,
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "detalle": "por saco"
+  },
+  {
+   "cultivo": "cebolla-roja",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 2000,
+   "precio_max": 2200,
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "detalle": "por saco"
+  },
+  {
+   "cultivo": "platano-maduro",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 15,
+   "precio_max": 18,
+   "nota": "El 17 el maduro fue 150–200 y hoy 15–18: un factor de diez. O cambió la unidad —racimo contra pieza— o uno de los dos trae un cero de más. No se compara con ayer hasta preguntarlo.",
+   "no_comparar": true,
+   "no_comparar_motivo": "El 17 el maduro fue 150–200 y hoy 15–18. La llave calza pero la medida no: o cambió el empaque —racimo contra pieza— o uno de los dos trae un cero de más. Hasta que el gremio lo aclare, restar los dos números inventaría una caída de 91%."
+  },
+  {
+   "cultivo": "coco-seco",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 40,
+   "precio_max": 50,
+   "nota": "«Coco seco entre 40 y 50», sin unidad declarada."
+  },
+  {
+   "cultivo": "name-mina",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 5500,
+   "precio_max": 6000,
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "detalle": "por quintal",
+   "nota": "Dijeron «quintal» sin declarar las libras. El mismo día declararon 110 lb en la yautía coco y en la yuca, pero eso no se extiende a este renglón sin preguntar."
+  },
+  {
+   "cultivo": "yautia-blanca",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 7000,
+   "precio_max": 7000,
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "detalle": "por quintal",
+   "nota": "Un solo número por grado, no un rango: así lo publicaron. «Quintal» sin libras declaradas."
+  },
+  {
+   "cultivo": "yautia-blanca",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 6000,
+   "precio_max": 6000,
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "detalle": "por quintal"
+  },
+  {
+   "cultivo": "yautia-blanca",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 5000,
+   "precio_max": 5000,
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "detalle": "por quintal"
+  },
+  {
+   "cultivo": "yautia-coco",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 4000,
+   "precio_max": 4000,
+   "unidad": "Quintal/110 lb",
+   "libras_unidad": 110,
+   "detalle": "por quintal",
+   "nota": "«Yautia coco quintal 110 libras», textual. Es el renglón que fijó que el quintal de este gremio es de 110 lb y no de 100."
+  },
+  {
+   "cultivo": "yautia-coco",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 3500,
+   "precio_max": 3500,
+   "unidad": "Quintal/110 lb",
+   "libras_unidad": 110,
+   "detalle": "por quintal"
+  },
+  {
+   "cultivo": "yautia-coco",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 3200,
+   "precio_max": 3200,
+   "unidad": "Quintal/110 lb",
+   "libras_unidad": 110,
+   "detalle": "por quintal"
+  },
+  {
+   "cultivo": "yuca",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 2800,
+   "precio_max": 3000,
+   "unidad": "Quintal/110 lb",
+   "libras_unidad": 110,
+   "detalle": "por quintal",
+   "nota": "El 17 la cotizaron a 28–30 la libra; hoy por quintal de 110 lb, que sale a 25.45–27.27 la libra. No se compara con ayer porque la unidad cambió, pero las dos cotizaciones se confirman entre sí."
+  },
+  {
+   "cultivo": "auyama",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 4000,
+   "precio_max": 4500,
+   "unidad": "Quintal",
+   "libras_unidad": null,
+   "detalle": "por quintal",
+   "nota": "El 17 fue 80–90 el kilo. El quintal de 110 lb son 49.9 kg, y 4,000–4,500 el quintal son exactamente 80–90 el kilo. Confirma las dos cotizaciones. No se compara con ayer porque la unidad cambió."
+  },
+  {
+   "cultivo": "mango-ki",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 10,
+   "precio_max": 20,
+   "nota": "«Mango ki entre 10 15 y 20 dependiendo el tamaño». Sin unidad declarada; el precio cambia con el tamaño de la fruta, que solo tiene sentido vendiéndola suelta."
   }
  ]
 }
