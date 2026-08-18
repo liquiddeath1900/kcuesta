@@ -142,9 +142,31 @@ def bloque_precios():
         "url": BASE + "precios.html",
         "inLanguage": "es-DO",
         "isAccessibleForFree": True,
-        "license": "https://creativecommons.org/licenses/by/4.0/",
+        # SIN `license`. Estaba declarado CC BY 4.0 y eso es afirmar derechos
+        # sobre cifras del Ministerio y de MERCADOM, que no son nuestras. Lo
+        # que sí es nuestro es la compilación y la normalización; si algún
+        # día se quiere licenciar, hay que decir que cubre eso y no los
+        # números de origen. Mientras tanto, `isBasedOn` y la atribución
+        # visible dicen la verdad sin reclamar nada.
         "spatialCoverage": {"@type": "Country", "name": "República Dominicana"},
-        "variableMeasured": "Precio mayorista, minorista y de supermercado por producto agrícola",
+        # NO se pone `unitText`. Las unidades de este archivo son ocho
+        # distintas —Ciento, UD, LB, Doc, Litro, Quintal— y estampar
+        # "DOP/libra" en el marcado sería inventarle al dato una etiqueta
+        # que la fuente nunca dio. La unidad va fila por fila en la tabla.
+        "variableMeasured": [
+            {"@type": "PropertyValue", "name": "Precio mayorista"},
+            {"@type": "PropertyValue", "name": "Precio minorista"},
+            {"@type": "PropertyValue", "name": "Precio de supermercado"}],
+        "keywords": ["precios agrícolas", "República Dominicana", "mercado mayorista",
+                     "agricultura", "canasta básica"],
+        # La cobertura temporal es la EDICION del informe del Ministerio, no
+        # el dia en que corrimos el pipeline. Decir "2026-08-16" cuando la
+        # edicion es del 7 es fechar el dato con nuestro reloj.
+        "temporalCoverage": fp.get("edicion"),
+        "distribution": [{"@type": "DataDownload",
+                          "contentUrl": BASE + "data/precios.json",
+                          "encodingFormat": "application/json"}],
+        "publisher": {"@type": "Organization", "name": "Kcuesta", "url": BASE},
         "dateModified": meta.get("actualizado"),
         "creator": {"@type": "Organization", "name": "Kcuesta", "url": BASE},
         "isBasedOn": [x for x in [
@@ -211,7 +233,16 @@ def bloque_gremio():
         "url": BASE + "gremio.html",
         "inLanguage": "es-DO",
         "isAccessibleForFree": True,
-        "temporalCoverage": m["fecha"],
+        # El archivo tiene mas de un parte y el anterior es el que sostiene
+        # la comparacion de subio/bajo. Se declara desde el mas viejo, en
+        # rango abierto, y sale del indice — no escrito a mano, que es como
+        # estas fechas se quedan viejas.
+        "temporalCoverage": "%s/.." % min(p["fecha"] for p in pubs),
+        "distribution": [{"@type": "DataDownload",
+                          "contentUrl": BASE + "data/partes.json",
+                          "encodingFormat": "application/json"}],
+        "keywords": ["precios al por mayor", "Mercado Nuevo de la Duarte",
+                     "República Dominicana", "mayorista", "agricultura"],
         "dateModified": m.get("actualizado", m["fecha"]),
         "spatialCoverage": {"@type": "Place", "name": "%s, %s, República Dominicana"
                             % (m["plaza"], m["provincia"])},
@@ -287,8 +318,20 @@ def bloque_mercado():
         "isAccessibleForFree": True,
         "dateModified": meta.get("actualizado"),
         "spatialCoverage": {"@type": "Country", "name": "República Dominicana"},
-        "variableMeasured": "Precio al consumidor por libra, banda de mercado y sobreprecio sobre el mayorista",
+        "variableMeasured": [
+            {"@type": "PropertyValue", "name": "Precio al consumidor",
+             "unitText": "DOP/libra"},
+            {"@type": "PropertyValue", "name": "Banda del mercado (p25–p75)",
+             "unitText": "DOP/libra"},
+            {"@type": "PropertyValue", "name": "Sobreprecio sobre el mayorista",
+             "unitText": "%"}],
+        "keywords": ["precios de supermercado", "República Dominicana",
+                     "góndola", "canasta básica", "agricultura"],
+        "distribution": [{"@type": "DataDownload",
+                          "contentUrl": BASE + "data/ofertas.json",
+                          "encodingFormat": "application/json"}],
         "creator": {"@type": "Organization", "name": "Kcuesta", "url": BASE},
+        "publisher": {"@type": "Organization", "name": "Kcuesta", "url": BASE},
     }
     return tabla, ld, meta.get("actualizado")
 
