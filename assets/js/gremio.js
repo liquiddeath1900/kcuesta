@@ -23,7 +23,7 @@
   // precio y la foto. Publicar el parte de mañana es escribir un archivo de
   // precios; no hay que volver a tocar nombres, unidades ni fotos, y los
   // partes viejos quedan intactos porque nadie los reescribe.
-  var V = '?v=10';
+  var V = '?v=11';
   var INDICE = 'data/partes.json' + V;
   var CATALOGO = 'data/gremio-rubros.json' + V;
 
@@ -32,15 +32,21 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  function num(n, d) {
+    return Number(n).toLocaleString('es-DO', {
+      minimumFractionDigits: d == null ? 2 : d, maximumFractionDigits: d == null ? 2 : d });
+  }
   function rd(n, d) {
     if (n == null) return '—';
-    return 'RD$ ' + Number(n).toLocaleString('es-DO', {
-      minimumFractionDigits: d == null ? 2 : d, maximumFractionDigits: d == null ? 2 : d });
+    return 'RD$ ' + num(n, d);
   }
   // Un rango donde los dos extremos son iguales no es un rango: es un
   // número. Enseñar "12 – 12" hace dudar del dato.
+  // El "RD$" va UNA vez. "RD$ 5,000 – RD$ 6,000" pide 40px más de los que
+  // hay en un teléfono de 320px y el rango se salía de la tarjeta; repetir
+  // la moneda dentro del mismo rango tampoco aclara nada.
   function rango(a, b, d) {
-    return a === b ? rd(a, d) : rd(a, d) + ' – ' + rd(b, d);
+    return a === b ? rd(a, d) : rd(a, d) + ' – ' + num(b, d);
   }
   function fechaLarga(iso) {
     var M = ['enero','febrero','marzo','abril','mayo','junio','julio',
@@ -49,9 +55,22 @@
     return Number(p[2]) + ' de ' + M[Number(p[1]) - 1] + ' ' + p[0];
   }
 
-  var ORDEN_CAL = { premium: 0, primera: 1, segunda: 2, regular: 2, tercera: 3 };
+  var ORDEN_CAL = { premium: 0, primera: 1, segunda: 2, regular: 2, tercera: 3,
+                    inferior: 4 };
+  // Los grados se rotulan con la palabra del gremio. 'Inferiores y viejos' no
+  // es 'tercera': el gremio distingue mercancía de grado bajo de mercancía
+  // pasada, y traducirlo a la escalera limpia le quitaría la advertencia.
   var ETIQ_CAL = { premium: 'Prímium', primera: 'Primera', segunda: 'Segunda',
-                   tercera: 'Tercera', regular: 'Regular' };
+                   tercera: 'Tercera', regular: 'Regular',
+                   inferior: 'Inferiores y viejos' };
+
+  // Identidad de un renglón para poder buscarlo en el parte anterior. Entra
+  // la UNIDAD a propósito: el morrón de ayer iba 'la caja' a 300–500 y el de
+  // hoy va sin unidad a 20–25. Comparar eso daría un −94% inventado. Si la
+  // unidad cambió, no es el mismo renglón y no se compara.
+  function llave(f) {
+    return [f.cultivo, f.calidad || '', f.unidad || '', f.detalle || ''].join('|');
+  }
 
   function traer(u) { return fetch(u).then(function (r) { return r.json(); }); }
 
@@ -63,12 +82,45 @@
     // El índice viene con el más reciente de primero, pero se ordena igual:
     // un archivo mal puesto no debería hacer que la página enseñe ayer.
     publicados.sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; });
-    return traer(publicados[0].archivo + V).then(function (parte) {
-      return [parte, res[1].rubros || {}];
-    });
+    // Se carga TAMBIÉN el parte anterior. Es lo único que convierte un
+    // número en una noticia: 1,100 la berenjena no dice nada; 1,100 cuando
+    // ayer estaba en 1,400 dice que entró mercancía. El gremio mismo lo
+    // explica en la nota de plaza.
+    var previo = publicados[1]
+      ? traer(publicados[1].archivo + V).catch(function () { return null; })
+      : Promise.resolve(null);
+    return Promise.all([traer(publicados[0].archivo + V), previo])
+      .then(function (ps) {
+        return [ps[0], res[1].rubros || {}, ps[1], publicados[1] || null];
+      });
   }).then(function (par) {
-    var d = par[0], CAT = par[1];
+    var d = par[0], CAT = par[1], ANT = par[2], ANT_INFO = par[3];
     var m = d._meta;
+
+    /* ---------- el parte de ayer, indexado por renglón ---------- */
+    var PREV = {}, PREV_CULTIVO = {};
+    if (ANT && ANT.items) {
+      ANT.items.forEach(function (i) {
+        var c = CAT[i.cultivo] || {};
+        var u = i.unidad !== undefined ? i.unidad : c.unidad;
+        var k = llave({ cultivo: i.cultivo, calidad: i.calidad, unidad: u,
+                        detalle: i.detalle });
+        PREV[k] = i;
+        PREV_CULTIVO[i.cultivo] = 1;
+      });
+    }
+    var PREV_FECHA = ANT && ANT._meta ? ANT._meta.fecha : (ANT_INFO && ANT_INFO.fecha);
+
+    // "desde ayer" solo si de verdad fue ayer. Si el gremio no publicó el
+    // lunes, el cambio es contra el viernes y hay que decirlo.
+    function desdeCuando() {
+      if (!PREV_FECHA) return '';
+      var a = new Date(m.fecha + 'T00:00:00');
+      var b = new Date(PREV_FECHA + 'T00:00:00');
+      var dias = Math.round((a - b) / 86400000);
+      return dias === 1 ? 'desde ayer' : 'desde el ' + fechaLarga(PREV_FECHA);
+    }
+    var DESDE = desdeCuando();
 
     // El parte trae precio y foto; el catálogo pone lo que no cambia. La
     // foto del día MANDA sobre la del catálogo: el gremio retrata la
@@ -86,6 +138,7 @@
         cultivo: i.cultivo,
         nombre: c.nombre || i.cultivo,
         calidad: i.calidad,
+        detalle: i.detalle || null,
         procedencia: i.procedencia,
         unidad: unidad,
         libras_unidad: libras,
@@ -104,10 +157,63 @@
       };
     });
 
+    /* ---------- frescura ----------
+       Se compara la fecha del parte contra el día de quien lee. Si el gremio
+       no publica un día, la página no puede seguir diciendo "el parte" como
+       si fuera de hoy: enseña cuántos días tiene y quien lee decide. */
+    function frescura(iso) {
+      var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      var f = new Date(iso + 'T00:00:00');
+      var dias = Math.round((hoy - f) / 86400000);
+      if (dias < 0) return '';
+      if (dias === 0) return '<span class="sello-fresco hoy">Hoy</span>';
+      if (dias === 1) return '<span class="sello-fresco ayer">Ayer</span>';
+      return '<span class="sello-fresco viejo">Hace ' + dias + ' días</span>';
+    }
+
+    /* ---------- lo que hoy no se cotizó ----------
+       El gremio no publica los mismos rubros todos los días: hoy mandó solo
+       la lista de vegetales y no la tanda de chinola, plátano y cebolla.
+       Borrarlos de la página deja al que entra sin saber a cómo está el
+       plátano; enseñarlos como si fueran de hoy sería mentir.
+
+       Se quedan, con la FECHA DEL DÍA QUE SE COTIZARON pegada al renglón.
+       El precio nunca se despega de su fecha: eso es lo que lo hace un dato
+       y no un número suelto. Van al final y con el sello a la vista. */
+    var hoyCultivos = {};
+    items.forEach(function (i) { hoyCultivos[i.cultivo] = 1; });
+    var nRubros = Object.keys(hoyCultivos).length;
+
+    if (ANT && ANT.items) {
+      ANT.items.forEach(function (i) {
+        if (hoyCultivos[i.cultivo]) return;   // hoy sí se cotizó: manda hoy
+        var c = CAT[i.cultivo] || {};
+        var unidad = i.unidad !== undefined ? i.unidad : c.unidad;
+        var libras = i.libras_unidad !== undefined ? i.libras_unidad : c.libras_unidad;
+        items.push({
+          cultivo: i.cultivo,
+          nombre: c.nombre || i.cultivo,
+          calidad: i.calidad,
+          detalle: i.detalle || null,
+          procedencia: i.procedencia,
+          unidad: unidad,
+          libras_unidad: libras,
+          unidad_confianza: c.unidad_confianza,
+          nota: i.nota || c.nota_unidad,
+          precio_min: i.precio_min,
+          precio_max: i.precio_max,
+          precio_lb_min: libras ? +(i.precio_min / libras).toFixed(2) : null,
+          precio_lb_max: libras ? +(i.precio_max / libras).toFixed(2) : null,
+          foto: i.foto || c.foto || null,
+          foto_credito: i.foto ? (i.foto_credito || 'foto del día')
+                               : (c.foto ? c.foto_credito : null),
+          arrastrado: true,
+          fecha_origen: PREV_FECHA
+        });
+      });
+    }
+
     /* ---------- cabecera ---------- */
-    var rubros = {};
-    items.forEach(function (i) { rubros[i.cultivo] = 1; });
-    var nRubros = Object.keys(rubros).length;
 
     document.getElementById('cab').innerHTML =
       '<div class="gr-id">' +
@@ -131,7 +237,34 @@
         '<div class="gr-cifra"><b>' + nRubros + '</b><span>rubros hoy</span></div>' +
         '<div class="gr-cifra"><b>Mayorista</b><span>nivel</span></div>' +
       '</div>' +
-      '<div class="gr-fecha">Parte del <b>' + esc(fechaLarga(m.fecha)) + '</b></div>';
+      // Cuándo se actualizó, a la vista. Un precio de plaza envejece en horas
+      // y el visitante tiene que poder saber si está mirando lo de hoy o lo
+      // del viernes SIN hacer la cuenta. La frescura se calcula contra el
+      // reloj de quien lee, no se escribe a mano en el archivo.
+      '<div class="gr-fecha">Parte del <b>' + esc(fechaLarga(m.fecha)) + '</b>' +
+        frescura(m.fecha) +
+        '<div class="gr-actualizado silencio">Actualizado el ' +
+          esc(fechaLarga(m.actualizado || m.fecha)) +
+          (m.momento ? ' ' + esc(m.momento) : '') +
+          ', con lo que publicó el gremio ese día.' +
+        '</div>' +
+      '</div>';
+
+    /* ---------- la nota de plaza ----------
+       El gremio escribe una línea diaria diciendo de qué entró mucho. Es la
+       CAUSA del precio, no un adorno: el día que dijo "plaza full berenjenas"
+       la berenjena cayó 25%. Ninguna otra fuente que tenemos trae esto, así
+       que va arriba, con su fecha, y textual. */
+    if (m.nota_plaza) {
+      var cab = document.getElementById('cab');
+      var np = document.createElement('div');
+      np.className = 'gr-plaza';
+      np.innerHTML = '<b>Nota de plaza</b> · ' + esc(fechaLarga(m.fecha)) +
+        '<div class="gr-plaza-txt">' + esc(m.nota_plaza) + '</div>' +
+        '<div class="silencio">A mayor oferta, el precio baja: es lo que ' +
+        'explica el gremio y lo que se ve en las flechas de abajo.</div>';
+      cab.appendChild(np);
+    }
 
     /* ---------- agrupar por rubro ----------
        Un renglón por grado se junta bajo su rubro. El orden de los grados
@@ -156,18 +289,35 @@
       var conFoto = r.filas.filter(function (f) { return f.foto; })[0];
       r.foto = conFoto ? conFoto.foto : null;
       r.foto_credito = conFoto ? conFoto.foto_credito : null;
+      // El renglón sin grado va PRIMERO (-1), no último. El gremio publicó
+      // "Pepino 1400/1300" y debajo "Pepino regular 1100/1000": el que no
+      // trae grado es el de arriba de la escalera, y mandarlo al final
+      // dejaba el regular más barato en el primer renglón, que se lee como
+      // un error de datos. Mismo caso de la lechoza por quintal.
       r.filas.sort(function (a, b) {
-        return (ORDEN_CAL[a.calidad] == null ? 9 : ORDEN_CAL[a.calidad]) -
-               (ORDEN_CAL[b.calidad] == null ? 9 : ORDEN_CAL[b.calidad]);
+        return (ORDEN_CAL[a.calidad] == null ? -1 : ORDEN_CAL[a.calidad]) -
+               (ORDEN_CAL[b.calidad] == null ? -1 : ORDEN_CAL[b.calidad]);
       });
       // Comparable = el gremio declaró (o se pudo deducir) la unidad.
       r.comparable = r.filas.some(function (f) { return f.precio_lb_min != null; });
+      r.arrastrado = r.filas.every(function (f) { return f.arrastrado; });
+      // Rubro entero nuevo: UN sello arriba, no uno por grado. El ají
+      // cubanela trae cuatro renglones y cuatro "Nuevo en este parte"
+      // seguidos se leen como un error de la página, no como una novedad.
+      r.nuevo = !r.arrastrado && ANT &&
+                r.filas.every(function (f) { return !PREV_CULTIVO[f.cultivo]; });
+      if (r.nuevo) r.filas.forEach(function (f) { f.rubroNuevo = true; });
+      r.fecha_origen = r.arrastrado ? r.filas[0].fecha_origen : null;
       return r;
     });
     // Primero lo que se puede comparar por libra. Lo que no, al final, con
     // el hueco a la vista.
+    // Primero lo de HOY, después lo arrastrado. Dentro de cada bloque,
+    // primero lo comparable por libra.
     lista.sort(function (a, b) {
-      return (b.comparable - a.comparable) || a.nombre.localeCompare(b.nombre, 'es');
+      return (a.arrastrado - b.arrastrado) ||
+             (b.comparable - a.comparable) ||
+             a.nombre.localeCompare(b.nombre, 'es');
     });
 
     /* ---------- la góndola, para el contraste ----------
@@ -217,6 +367,52 @@
         '</div>';
     }
 
+    /* ---------- subió o bajó ----------
+       Contra el MISMO renglón del parte anterior: mismo rubro, mismo grado,
+       misma unidad. Se compara el punto medio del rango porque los dos
+       extremos se mueven por separado —el bugalú regular subió el piso 50%
+       y el techo 17%— y una sola flecha tiene que representar el renglón
+       entero.
+
+       No se compara: renglón nuevo, renglón que ayer venía con otra unidad,
+       o rubro que ayer no se cotizó. En esos tres casos el hueco se dice. */
+    function medio(f) { return (f.precio_min + f.precio_max) / 2; }
+
+    function cambio(f) {
+      // Un renglón arrastrado no cambió de precio: es el MISMO renglón de
+      // otro día. Ponerle "igual" diría que hoy se cotizó igual, y hoy no
+      // se cotizó. Lleva su sello de fecha en vez de flecha.
+      if (f.arrastrado) return '';
+      if (!ANT) return '';
+      var ant = PREV[llave(f)];
+      if (!ant) {
+        // Distinguir "producto nuevo en la lista" de "hoy vino distinto".
+        // Son dos cosas y la segunda es una advertencia, no una novedad.
+        if (!PREV_CULTIVO[f.cultivo]) {
+          if (f.rubroNuevo) return '';   // ya lo dice el sello del rubro
+          // "Nuevo" a secas. Decía "Nuevo ayer", que se leía como que el
+          // renglón entró ayer cuando lo que pasa es lo contrario: entró
+          // hoy y ayer no estaba.
+          return '<span class="gr-cambio nuevo" title="No estaba en el parte ' +
+                 'anterior">Nuevo en este parte</span>';
+        }
+        return '<span class="gr-cambio sin-base" title="Ayer este rubro se cotizó con otro grado o con otra unidad">sin comparación</span>';
+      }
+      var hoy = medio(f), ayer = medio(ant);
+      if (!ayer) return '';
+      var pct = Math.round((hoy - ayer) / ayer * 100);
+      var t = 'Ayer: ' + rango(ant.precio_min, ant.precio_max, 0) +
+              (ant.unidad ? ' / ' + ant.unidad : '');
+      if (pct === 0) {
+        return '<span class="gr-cambio igual" title="' + esc(t) + '">Igual ' +
+               esc(DESDE) + '</span>';
+      }
+      var arriba = pct > 0;
+      return '<span class="gr-cambio ' + (arriba ? 'sube' : 'baja') +
+             '" title="' + esc(t) + '">' +
+             (arriba ? '▲ +' : '▼ ') + pct + '% ' + esc(DESDE) + '</span>';
+    }
+
     /* ---------- pintar ---------- */
     function fila(f) {
       var etiq = f.calidad ? ETIQ_CAL[f.calidad] || f.calidad : 'Precio del día';
@@ -224,11 +420,16 @@
       return '<li class="gr-fila">' +
         '<div class="gr-grado">' +
           '<b class="cal cal-' + esc(f.calidad || 'unica') + '">' + esc(etiq) + '</b>' +
+          (f.detalle ? '<span class="silencio gr-proc">' + esc(f.detalle) + '</span>' : '') +
           (f.procedencia ? '<span class="silencio gr-proc">' + esc(f.procedencia) + '</span>' : '') +
+          cambio(f) +
         '</div>' +
         '<div class="gr-precio">' +
           '<span class="cifra">' + rango(f.precio_min, f.precio_max, 0) + '</span>' +
-          '<span class="gr-u">' + (f.unidad ? ' / ' + esc(f.unidad) : '') + '</span>' +
+          // El espacio va FUERA del span. Adentro, junto a la unidad que es
+          // `nowrap`, no había dónde partir la línea y "/ Saco/22 lb" se
+          // salía de la tarjeta en vez de bajar al renglón de abajo.
+          (f.unidad ? ' <span class="gr-u">/ ' + esc(f.unidad) + '</span>' : '') +
           // Dos huecos distintos, y decían lo mismo. La chinola SÍ trae
           // unidad —se vende por unidad— lo que no tiene es peso, así que
           // no hay libra a la cual convertir. Rotularla "sin unidad
@@ -257,7 +458,8 @@
 
     document.getElementById('rejilla').innerHTML = lista.map(function (r) {
       var dudosa = r.filas.some(function (f) { return f.unidad_confianza === 'a confirmar'; });
-      return '<article class="rubro gremio-rubro' + (r.comparable ? '' : ' sin-unidad') + '"' +
+      return '<article class="rubro gremio-rubro' + (r.comparable ? '' : ' sin-unidad') +
+             (r.arrastrado ? ' arrastrado' : '') + '"' +
              ' data-cal="' + esc(r.filas.map(function (f) { return f.calidad || ''; }).join(' ')) + '">' +
         // La foto es su propia COLUMNA y va a todo lo alto de la tarjeta.
         // Puesta como miniatura al lado del nombre se quedaba en 60px, y
@@ -266,7 +468,7 @@
         // tarjeta de la chinola, que trae tres grados, le da a la foto
         // ~150px sin ocupar más pantalla que antes.
         (r.foto
-          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=10" alt="' + esc(r.nombre) +
+          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=11" alt="' + esc(r.nombre) +
               '" loading="lazy" width="280" height="373">' +
               (r.foto_credito === 'foto de la asociación'
                 ? '<span class="gr-foto-sello" title="Foto de la Asociación Mercaderes Unidos, tomada en el Mercado Nuevo">🤝</span>'
@@ -276,8 +478,17 @@
         '<div class="gr-cuerpo">' +
           '<div class="gr-cab">' +
             '<div class="gr-rubro-nom">' + esc(r.nombre) + '</div>' +
+            (r.nuevo ? '<span class="gr-cambio nuevo" title="No estaba en el ' +
+              'parte anterior">Nuevo en este parte</span>' : '') +
             (dudosa ? '<span class="gr-flag" title="Falta confirmar la unidad">unidad por confirmar</span>' : '') +
           '</div>' +
+          // El sello de fecha. Nunca se enseña un precio de otro día sin
+          // decir de qué día es, en el mismo bloque donde está el número.
+          (r.arrastrado
+            ? '<div class="gr-sello-viejo">Precio del <b>' +
+                esc(fechaLarga(r.fecha_origen)) + '</b>' +
+                '<span class="silencio"> · el gremio no lo cotizó hoy</span></div>'
+            : '') +
           '<ul class="gr-lista">' + r.filas.map(fila).join('') + '</ul>' +
           contraste(r) +
           notas(r) +
@@ -286,14 +497,33 @@
     }).join('');
 
     /* ---------- pie y crédito ---------- */
-    var conUnidad = items.filter(function (i) { return i.precio_lb_min != null; }).length;
+    var deHoy = items.filter(function (i) { return !i.arrastrado; });
+    var conUnidad = deHoy.filter(function (i) { return i.precio_lb_min != null; }).length;
+    var nArrastrados = items.length - deHoy.length;
     document.getElementById('pie-parte').innerHTML =
       '<p class="silencio">' +
-        items.length + ' renglones · ' + nRubros + ' rubros · ' +
+        deHoy.length + ' renglones cotizados hoy · ' + nRubros + ' rubros · ' +
         conUnidad + ' comparables por libra. ' +
         'Los que no traen unidad declarada se muestran tal cual se publicaron y ' +
         '<b>no se comparan</b>: un hueco se ve, un supuesto no.' +
-      '</p>';
+      '</p>' +
+      // Qué NO trae el parte de hoy. Sin esto, un rubro que ayer estaba y hoy
+      // no queda como si hubiera desaparecido del mercado, cuando lo que pasó
+      // es que el gremio no lo cotizó. Callarlo se leería como dato.
+      (nArrastrados
+        ? '<p class="gr-cobertura">' + nArrastrados + ' renglones más siguen ' +
+          'abajo con la fecha del día en que se cotizaron: el gremio no los ' +
+          'publicó hoy. Se dejan porque un precio de mayoreo de hace un día ' +
+          'sigue orientando, pero no se cuentan como precio de hoy ni se les ' +
+          'calcula subida o bajada.</p>'
+        : '') +
+      (m.nota_cobertura
+        ? '<p class="gr-cobertura">' + esc(m.nota_cobertura) + '</p>'
+        : '') +
+      (PREV_FECHA
+        ? '<p class="silencio">El cambio de precio se calcula contra el parte del <b>' +
+          esc(fechaLarga(PREV_FECHA)) + '</b>.</p>'
+        : '');
 
     // El crédito no es cortesía, es el trato. Lo que hace que publicar esto
     // le sirva a la asociación es que su nombre vaya en cada pantalla donde

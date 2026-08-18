@@ -1,0 +1,187 @@
+{
+ "_meta": {
+  "fuente": "Asociación Dominicana Mercaderes Unidos",
+  "canal": "Grupo de WhatsApp, solo administradores · 203 miembros",
+  "contacto_publico": "+1 (809) 428-5188",
+  "plaza": "Mercado Nuevo de la Duarte",
+  "provincia": "Santo Domingo",
+  "nivel": "mayorista",
+  "fecha": "2026-08-18",
+  "actualizado": "2026-08-18",
+  "momento": "en la mañana",
+  "estado": "publicado",
+  "transcripcion": "archivo/2026/08/18/mercaderes-unidos-whatsapp.md",
+  "permiso": {
+   "otorgado_por": "Administrador del canal de WhatsApp de la Asociación Dominicana Mercaderes Unidos",
+   "fecha": "2026-08-17",
+   "via": "verbal, a través de Victorius",
+   "alcance": "publicar en kcuesta.com los precios que la asociación difunde",
+   "nota": "Permiso verbal del administrador, no un acuerdo escrito. Se registra aquí con fecha para que quede claro de quién vino. La asociación va acreditada en cada pantalla donde salgan sus números. Si piden retirarlo, el campo `estado` pasa a 'retirado' y desaparece del sitio."
+  },
+  "catalogo": "data/gremio-rubros.json",
+  "nota_plaza": "Plaza full berenjenas, morrones, ensaladas regulares y ajíes regulares cubanelas.",
+  "nota_plaza_fuente": "Encabezado del parte, textual",
+  "nota_cobertura": "Este día solo llegó la lista de la Asociación de Mayoristas de Vegetales. El administrador no publicó su tanda —chinola, plátano, cebolla, ajo, zanahoria, apio, remolacha, yuca, auyama, cilantro, lechoza, maíz y papa— ni mandó fotos nuevas. Esos rubros siguen abajo con su último precio y la fecha en que se cotizó, no como precio de hoy.",
+  "nota_unidades": "Ni un solo renglón cotizado este día declaró unidad. Se publican tal cual y no se convierten a libra.",
+  "miembros_canal": 203
+ },
+ "items": [
+  {
+   "cultivo": "tomate-bugalu",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 400,
+   "precio_max": 500
+  },
+  {
+   "cultivo": "tomate-bugalu",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 300,
+   "precio_max": 350
+  },
+  {
+   "cultivo": "tomate-ensalada",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 500,
+   "precio_max": 700
+  },
+  {
+   "cultivo": "tomate-ensalada",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 300,
+   "precio_max": 400
+  },
+  {
+   "cultivo": "pepino",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 1300,
+   "precio_max": 1400,
+   "nota": "El renglón alto del pepino salió sin grado; solo el segundo dice «regular». Se deja sin grado porque es lo que se publicó."
+  },
+  {
+   "cultivo": "pepino",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 1000,
+   "precio_max": 1100
+  },
+  {
+   "cultivo": "limon",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 4000,
+   "precio_max": 4500,
+   "foto": "assets/img/gremio/limon.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "aji-cubanela",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 800,
+   "precio_max": 900,
+   "unidad": "Saco",
+   "libras_unidad": null,
+   "detalle": "por saco",
+   "nota": "Tamaño del saco no declarado."
+  },
+  {
+   "cultivo": "aji-cubanela",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 600,
+   "precio_max": 700,
+   "unidad": "Saco",
+   "libras_unidad": null,
+   "detalle": "por saco"
+  },
+  {
+   "cultivo": "aji-cubanela",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 500,
+   "precio_max": 600,
+   "unidad": "Caja",
+   "libras_unidad": null,
+   "detalle": "por caja",
+   "nota": "Tamaño de la caja no declarado. El mismo ají se cotiza por saco y por caja el mismo día; son dos empaques, no dos precios del mismo bulto."
+  },
+  {
+   "cultivo": "aji-cubanela",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 300,
+   "precio_max": 400,
+   "unidad": "Caja",
+   "libras_unidad": null,
+   "detalle": "por caja"
+  },
+  {
+   "cultivo": "aji-gustoso",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 5000,
+   "precio_max": 6000
+  },
+  {
+   "cultivo": "aji-gustoso",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 3500,
+   "precio_max": 4000
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 1000,
+   "precio_max": 1100,
+   "foto": "assets/img/gremio/berenjena.webp",
+   "foto_credito": "foto de góndola"
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 600,
+   "precio_max": 800,
+   "nota": "Publicada como «berenjena buenas»."
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 500,
+   "precio_max": 500,
+   "unidad": "Saco pequeño",
+   "libras_unidad": null,
+   "detalle": "saco pequeño",
+   "nota": "«Saco pequeño» sin libras declaradas. No se compara con la berenjena prímium de arriba: no se sabe si es el mismo bulto."
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 400,
+   "precio_max": 400,
+   "unidad": "Saco pequeño",
+   "libras_unidad": null,
+   "detalle": "negra, saco pequeño"
+  },
+  {
+   "cultivo": "aji-morron",
+   "calidad": "inferior",
+   "procedencia": null,
+   "precio_min": 20,
+   "precio_max": 25,
+   "unidad": null,
+   "libras_unidad": null,
+   "detalle": "inferiores y viejos",
+   "nota": "Ayer el morrón se cotizó «regular, la caja» a 300–500. Hoy es otro grado y sin unidad: 25 no puede ser una caja. Son dos cosas distintas, no una caída de precio, y por eso no se compara con ayer."
+  }
+ ]
+}

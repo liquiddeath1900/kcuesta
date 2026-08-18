@@ -124,3 +124,37 @@ Tampoco están cargados a `precios_oficiales`: esa tabla exige `fuente` y
 4. **Anotar el cambio en MERCADOM.** Nueva directora general, Mariana
    Tavarez de Santos. Importa el día que se pida acceso oficial a la serie
    —que es la que hoy se pierde todos los días— no antes.
+
+---
+
+## 7. Cómo se publica el parte de cada día
+
+El gremio manda por WhatsApp casi todas las mañanas y los rubros son casi
+siempre los mismos. Publicar el parte de mañana es **escribir precios**, no
+volver a armar la página.
+
+1. **Archivar primero, el mismo día.** `archivo/AAAA/MM/DD/mercaderes-unidos-whatsapp.md`
+   con la transcripción textual, incluida la unidad cuando la digan y el
+   hueco cuando no. El scrollback de WhatsApp se pierde: lo que no se
+   archive hoy no se puede volver a pedir.
+2. **`data/partes/AAAA-MM-DD.json`** — solo lo del día: `precio_min`,
+   `precio_max`, `calidad`, y `foto` cuando manden foto nueva. En `_meta`
+   van `fecha`, `actualizado` y la `nota_plaza` textual.
+3. **`data/partes.json`** — el nuevo de primero.
+4. **Rubro que nunca se ha cotizado:** se agrega a `data/gremio-rubros.json`
+   (nombre, unidad, libras, foto) y ahí se queda para siempre. Es lo único
+   que hay que tocar una vez.
+
+Lo que la página hace sola con eso:
+
+- **Subió o bajó.** Compara cada renglón contra el mismo renglón del parte
+  anterior —mismo rubro, mismo grado, **misma unidad**— por el punto medio
+  del rango. Si la unidad cambió no compara: el morrón pasó de "la caja
+  300–500" a "20–25 sin unidad" y esa resta habría inventado un −94%.
+- **Los rubros que hoy no se cotizaron se quedan**, al final, atenuados y
+  con la fecha del día en que sí se cotizaron pegada al renglón. Un precio
+  de mayoreo de ayer sigue orientando; presentarlo como de hoy sería mentir.
+- **El sello de frescura** (Hoy / Ayer / Hace N días) se calcula contra el
+  reloj de quien lee, no se escribe a mano.
+- La nota de plaza sale arriba. Es la causa del precio: el día que dijo
+  "plaza full berenjenas", la berenjena bajó 25%.

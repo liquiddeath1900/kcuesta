@@ -949,3 +949,101 @@ p.aviso-seg { max-width: 62ch; }
 .lista-fuentes-corta { list-style: none; margin: 8px 0; padding: 0; }
 .lista-fuentes-corta li { font-size: .85rem; line-height: 1.45; padding: 7px 0 7px 12px;
   border-left: 2px solid var(--linea); margin-bottom: 4px; }
+
+/* ============================================================
+   PARTE DEL GREMIO — frescura, nota de plaza y cambio de precio
+   ============================================================ */
+
+/* Cuándo se actualizó. Un precio de plaza envejece en horas: si el gremio
+   no publicó hoy, el visitante tiene que verlo de una vez y no deducirlo
+   de una fecha larga. Por eso el sello va al lado de la fecha y cambia de
+   color cuando el parte ya tiene días. */
+.gr-fecha { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gr-actualizado { flex-basis: 100%; font-size: .74rem; margin-top: 2px; }
+.sello-fresco { font-weight: 700; font-size: .68rem; border-radius: 999px;
+  padding: 2px 9px; white-space: nowrap; }
+.sello-fresco.hoy   { background: var(--verde-700); color: #fff; }
+.sello-fresco.ayer  { background: var(--verde-100); color: var(--verde-800); }
+.sello-fresco.viejo { background: var(--naranja-100); color: var(--naranja-700); }
+
+/* La nota de plaza es la CAUSA del precio, no un adorno. Va con el mismo
+   peso visual que una cita, dentro de la cabecera del gremio. */
+.gr-plaza { margin-top: 14px; padding: 10px 13px; background: #fff;
+  border: 1px solid var(--linea); border-left: 3px solid var(--naranja-600);
+  border-radius: 0 10px 10px 0; font-size: .8rem; }
+.gr-plaza-txt { font-size: .9rem; font-weight: 600; margin: 4px 0 5px;
+  line-height: 1.35; }
+
+/* Subió o bajó. Rojo cuando sube y verde cuando baja, igual que el resto
+   del sitio: aquí se lee desde el bolsillo de quien compra. */
+.gr-cambio { display: inline-block; margin-top: 4px; font-weight: 700;
+  font-size: .7rem; border-radius: 999px; padding: 2px 8px;
+  white-space: nowrap; }
+/* Pegado al grado se leía "PrímiumIgual". */
+.cal + .gr-cambio { margin-left: 6px; }
+.gr-cambio.sube  { background: var(--sube-bg); color: var(--sube); }
+.gr-cambio.baja  { background: var(--baja-bg); color: var(--baja); }
+.gr-cambio.igual { background: var(--arena); color: var(--tinta-3); }
+.gr-cambio.nuevo { background: var(--verde-100); color: var(--verde-800); }
+/* "Sin comparación" no es un precio estable: es un hueco. Se pinta como
+   hueco —punteado, sin color de señal— para que no se lea como "igual". */
+.gr-cambio.sin-base { background: none; color: var(--tinta-3);
+  border: 1px dashed var(--linea-2); font-weight: 600; }
+
+/* Lo que el gremio NO cotizó hoy. Sin esto, un rubro ausente se lee como
+   desaparecido del mercado en vez de no publicado. */
+.gr-cobertura { margin-top: 8px; padding: 9px 12px; background: var(--arena);
+  border-radius: 10px; font-size: .78rem; line-height: 1.45;
+  color: var(--tinta-2); }
+
+.cal-inferior { color: var(--naranja-700); }
+
+/* Rubro que el gremio no cotizó hoy. Se queda en la página —el que entra
+   quiere saber a cómo está el plátano aunque hoy no lo hayan publicado—
+   pero con la fecha de su precio pegada al renglón y atenuado, para que
+   nunca se confunda con lo de hoy. */
+.gremio-rubro.arrastrado { opacity: .9; }
+.gr-sello-viejo { margin: 0 15px 6px; padding: 5px 9px; font-size: .72rem;
+  background: var(--naranja-50); border: 1px solid var(--naranja-100);
+  border-radius: 8px; color: var(--naranja-700); line-height: 1.4; }
+
+/* ------------------------------------------------------------
+   Que no se corte nada en pantalla de teléfono
+
+   En un iPhone la tarjeta reparte 116px a la foto y deja ~190px útiles al
+   precio. Con `white-space: nowrap` en toda la línea, "RD$ 2,100 – RD$ 2,200
+   / Saco/22 lb" pedía 246px y la unidad se salía de la tarjeta: quedaba
+   cortada y había que girar el teléfono para leerla. La unidad es
+   justamente lo que hace comparable el precio — es lo último que se puede
+   perder.
+
+   Ahora la línea SÍ puede saltar, pero solo entre piezas: el rango nunca se
+   parte por la mitad ("RD$ 2,100 –" arriba y "RD$ 2,200" abajo se lee como
+   dos precios) y la unidad viaja entera.
+   ------------------------------------------------------------ */
+.gr-precio { white-space: normal; }
+.gr-precio .cifra { white-space: nowrap; }
+.gr-u { white-space: nowrap; }
+
+/* "unidad por confirmar" mide 122px y no cabía al lado del nombre: se
+   salía por el borde derecho. Baja a su propia línea cuando no quepa. */
+.gr-cab { flex-wrap: wrap; }
+.gr-flag { white-space: normal; flex: 0 1 auto; }
+
+/* En pantallas angostas la foto cede 16px al texto. La foto sigue siendo
+   evidencia, pero un precio cortado no se puede leer y una foto 16px más
+   estrecha sí. */
+@media (max-width: 419px) {
+  .gremio-rubro { grid-template-columns: 100px 1fr; }
+  .gr-foto { min-height: 100px; }
+  .gr-cab, .gr-fila, .gr-contraste, .gr-notas { padding-left: 12px; padding-right: 12px; }
+  .gr-sello-viejo { margin-left: 12px; margin-right: 12px; }
+}
+
+/* Teléfono chico (iPhone SE y parecidos): la foto cede otro poco antes que
+   el precio, que es el dato. */
+@media (max-width: 359px) {
+  .gremio-rubro { grid-template-columns: 84px 1fr; }
+  .gr-foto { min-height: 84px; }
+  .gr-precio .cifra { font-size: .9rem; }
+}

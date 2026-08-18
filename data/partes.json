@@ -1,8 +1,15 @@
 {
  "_meta": {
-  "nota": "El más reciente primero. La página carga index[0]."
+  "nota": "El más reciente primero. La página carga index[0] y usa index[1] para el cambio de precio de un parte al otro."
  },
  "partes": [
+  {
+   "fecha": "2026-08-18",
+   "archivo": "data/partes/2026-08-18.json",
+   "fuente": "Asociación Dominicana Mercaderes Unidos",
+   "plaza": "Mercado Nuevo de la Duarte",
+   "estado": "publicado"
+  },
   {
    "fecha": "2026-08-17",
    "archivo": "data/partes/2026-08-17.json",

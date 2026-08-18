@@ -1,8 +1,8 @@
 {
  "_meta": {
   "que_es": "Catálogo estable de los rubros que cotiza el gremio. Nombre, unidad, libras y foto viven AQUÍ y no en el parte del día: los rubros se repiten todas las mañanas y lo único que cambia es el precio.",
-  "como_actualizar": "Foto nueva: se deja el .webp en assets/img/gremio/ y se apunta aquí. Unidad confirmada por el gremio: se cambia `unidad_confianza` a 'verificada' y se borra `nota_unidad`. Nada de esto obliga a tocar los partes ya publicados.",
-  "actualizado": "2026-08-17"
+  "como_actualizar": "Los rubros se repiten casi todas las mañanas: publicar el parte de mañana es escribir data/partes/<fecha>.json con los precios nuevos y agregarlo a data/partes.json. Nombre, unidad, libras y foto NO se vuelven a tocar — viven aquí. Un rubro que el gremio no cotice ese día se arrastra solo, con la fecha del día que sí se cotizó pegada al renglón. Foto nueva del gremio: va en el renglón del parte (es del día) y manda sobre esta. Foto de catálogo nueva: se deja el .webp en assets/img/gremio/ o assets/img/rubros/ y se apunta aquí. Unidad confirmada por el gremio: `unidad_confianza` pasa a 'verificada' y se borra `nota_unidad`.",
+  "actualizado": "2026-08-18"
  },
  "rubros": {
   "chinola": {
@@ -175,6 +175,33 @@
    "foto": "assets/img/gremio/papa.webp",
    "foto_credito": "foto de la asociación",
    "nota_unidad": "El mensaje no dijo qué producto era, solo “entre 1600 y 1200 saco de 50lbs”. Se identificó por la foto: papa en malla amarilla. Confirmar con el gremio."
+  },
+  "pepino": {
+   "nombre": "Pepino",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/pepino.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Unidad no declarada. Llegó en la lista reenviada de la Asociación de Mayoristas de Vegetales, que este día no declaró unidad en ningún renglón."
+  },
+  "aji-cubanela": {
+   "nombre": "Ají cubanela",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/aji-cubanela.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Se cotiza por saco y por caja a la vez, y de ninguno se dijo el tamaño. El nombre 'cubanela' sale de la nota de plaza del día —«ajíes regulares cubanelas»— no del renglón de precio, que dice solo 'ají de saco' y 'ají de cajas'. Confirmar variedad y empaque."
+  },
+  "aji-gustoso": {
+   "nombre": "Ají gustoso (oloroso)",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/aji-gustoso.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "NO es el ají cubanela ni el morrón: el gremio lo cotiza en renglón aparte y a otro orden de magnitud (6,000 contra 900 el de saco). Unidad no declarada."
   }
  }
 }
