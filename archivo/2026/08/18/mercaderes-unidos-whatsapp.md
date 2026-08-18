@@ -48,7 +48,7 @@ góndola ni con MERCADOM hasta que se pregunte. Se archiva el número tal cual.
 | Gustoso oloroso regular | *no declarada* | 4,000/3,500 |
 | Berenjena primium | *no declarada* | 1,100/1,000 |
 | Berenjena buenas | *no declarada* | 800/600 |
-| Berenjena primium negra | saco pequeño | 500 |
+| Berenjena primium | saco pequeño | 500 |
 | Berenjena primium negra | saco pequeño | 400 |
 | Morrones inferiores y viejos | *no declarada* | 25/20 |
 

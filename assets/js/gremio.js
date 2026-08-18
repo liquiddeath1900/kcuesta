@@ -184,9 +184,21 @@
     items.forEach(function (i) { hoyCultivos[i.cultivo] = 1; });
     var nRubros = Object.keys(hoyCultivos).length;
 
+    // Se arrastra por RENGLÓN, no por rubro. Arrastrar por rubro borraba
+    // grados enteros sin decirlo: hoy el gremio cotizó berenjena prímium y
+    // regular pero no la tercera, y la tercera de ayer (500–700) desaparecía
+    // de la página como si no existiera. Igual el morrón regular "la caja"
+    // 300–500, tapado por el renglón de hoy "inferiores y viejos". El grado
+    // que hoy no se cotizó se queda, con su fecha, como cualquier otro.
+    var hoyLlaves = {};
+    items.forEach(function (i) { hoyLlaves[llave(i)] = 1; });
+
     if (ANT && ANT.items) {
       ANT.items.forEach(function (i) {
-        if (hoyCultivos[i.cultivo]) return;   // hoy sí se cotizó: manda hoy
+        var c0 = CAT[i.cultivo] || {};
+        var u0 = i.unidad !== undefined ? i.unidad : c0.unidad;
+        if (hoyLlaves[llave({ cultivo: i.cultivo, calidad: i.calidad,
+                              unidad: u0, detalle: i.detalle })]) return;
         var c = CAT[i.cultivo] || {};
         var unidad = i.unidad !== undefined ? i.unidad : c.unidad;
         var libras = i.libras_unidad !== undefined ? i.libras_unidad : c.libras_unidad;
@@ -232,7 +244,7 @@
         // Sale del dato y se rotula por lo que de verdad se sabe: son 203
         // en el canal de WhatsApp. Cuántos socios tiene la asociación es
         // otra cifra y nadie la ha confirmado.
-        '<div class="gr-cifra"><b>' + (m.miembros_canal || 203) + '</b>' +
+        '<div class="gr-cifra"><b>' + esc(m.miembros_canal || 203) + '</b>' +
           '<span>en el canal</span></div>' +
         '<div class="gr-cifra"><b>' + nRubros + '</b><span>rubros hoy</span></div>' +
         '<div class="gr-cifra"><b>Mayorista</b><span>nivel</span></div>' +
@@ -295,8 +307,11 @@
       // dejaba el regular más barato en el primer renglón, que se lee como
       // un error de datos. Mismo caso de la lechoza por quintal.
       r.filas.sort(function (a, b) {
-        return (ORDEN_CAL[a.calidad] == null ? -1 : ORDEN_CAL[a.calidad]) -
-               (ORDEN_CAL[b.calidad] == null ? -1 : ORDEN_CAL[b.calidad]);
+        // Lo de hoy arriba, lo arrastrado abajo, y dentro de cada bloque la
+        // escalera de calidad.
+        return ((a.arrastrado ? 1 : 0) - (b.arrastrado ? 1 : 0)) ||
+               ((ORDEN_CAL[a.calidad] == null ? -1 : ORDEN_CAL[a.calidad]) -
+                (ORDEN_CAL[b.calidad] == null ? -1 : ORDEN_CAL[b.calidad]));
       });
       // Comparable = el gremio declaró (o se pudo deducir) la unidad.
       r.comparable = r.filas.some(function (f) { return f.precio_lb_min != null; });
@@ -307,6 +322,12 @@
       r.nuevo = !r.arrastrado && ANT &&
                 r.filas.every(function (f) { return !PREV_CULTIVO[f.cultivo]; });
       if (r.nuevo) r.filas.forEach(function (f) { f.rubroNuevo = true; });
+      // Tarjeta mixta —parte de hoy y parte de ayer en el mismo rubro—: el
+      // sello de fecha no puede ir arriba porque no aplica a toda la
+      // tarjeta. Va pegado al renglón viejo.
+      if (!r.arrastrado) {
+        r.filas.forEach(function (f) { if (f.arrastrado) f.selloFila = true; });
+      }
       r.fecha_origen = r.arrastrado ? r.filas[0].fecha_origen : null;
       return r;
     });
@@ -382,7 +403,12 @@
       // Un renglón arrastrado no cambió de precio: es el MISMO renglón de
       // otro día. Ponerle "igual" diría que hoy se cotizó igual, y hoy no
       // se cotizó. Lleva su sello de fecha en vez de flecha.
-      if (f.arrastrado) return '';
+      if (f.arrastrado) {
+        return f.selloFila
+          ? '<span class="gr-cambio viejo" title="El gremio no cotizó este ' +
+            'grado hoy">Precio del ' + esc(fechaLarga(f.fecha_origen)) + '</span>'
+          : '';
+      }
       if (!ANT) return '';
       var ant = PREV[llave(f)];
       if (!ant) {
@@ -403,11 +429,18 @@
       var pct = Math.round((hoy - ayer) / ayer * 100);
       var t = 'Ayer: ' + rango(ant.precio_min, ant.precio_max, 0) +
               (ant.unidad ? ' / ' + ant.unidad : '');
-      if (pct === 0) {
+      var arriba = hoy > ayer;
+      if (hoy === ayer) {
         return '<span class="gr-cambio igual" title="' + esc(t) + '">Igual ' +
                esc(DESDE) + '</span>';
       }
-      var arriba = pct > 0;
+      // Se movió, pero redondea a 0%. Decir "Igual" sería afirmar que no se
+      // movió. Se dice que se movió poco.
+      if (pct === 0) {
+        return '<span class="gr-cambio ' + (arriba ? 'sube' : 'baja') +
+               '" title="' + esc(t) + '">' + (arriba ? '▲' : '▼') +
+               ' menos de 1% ' + esc(DESDE) + '</span>';
+      }
       return '<span class="gr-cambio ' + (arriba ? 'sube' : 'baja') +
              '" title="' + esc(t) + '">' +
              (arriba ? '▲ +' : '▼ ') + pct + '% ' + esc(DESDE) + '</span>';
@@ -511,11 +544,12 @@
       // no queda como si hubiera desaparecido del mercado, cuando lo que pasó
       // es que el gremio no lo cotizó. Callarlo se leería como dato.
       (nArrastrados
-        ? '<p class="gr-cobertura">' + nArrastrados + ' renglones más siguen ' +
-          'abajo con la fecha del día en que se cotizaron: el gremio no los ' +
-          'publicó hoy. Se dejan porque un precio de mayoreo de hace un día ' +
-          'sigue orientando, pero no se cuentan como precio de hoy ni se les ' +
-          'calcula subida o bajada.</p>'
+        ? '<p class="gr-cobertura">Otros ' + nArrastrados + ' renglones ' +
+          'llevan la fecha del día en que se cotizaron —unos en su propio ' +
+          'rubro más abajo, otros dentro de un rubro que hoy sí se cotizó ' +
+          'pero sin ese grado—. Se dejan porque un precio de mayoreo de hace ' +
+          'un día sigue orientando, pero no cuentan como precio de hoy ni se ' +
+          'les calcula subida o bajada.</p>'
         : '') +
       (m.nota_cobertura
         ? '<p class="gr-cobertura">' + esc(m.nota_cobertura) + '</p>'

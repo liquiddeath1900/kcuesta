@@ -1047,3 +1047,9 @@ p.aviso-seg { max-width: 62ch; }
   .gr-foto { min-height: 84px; }
   .gr-precio .cifra { font-size: .9rem; }
 }
+
+/* Renglón viejo dentro de una tarjeta que SÍ tiene precio de hoy. Mismo
+   color de aviso que el sello de la tarjeta completa, para que se lea igual
+   en los dos casos. */
+.gr-cambio.viejo { background: var(--naranja-50); color: var(--naranja-700);
+  border: 1px solid var(--naranja-100); font-weight: 600; }
