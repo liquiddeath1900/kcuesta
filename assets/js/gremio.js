@@ -23,7 +23,7 @@
   // precio y la foto. Publicar el parte de mañana es escribir un archivo de
   // precios; no hay que volver a tocar nombres, unidades ni fotos, y los
   // partes viejos quedan intactos porque nadie los reescribe.
-  var V = '?v=11';
+  var V = '?v=12';
   var INDICE = 'data/partes.json' + V;
   var CATALOGO = 'data/gremio-rubros.json' + V;
 
@@ -501,7 +501,7 @@
         // tarjeta de la chinola, que trae tres grados, le da a la foto
         // ~150px sin ocupar más pantalla que antes.
         (r.foto
-          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=11" alt="' + esc(r.nombre) +
+          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=12" alt="' + esc(r.nombre) +
               '" loading="lazy" width="280" height="373">' +
               (r.foto_credito === 'foto de la asociación'
                 ? '<span class="gr-foto-sello" title="Foto de la Asociación Mercaderes Unidos, tomada en el Mercado Nuevo">🤝</span>'

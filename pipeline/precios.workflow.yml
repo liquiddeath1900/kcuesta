@@ -71,12 +71,20 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # El HTML lleva los precios adentro, no solo el JSON. Si esto no
+      # corre, precios.html se queda enseñándole al robot la tabla del
+      # informe anterior mientras el JSON ya trae el nuevo: dos verdades
+      # en la misma página, y la que el robot lee es la vieja.
+      - name: Rellenar el HTML estático y el sitemap
+        if: ${{ !inputs.seco }}
+        run: python3 pipeline/seo_estatico.py
+
       - name: Publicar datos y archivo crudo
         if: ${{ !inputs.seco }}
         run: |
           git config user.name  'kcuesta-bot'
           git config user.email 'bot@kcuesta.com'
-          git add archivo/ data/ assets/js/datos.js
+          git add archivo/ data/ assets/js/datos.js precios.html gremio.html sitemap.xml
           if git diff --cached --quiet; then
             echo 'sin cambios que publicar'
             exit 0

@@ -144,6 +144,23 @@ volver a armar la página.
 4. **Rubro que nunca se ha cotizado:** se agrega a `data/gremio-rubros.json`
    (nombre, unidad, libras, foto) y ahí se queda para siempre. Es lo único
    que hay que tocar una vez.
+5. **`python3 pipeline/seo_estatico.py`** — y se comitea `gremio.html`,
+   `precios.html` y `sitemap.xml` junto con el parte.
+
+   Esto escribe el parte del día *dentro* del HTML, en una tabla simple, y
+   pone la fecha real en el sitemap. La página siempre lo pintó con
+   JavaScript, y así un robot que no ejecuta JavaScript —Bing, y los
+   rastreadores de los asistentes, por donde cada vez más gente pregunta "a
+   cómo está el aguacate"— no veía ni un precio. Google sí ejecuta, pero en
+   una segunda pasada que para un dominio nuevo tarda días, y el precio del
+   plátano de hoy no le sirve a nadie dentro de tres días.
+
+   La tabla vive **dentro** de `#rejilla`, el mismo contenedor que
+   `gremio.js` sobreescribe. Con JavaScript el visitante ve las tarjetas de
+   siempre; sin JavaScript, o mientras el JSON viaja por una conexión del
+   interior, ve la tabla. Es la misma información, no una versión para el
+   robot. **Si se salta este paso, el HTML sigue enseñando el parte de
+   ayer** mientras el JSON ya trae el de hoy.
 
 Lo que la página hace sola con eso:
 

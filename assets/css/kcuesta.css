@@ -1058,3 +1058,42 @@ p.aviso-seg { max-width: 62ch; }
 .gr-cambio.viejo { background: var(--naranja-50); color: var(--naranja-700);
   border: 1px solid var(--naranja-100); font-weight: 600;
   white-space: normal; }
+
+/* ---------------------------------------------------------------
+   Tabla estática — lo que se ve antes de que llegue el JSON, y lo
+   único que ve un robot que no ejecuta JavaScript.
+
+   Vive dentro de #tbody y #rejilla, así que el render la reemplaza
+   sola en cuanto el fetch resuelve. No se esconde: en una conexión
+   lenta del interior es el precio que el visitante alcanza a leer
+   primero, y esconderla ante el robot sería enseñar dos cosas
+   distintas a dos visitantes distintos.
+
+   `overflow-x` en el envoltorio y no en la tabla: siete columnas no
+   caben en 320px y sin esto la PÁGINA entera se corre de lado.
+   --------------------------------------------------------------- */
+.tabla-estatica{
+  display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 24px;
+}
+.tabla-estatica caption{
+  caption-side:top; text-align:left; padding:0 0 12px;
+  font-size:14px; line-height:1.5; color:var(--tinta-3);
+  /* El caption se estiraba al ancho de la TABLA (693px con siete
+     columnas), no al de la pantalla: para leer de qué fecha y de qué
+     fuente era la tabla había que arrastrarla de lado. `sticky left`
+     lo deja fijo mientras las columnas corren por debajo, y el ancho
+     lo amarra al envoltorio para que envuelva como párrafo normal. */
+  position:sticky; left:0;
+  width:min(100%, calc(100vw - 2 * var(--env-pad, 20px)));
+  white-space:normal;
+}
+.tabla-estatica th,.tabla-estatica td{
+  padding:8px 12px; text-align:left; white-space:nowrap;
+  border-bottom:1px solid var(--linea);
+}
+.tabla-estatica thead th{
+  font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--tinta-3); border-bottom-width:2px;
+}
+.tabla-estatica tbody th{font-weight:600; white-space:normal; min-width:11ch}

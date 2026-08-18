@@ -20,7 +20,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=11">
+<link rel="canonical" href="https://kcuesta.com/">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=12">
 </head>
 <body>
 
@@ -30,9 +31,10 @@
 
 <header class="barra">
   <div class="env barra-in">
-    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=11" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=12" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
     <nav class="nav-esc">
       <a href="precios.html">Precios oficiales</a>
+      <a href="inflacion.html">¿Está más caro?</a>
       <a href="gremio.html">Mercado Nuevo</a>
     </nav>
     <span id="sesion" class="sesion-env">
@@ -203,8 +205,8 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=11"></script>
-<script src="assets/js/auth.js?v=11"></script>
+<script src="assets/js/config.js?v=12"></script>
+<script src="assets/js/auth.js?v=12"></script>
 <script>
 /* Muestra de portada: el mismo componente de tarjeta del mercado, con los
    precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
@@ -226,7 +228,7 @@
     });
   }
 
-  fetch('data/portada.json?v=11')
+  fetch('data/portada.json?v=12')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var cadenas = d.cadenas || {};
@@ -286,5 +288,6 @@
     });
 })();
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kcuesta.com/#org","name":"Kcuesta","alternateName":"Kcuesta — ¿A cómo está?","url":"https://kcuesta.com/","logo":"https://kcuesta.com/assets/brand/logo.png","image":"https://kcuesta.com/assets/brand/og.jpg","description":"Mercado agrícola digital dominicano: precios oficiales al día y venta directa entre productores y compradores.","areaServed":{"@type":"Country","name":"República Dominicana"},"knowsLanguage":"es-DO"},{"@type":"WebSite","@id":"https://kcuesta.com/#sitio","url":"https://kcuesta.com/","name":"Kcuesta","inLanguage":"es-DO","publisher":{"@id":"https://kcuesta.com/#org"}},{"@type":"WebPage","@id":"https://kcuesta.com/#portada","url":"https://kcuesta.com/","name":"Kcuesta — El mercado agrícola dominicano","isPartOf":{"@id":"https://kcuesta.com/#sitio"},"about":{"@type":"Thing","name":"Precios agrícolas de República Dominicana"},"citation":{"@type":"CreativeWork","name":"Ministerio de Agricultura","url":"https://agricultura.gob.do/wp-content/uploads/2026/08/Informe-de-precios-07-de-agosto-2026.pdf"}}]}</script>
 </body>
 </html>
