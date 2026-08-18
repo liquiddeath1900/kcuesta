@@ -1,0 +1,278 @@
+{
+ "_meta": {
+  "fuente": "Asociación Dominicana Mercaderes Unidos",
+  "canal": "Grupo de WhatsApp, solo administradores · 203 miembros",
+  "contacto_publico": "+1 (809) 428-5188",
+  "plaza": "Mercado Nuevo de la Duarte",
+  "provincia": "Santo Domingo",
+  "nivel": "mayorista",
+  "fecha": "2026-08-17",
+  "estado": "publicado",
+  "transcripcion": "archivo/2026/08/17/mercaderes-unidos-whatsapp.md",
+  "permiso": {
+   "otorgado_por": "Administrador del canal de WhatsApp de la Asociación Dominicana Mercaderes Unidos",
+   "fecha": "2026-08-17",
+   "via": "verbal, a través de Victorius",
+   "alcance": "publicar en kcuesta.com los precios que la asociación difunde",
+   "nota": "Permiso verbal del administrador, no un acuerdo escrito. Se registra aquí con fecha para que quede claro de quién vino. La asociación va acreditada en cada pantalla donde salgan sus números: es lo que hace que el trato le sirva a ella —autoridad del gremio— y es lo que hay que sostener si algún día pregunta otro miembro. Si piden retirarlo, el campo `estado` pasa a 'retirado' y desaparece del sitio."
+  },
+  "catalogo": "data/gremio-rubros.json",
+  "nota_fotos": "Las fotos van en el parte porque son del día: el gremio retrata la mercancía que entró esa mañana. Si un día no mandan foto, la tarjeta cae a la del catálogo y se nota en el crédito."
+ },
+ "items": [
+  {
+   "cultivo": "chinola",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 12,
+   "precio_max": 14,
+   "foto": "assets/img/gremio/chinola.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "chinola",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 8,
+   "precio_max": 10
+  },
+  {
+   "cultivo": "chinola",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 5,
+   "precio_max": 7
+  },
+  {
+   "cultivo": "maiz-dulce",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 20,
+   "precio_max": 25,
+   "foto": "assets/img/gremio/maiz-dulce.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "ajo",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 2100,
+   "precio_max": 2200,
+   "foto": "assets/img/gremio/ajo.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 1500,
+   "precio_max": 1500,
+   "foto": "assets/img/gremio/lechoza.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 60,
+   "precio_max": 80
+  },
+  {
+   "cultivo": "lechoza",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 40,
+   "precio_max": 50
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "primera",
+   "procedencia": "Barahona, Azua, Mao",
+   "precio_min": 15,
+   "precio_max": 18,
+   "foto": "assets/img/gremio/platano-verde.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "segunda",
+   "procedencia": "Barahona, Azua, Mao",
+   "precio_min": 12,
+   "precio_max": 14
+  },
+  {
+   "cultivo": "platano-verde",
+   "calidad": "tercera",
+   "procedencia": "Barahona, Azua, Mao",
+   "precio_min": 7,
+   "precio_max": 10
+  },
+  {
+   "cultivo": "apio",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 400,
+   "precio_max": 500,
+   "foto": "assets/img/gremio/apio.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "zanahoria",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 1200,
+   "precio_max": 1500,
+   "foto": "assets/img/gremio/zanahoria.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "remolacha",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 1200,
+   "precio_max": 1400,
+   "foto": "assets/img/gremio/remolacha.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "cebolla-roja",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 1900,
+   "precio_max": 2100,
+   "foto": "assets/img/gremio/cebolla-roja.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "cebolla-roja",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 1500,
+   "precio_max": 1800
+  },
+  {
+   "cultivo": "yuca",
+   "calidad": null,
+   "procedencia": "Moca",
+   "precio_min": 28,
+   "precio_max": 30,
+   "foto": "assets/img/gremio/yuca.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "auyama",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 80,
+   "precio_max": 90,
+   "foto": "assets/img/gremio/auyama.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "cilantro",
+   "calidad": "primera",
+   "procedencia": null,
+   "precio_min": 30,
+   "precio_max": 30,
+   "foto": "assets/img/gremio/cilantro.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "cilantro",
+   "calidad": "segunda",
+   "procedencia": null,
+   "precio_min": 20,
+   "precio_max": 25
+  },
+  {
+   "cultivo": "cilantro",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 15,
+   "precio_max": 15
+  },
+  {
+   "cultivo": "tomate-bugalu",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 400,
+   "precio_max": 500
+  },
+  {
+   "cultivo": "tomate-bugalu",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 200,
+   "precio_max": 300
+  },
+  {
+   "cultivo": "tomate-ensalada",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 600,
+   "precio_max": 700
+  },
+  {
+   "cultivo": "tomate-ensalada",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 300,
+   "precio_max": 500
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "premium",
+   "procedencia": null,
+   "precio_min": 1300,
+   "precio_max": 1500,
+   "foto": "assets/img/gremio/berenjena.webp",
+   "foto_credito": "foto de góndola"
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 800,
+   "precio_max": 1100
+  },
+  {
+   "cultivo": "berenjena",
+   "calidad": "tercera",
+   "procedencia": null,
+   "precio_min": 500,
+   "precio_max": 700
+  },
+  {
+   "cultivo": "aji-morron",
+   "calidad": "regular",
+   "procedencia": null,
+   "precio_min": 300,
+   "precio_max": 500
+  },
+  {
+   "cultivo": "platano-maduro",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 150,
+   "precio_max": 200
+  },
+  {
+   "cultivo": "limon",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 3500,
+   "precio_max": 4000,
+   "foto": "assets/img/gremio/limon.webp",
+   "foto_credito": "foto de la asociación"
+  },
+  {
+   "cultivo": "papa",
+   "calidad": null,
+   "procedencia": null,
+   "precio_min": 1200,
+   "precio_max": 1600,
+   "foto": "assets/img/gremio/papa.webp",
+   "foto_credito": "foto de la asociación"
+  }
+ ]
+}

@@ -808,3 +808,130 @@ p.aviso-seg { max-width: 62ch; }
 /* Precio de etiqueta junto al de por libra: uno es lo que se paga en caja,
    el otro es el que sirve para comparar. */
 .rb-etiq { display: block; font-size: .66rem; }
+
+/* ---------- Perfil de gremio (gremio.html) ----------
+   Un gremio no es un vendedor: reporta la plaza. La cabecera lo dice con
+   una etiqueta y enseña a cuánta gente representa, que es su autoridad,
+   en vez de cuántos artículos tiene. */
+.gremio-cab { background: var(--verde-50); border: 1px solid var(--linea);
+  border-radius: 14px; padding: 16px; margin: 14px 0 18px; }
+.gr-id { display: flex; gap: 13px; align-items: flex-start; }
+.gr-avatar { width: 52px; height: 52px; border-radius: 50%; flex: none;
+  background: #fff; border: 1px solid var(--linea);
+  display: grid; place-items: center; font-size: 1.5rem; }
+.gr-txt { min-width: 0; }
+.gr-nom { font-size: 1.12rem; line-height: 1.22; margin: 0; letter-spacing: -.01em; }
+.gr-tipo { margin-top: 4px; font-size: .8rem; }
+.etiq-reporta { display: inline-block; background: var(--verde-700); color: #fff;
+  border-radius: 999px; padding: 2px 9px; font-size: .72rem; font-weight: 700; }
+.gr-meta { font-size: .8rem; margin-top: 4px; }
+.gr-cifras { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.gr-cifra { background: #fff; border: 1px solid var(--linea); border-radius: 10px;
+  padding: 8px 12px; flex: 1 1 90px; }
+.gr-cifra b { display: block; font-size: 1.02rem; }
+.gr-cifra span { font-size: .72rem; color: var(--tinta-3); }
+.gr-fecha { margin-top: 12px; font-size: .84rem; }
+
+.gremio-explica { margin-bottom: 16px; }
+.gremio-explica h2 { font-size: 1.02rem; margin-bottom: 6px; }
+.gremio-explica p { font-size: .9rem; }
+.cita-gremio { margin: 12px 0; padding: 11px 14px; font-size: .88rem;
+  background: var(--arena); border-left: 3px solid var(--naranja-600);
+  border-radius: 0 10px 10px 0; }
+.cita-gremio cite { display: block; margin-top: 6px; font-size: .76rem;
+  color: var(--tinta-3); font-style: normal; }
+
+.gremio-rubro { padding: 0; }
+.gr-cab { display: flex; justify-content: space-between; align-items: baseline;
+  gap: 8px; padding: 12px 15px 8px; }
+.gr-rubro-nom { font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
+.gr-flag { font-size: .66rem; color: var(--tinta-3); border: 1px dashed var(--linea);
+  border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.gr-lista { list-style: none; margin: 0; padding: 0; }
+/* En una columna de ~250px el grado y el precio no caben en la misma
+   línea: "Precio del día" se partía en tres y el precio se le montaba
+   encima. Se apilan —grado arriba, precio abajo— y solo se ponen lado a
+   lado cuando hay ancho de sobra. */
+.gr-fila { display: block; padding: 9px 15px;
+  border-top: 1px solid var(--linea); }
+.gr-grado { min-width: 0; }
+/* El grado se lee sin depender del color: la palabra ya lo dice. El color
+   solo refuerza (WCAG 1.4.1). */
+.cal { font-size: .84rem; }
+.cal-primera, .cal-premium { color: var(--verde-700); }
+.gr-proc { display: block; font-size: .72rem; }
+.gr-precio { white-space: nowrap; margin-top: 1px; }
+.gr-precio .cifra { font-weight: 700; font-size: .96rem; }
+.gr-u { font-size: .72rem; color: var(--tinta-3); }
+/* El precio por libra es el que se compara; el de empaque es el que se
+   paga. Se enseñan los dos, como en el mercado. */
+.gr-lb { display: block; font-size: .74rem; color: var(--tinta-3); }
+.gr-contraste { padding: 9px 15px; background: var(--arena); font-size: .8rem;
+  border-top: 1px solid var(--linea); }
+.gr-notas { padding: 8px 15px 11px; font-size: .72rem; line-height: 1.45;
+  border-top: 1px solid var(--linea); }
+.gr-notas div + div { margin-top: 4px; }
+/* Sin unidad declarada no se compara, y se nota: el hueco es el dato. */
+.gremio-rubro.sin-unidad { opacity: .82; }
+.gremio-pie { margin: 16px 0 6px; font-size: .8rem; }
+
+@media (min-width: 760px) {
+  .gr-cifra { flex: 0 1 auto; }
+}
+
+/* La foto es una COLUMNA a todo lo alto de la tarjeta, no una miniatura.
+   Como miniatura se quedaba en 60px y agrandarla empujaba la tarjeta hacia
+   abajo; como columna crece con las filas de grado sin costar un pixel de
+   alto. Aquí la foto es evidencia —el producto real, en el saco real, el
+   día que se cotizó— así que merece el espacio.
+
+   El sello 🤝 distingue la que tomó la asociación de la de góndola que ya
+   estaba en el repo: de quién es la foto cambia lo que vale. */
+.gremio-rubro { display: grid; grid-template-columns: 116px 1fr;
+  align-items: stretch; overflow: hidden; }
+.gr-foto { position: relative; background: var(--arena); min-height: 116px; }
+.gr-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gr-foto.sin-foto { display: grid; place-items: center;
+  font-weight: 800; font-size: 1.6rem; color: var(--tinta-3); }
+.gr-foto-sello { position: absolute; right: 6px; bottom: 6px; font-size: .74rem;
+  background: rgba(255,255,255,.94); border-radius: 50%; padding: 3px 4px;
+  line-height: 1; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.gr-cuerpo { min-width: 0; display: flex; flex-direction: column; }
+.gr-cab { padding: 11px 14px 7px; }
+.gr-fila { padding: 8px 14px; }
+.gr-contraste, .gr-notas { padding-left: 14px; padding-right: 14px; }
+/* La primera fila no lleva línea: ya la separa el título de arriba. */
+.gr-lista .gr-fila:first-child { border-top: 1px solid var(--linea); }
+
+@media (min-width: 560px) {
+  /* Con ancho de sobra la foto puede respirar más y la fila vuelve a caber
+     en una sola línea. */
+  .gremio-rubro { grid-template-columns: 150px 1fr; }
+  .gr-foto { min-height: 150px; }
+  .gr-fila { display: grid; grid-template-columns: 1fr auto;
+    gap: 3px 14px; align-items: center; }
+  .gr-precio { text-align: right; margin-top: 0; }
+}
+
+/* Entrada al parte del gremio desde el mercado. Franja y no tarjeta: tiene
+   que leerse como "hay otra cosa acá" sin competir con los rubros, que son
+   el contenido de esa página. */
+.enlace-gremio { display: flex; align-items: center; gap: 12px;
+  padding: 13px 15px; margin: 0 0 14px; text-decoration: none; color: inherit;
+  background: var(--verde-50); border: 1px solid var(--linea);
+  border-radius: 12px; }
+.enlace-gremio:hover { border-color: var(--verde-700); }
+.eg-ico { font-size: 1.4rem; flex: none; }
+.eg-txt { flex: 1; min-width: 0; font-size: .84rem; }
+.eg-txt b { display: block; margin-bottom: 2px; }
+.eg-txt .silencio { display: block; font-size: .78rem; line-height: 1.35; }
+.eg-flecha { color: var(--verde-700); font-weight: 700; flex: none; }
+
+/* Lista de fuentes. El gremio va al mismo nivel que el Ministerio y las
+   cadenas: es una fuente, no un vendedor. */
+.fuentes-lista { margin-top: 18px; }
+.fuentes-lista h3 { font-size: .96rem; margin-bottom: 8px; }
+.fuentes-lista ul { list-style: none; margin: 0; padding: 0; }
+.fuentes-lista li { font-size: .82rem; line-height: 1.45; padding: 9px 0;
+  border-top: 1px solid var(--linea); }
+.fuentes-lista .silencio { display: block; font-size: .78rem; }

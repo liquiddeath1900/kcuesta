@@ -534,6 +534,13 @@
     if (caja) {
       caja.hidden = vista !== 'rubro';
       var ids = Object.keys(O.cadenas).filter(function (id) {
+        // Un gremio está en el registro de fuentes pero NO es una tienda
+        // donde comprar: la Asociación Mercaderes Unidos reporta la plaza,
+        // no vende. Como pastilla de filtro le prometería al usuario que
+        // puede comprarle. Hoy además no tiene ofertas en los rubros, así
+        // que el segundo filtro ya la deja fuera — esto es para el día que
+        // sí las tenga.
+        if ((O.cadenas[id] || {}).tipo === 'gremio') return false;
         return O.rubros.some(function (r) {
           return r.ofertas.some(function (o) { return o.cadena === id; });
         });

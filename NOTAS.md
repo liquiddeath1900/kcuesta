@@ -264,3 +264,79 @@ cuentas creadas es una migración.
       en el Mercado Nuevo los sábados. Un solo par provincia/municipio en
       `perfiles` no lo aguanta; probablemente sea una tabla aparte de
       puntos de venta.
+
+---
+
+## 2026-08-17 — El Mercado Nuevo entra como fuente
+
+Victorius habló con alguien que trabaja con la **Asociación Dominicana
+Mercaderes Unidos** (203 miembros, Mercado Nuevo de la Duarte) y consiguió
+permiso del administrador del canal para publicar sus precios. Notas de
+mercado en `MERCADO-NUEVO.md`, vocabulario en `GLOSARIO.md`, transcripción
+del día en `archivo/2026/08/17/`.
+
+### Es una FUENTE, no un vendedor
+
+El gremio no vende: reporta a cómo está vendiendo la plaza. Todo el diseño
+sale de ahí. `perfiles.tipo` gana `'asociacion'`, la tarjeta dice "Reporta
+la plaza · no vende", la métrica de arriba es a cuánta gente representa, y
+en el registro de fuentes lleva `tipo: 'gremio'` para que **no** aparezca
+como pastilla de filtro en el mercado — una pastilla le prometería al
+usuario que puede comprarle.
+
+### Cómo se resolvió "muchos artículos, un solo usuario"
+
+Con el **parte del día**: catorce rubros publicados una mañana son UNA cosa,
+no catorce anuncios con el mismo nombre repetido. La tarjeta es el rubro y
+adentro va la escalera de calidad. Es la misma solución que se aplicó al
+mercado cuando repetía "Ají" trece veces.
+
+### Los datos van en tres archivos, no en uno
+
+Los rubros vuelven todos los días y lo único que cambia es el precio y la
+foto, así que:
+
+- `data/gremio-rubros.json` — lo estable: nombre, unidad, libras, foto de
+  respaldo.
+- `data/partes/<fecha>.json` — lo del día: precio y foto.
+- `data/partes.json` — el índice; la página carga el más reciente sola.
+
+Publicar el parte de mañana es escribir un archivo de precios. No hay que
+volver a tocar nombres ni unidades, y los partes viejos quedan intactos.
+
+### Lo que hubo que aprender del mercado
+
+- **El precio es un RANGO con escalera de calidad**, nunca un número.
+  Primera, segunda, tercera. `parte_items` guarda `precio_min`/`precio_max`
+  siempre; cuando dan un solo número, min = max y se ve.
+- **Calidad y procedencia son ejes DISTINTOS.** Barahonero, azuano, maeño y
+  mocano no son variedades: son las zonas donde se produjo. Un plátano puede
+  ser barahonero de tercera.
+- **Solo se compara el grado alto contra la góndola.** El tomate "regular"
+  del gremio contra el supermercado daba +746%, pero el supermercado no
+  vende tomate regular. Contra prímium da +370%, que es defendible.
+- **El informe del Ministerio publica la unidad mayorista canónica** de cada
+  rubro. Con esa tabla, "Bugalu primiun 500/400" pasa a ser RD$8.89–11.11/lb
+  y se vuelve comparable. Las tres unidades que el gremio sí declaró cuadran
+  exactamente con ella.
+
+## Pendiente del gremio
+
+- [ ] **Siete preguntas de unidades** listadas al final de `GLOSARIO.md`. La
+      más importante: si `500/400` es rango alto/bajo o primera/segunda. Sin
+      eso, la lista reenviada de la Asociación de Mayoristas de Vegetales no
+      se puede comparar.
+- [ ] **Confirmar la papa.** El mensaje de las 8:35 AM no dijo qué producto
+      era; se identificó por la foto (sacos amarillos de papa, con los de
+      cebolla roja al lado). El precio se publicó con esa lectura.
+- [ ] **Que el parte entre solo.** Hoy se transcribe a mano de capturas de
+      pantalla. El gremio publica a lo largo de la mañana, así que lo que se
+      quiere es que los precios entren según van saliendo, no una foto del
+      día completo a las 9 PM.
+- [ ] **Que publiquen los propios vendedores.** El objetivo real: que cada
+      mayorista del Mercado Nuevo suba su precio y quien va al mercado
+      llegue sabiendo. Ojo con lo que advirtió el gremio — "la mayoría de
+      comerciantes no le gusta que se publiquen los precios"— y con
+      `ESCALA.md`: la lista no puede ordenarse por precio ni premiar al más
+      barato, o los pone a competir a la baja entre ellos. La entrada es la
+      ASOCIACIÓN, no el comerciante suelto.

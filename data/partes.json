@@ -1,0 +1,14 @@
+{
+ "_meta": {
+  "nota": "El más reciente primero. La página carga index[0]."
+ },
+ "partes": [
+  {
+   "fecha": "2026-08-17",
+   "archivo": "data/partes/2026-08-17.json",
+   "fuente": "Asociación Dominicana Mercaderes Unidos",
+   "plaza": "Mercado Nuevo de la Duarte",
+   "estado": "publicado"
+  }
+ ]
+}

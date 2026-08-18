@@ -20,7 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=6">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=8">
 </head>
 <body>
 
@@ -30,9 +30,10 @@
 
 <header class="barra">
   <div class="env barra-in">
-    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=6" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=8" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
     <nav class="nav-esc">
       <a href="precios.html">Precios oficiales</a>
+      <a href="gremio.html">Mercado Nuevo</a>
     </nav>
     <span id="sesion" class="sesion-env">
       <a class="boton btn-entrar" href="entrar.html">Entrar</a>
@@ -201,8 +202,8 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=6"></script>
-<script src="assets/js/auth.js?v=6"></script>
+<script src="assets/js/config.js?v=8"></script>
+<script src="assets/js/auth.js?v=8"></script>
 <script>
 /* Muestra de portada: el mismo componente de tarjeta del mercado, con los
    precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
@@ -224,7 +225,7 @@
     });
   }
 
-  fetch('data/portada.json?v=6')
+  fetch('data/portada.json?v=8')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var cadenas = d.cadenas || {};

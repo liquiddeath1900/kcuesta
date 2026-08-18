@@ -1,0 +1,180 @@
+{
+ "_meta": {
+  "que_es": "Catálogo estable de los rubros que cotiza el gremio. Nombre, unidad, libras y foto viven AQUÍ y no en el parte del día: los rubros se repiten todas las mañanas y lo único que cambia es el precio.",
+  "como_actualizar": "Foto nueva: se deja el .webp en assets/img/gremio/ y se apunta aquí. Unidad confirmada por el gremio: se cambia `unidad_confianza` a 'verificada' y se borra `nota_unidad`. Nada de esto obliga a tocar los partes ya publicados.",
+  "actualizado": "2026-08-17"
+ },
+ "rubros": {
+  "chinola": {
+   "nombre": "Chinola",
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/chinola.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": null
+  },
+  "maiz-dulce": {
+   "nombre": "Mazorca de maíz dulce",
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/maiz-dulce.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": null
+  },
+  "ajo": {
+   "nombre": "Ajo",
+   "unidad": "Saco/22 lb",
+   "libras_unidad": 22,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/ajo.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "El gremio declaró la unidad y cuadra con el informe del Ministerio."
+  },
+  "lechoza": {
+   "nombre": "Lechoza",
+   "unidad": "Quintal",
+   "libras_unidad": 100,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/lechoza.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Un solo número, no un rango: así lo publicaron."
+  },
+  "platano-verde": {
+   "nombre": "Plátano blanco",
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "unidad_confianza": "inferida",
+   "foto": "assets/img/gremio/platano-verde.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Unidad no declarada. Se lee por unidad porque el Ministerio cotiza el plátano por millar y 15–18 solo cuadra por pieza."
+  },
+  "apio": {
+   "nombre": "Apio",
+   "unidad": "Caja/50 lb",
+   "libras_unidad": 50,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/apio.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "El gremio declaró la unidad."
+  },
+  "zanahoria": {
+   "nombre": "Zanahoria",
+   "unidad": "Saco/100 lb",
+   "libras_unidad": 100,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/zanahoria.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Declarada por el gremio y cuadra con el Ministerio."
+  },
+  "remolacha": {
+   "nombre": "Remolacha",
+   "unidad": "Saco/100 lb",
+   "libras_unidad": 100,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/remolacha.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Declarada por el gremio y cuadra con el Ministerio."
+  },
+  "cebolla-roja": {
+   "nombre": "Cebolla roja",
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "unidad_confianza": "verificada",
+   "foto": "assets/img/gremio/cebolla-roja.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Declarada por el gremio y cuadra con el Ministerio."
+  },
+  "yuca": {
+   "nombre": "Yuca pecho rojo",
+   "unidad": "Libra",
+   "libras_unidad": 1,
+   "unidad_confianza": "inferida",
+   "foto": "assets/img/gremio/yuca.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Unidad no declarada. Se lee por libra porque el Ministerio cotiza la yuca a RD$2,800 el quintal, que son exactamente RD$28/lb."
+  },
+  "auyama": {
+   "nombre": "Auyama",
+   "unidad": "Kilo",
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/gremio/auyama.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Único rubro cotizado en kilo; todo lo demás va en libra. No se normaliza hasta confirmarlo."
+  },
+  "cilantro": {
+   "nombre": "Cilantro",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/gremio/cilantro.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Unidad no declarada. Probablemente por mazo."
+  },
+  "tomate-bugalu": {
+   "nombre": "Tomate bugalú",
+   "unidad": "Huacal/45 lb",
+   "libras_unidad": 45,
+   "unidad_confianza": "inferida",
+   "foto": "assets/img/rubros/tomate-bugalu.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Unidad no declarada en el mensaje. El Ministerio cotiza el bugalú en huacal de 45 lb en esta misma plaza."
+  },
+  "tomate-ensalada": {
+   "nombre": "Tomate de ensalada (invernadero)",
+   "unidad": "Huacal/45 lb",
+   "libras_unidad": 45,
+   "unidad_confianza": "inferida",
+   "foto": "assets/img/rubros/tomate-ensalada.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": null
+  },
+  "berenjena": {
+   "nombre": "Berenjena",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/gremio/berenjena.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Unidad no declarada y el Ministerio no la publica en el extracto que tenemos."
+  },
+  "aji-morron": {
+   "nombre": "Ají morrón",
+   "unidad": "Caja",
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/aji-morron.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Dijeron 'la caja', pero el Ministerio cotiza el morrón en huacal de 100 lb a RD$4,000–5,000. La caja del gremio tiene que ser mucho más chica; sin saber cuánto, no se normaliza."
+  },
+  "platano-maduro": {
+   "nombre": "Plátano maduro",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/rubros/platano-maduro.webp",
+   "foto_credito": "foto de góndola",
+   "nota_unidad": "Unidad no declarada. No cuadra por unidad ni por ciento."
+  },
+  "limon": {
+   "nombre": "Limón",
+   "unidad": null,
+   "libras_unidad": null,
+   "unidad_confianza": "a confirmar",
+   "foto": "assets/img/gremio/limon.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "Unidad no declarada. El número no cuadra con nada más de la lista."
+  },
+  "papa": {
+   "nombre": "Papa",
+   "unidad": "Saco/50 lb",
+   "libras_unidad": 50,
+   "unidad_confianza": "inferida",
+   "foto": "assets/img/gremio/papa.webp",
+   "foto_credito": "foto de la asociación",
+   "nota_unidad": "El mensaje no dijo qué producto era, solo “entre 1600 y 1200 saco de 50lbs”. Se identificó por la foto: papa en malla amarilla. Confirmar con el gremio."
+  }
+ }
+}
