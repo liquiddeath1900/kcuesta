@@ -23,7 +23,7 @@
   // precio y la foto. Publicar el parte de mañana es escribir un archivo de
   // precios; no hay que volver a tocar nombres, unidades ni fotos, y los
   // partes viejos quedan intactos porque nadie los reescribe.
-  var V = '?v=8';
+  var V = '?v=9';
   var INDICE = 'data/partes.json' + V;
   var CATALOGO = 'data/gremio-rubros.json' + V;
 
@@ -75,22 +75,29 @@
     // mercancía que entró esa mañana, y esa dice más que una de archivo.
     var items = (d.items || []).map(function (i) {
       var c = CAT[i.cultivo] || {};
+      // La unidad del RENGLÓN manda sobre la del catálogo. Un mismo rubro
+      // se cotiza en dos unidades a la vez: la lechoza va por quintal en
+      // bulto y por unidad la fruta suelta. Con una sola unidad por rubro,
+      // los 60–80 por fruta se dividían entre 100 libras y la tarjeta
+      // enseñaba lechoza de primera a 60 centavos la libra.
+      var unidad = i.unidad !== undefined ? i.unidad : c.unidad;
+      var libras = i.libras_unidad !== undefined ? i.libras_unidad : c.libras_unidad;
       return {
         cultivo: i.cultivo,
         nombre: c.nombre || i.cultivo,
         calidad: i.calidad,
         procedencia: i.procedencia,
-        unidad: c.unidad,
-        libras_unidad: c.libras_unidad,
+        unidad: unidad,
+        libras_unidad: libras,
         unidad_confianza: c.unidad_confianza,
-        nota: c.nota_unidad,
+        nota: i.nota || c.nota_unidad,
         precio_min: i.precio_min,
         precio_max: i.precio_max,
         // Se normaliza AQUÍ y no en el archivo: el precio por libra es una
         // cuenta —precio entre libras del empaque— y guardarla en el JSON
         // la deja envejecer mal el día que se corrija una unidad.
-        precio_lb_min: c.libras_unidad ? +(i.precio_min / c.libras_unidad).toFixed(2) : null,
-        precio_lb_max: c.libras_unidad ? +(i.precio_max / c.libras_unidad).toFixed(2) : null,
+        precio_lb_min: libras ? +(i.precio_min / libras).toFixed(2) : null,
+        precio_lb_max: libras ? +(i.precio_max / libras).toFixed(2) : null,
         foto: i.foto || c.foto || null,
         foto_credito: i.foto ? (i.foto_credito || 'foto del día')
                              : (c.foto ? c.foto_credito : null)
@@ -116,7 +123,11 @@
         '</div>' +
       '</div>' +
       '<div class="gr-cifras">' +
-        '<div class="gr-cifra"><b>203</b><span>miembros</span></div>' +
+        // Sale del dato y se rotula por lo que de verdad se sabe: son 203
+        // en el canal de WhatsApp. Cuántos socios tiene la asociación es
+        // otra cifra y nadie la ha confirmado.
+        '<div class="gr-cifra"><b>' + (m.miembros_canal || 203) + '</b>' +
+          '<span>en el canal</span></div>' +
         '<div class="gr-cifra"><b>' + nRubros + '</b><span>rubros hoy</span></div>' +
         '<div class="gr-cifra"><b>Mayorista</b><span>nivel</span></div>' +
       '</div>' +
@@ -177,10 +188,20 @@
     function contraste(r) {
       var g = GONDOLA[r.cultivo];
       if (!g) return '';
-      var alto = r.filas.filter(function (f) {
+      // Se prefiere el grado alto declarado. Si el rubro no trae grado
+      // —el apio, la zanahoria, la remolacha y la papa vienen sin él— se
+      // usa igual, pero SE DICE: el supermercado vende primera, así que un
+      // "+500%" contra mercancía de grado desconocido no se puede leer
+      // como primera contra primera. El comentario de arriba prometía que
+      // los grados no se mezclan y en estas cuatro sí se estaban mezclando.
+      var conGrado = r.filas.filter(function (f) {
         return f.precio_lb_min != null &&
-               (f.calidad === 'primera' || f.calidad === 'premium' || f.calidad == null);
+               (f.calidad === 'primera' || f.calidad === 'premium');
       })[0];
+      var sinGrado = r.filas.filter(function (f) {
+        return f.precio_lb_min != null && f.calidad == null;
+      })[0];
+      var alto = conGrado || sinGrado;
       if (!alto) return '';
       var may = (alto.precio_lb_min + alto.precio_lb_max) / 2;
       var pct = Math.round((g - may) / may * 100);
@@ -188,6 +209,8 @@
       return '<div class="gr-contraste">' +
         'En góndola: <b>' + rd(g, 2) + '/lb</b> ' +
         '<span class="marca sube">+' + pct + '% sobre el mayorista</span>' +
+        (conGrado ? '' : '<span class="gr-aviso-grado silencio">' +
+          'el gremio no declaró grado; el supermercado vende primera</span>') +
         '</div>';
     }
 
@@ -240,7 +263,7 @@
         // tarjeta de la chinola, que trae tres grados, le da a la foto
         // ~150px sin ocupar más pantalla que antes.
         (r.foto
-          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=8" alt="' + esc(r.nombre) +
+          ? '<div class="gr-foto"><img src="' + esc(r.foto) + '?v=9" alt="' + esc(r.nombre) +
               '" loading="lazy" width="280" height="373">' +
               (r.foto_credito === 'foto de la asociación'
                 ? '<span class="gr-foto-sello" title="Foto de la Asociación Mercaderes Unidos, tomada en el Mercado Nuevo">🤝</span>'

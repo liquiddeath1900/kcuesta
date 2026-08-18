@@ -340,3 +340,58 @@ volver a tocar nombres ni unidades, y los partes viejos quedan intactos.
       `ESCALA.md`: la lista no puede ordenarse por precio ni premiar al más
       barato, o los pone a competir a la baja entre ellos. La entrada es la
       ASOCIACIÓN, no el comerciante suelto.
+
+---
+
+## 2026-08-17 (tarde) — Auditoría de rótulos: siete números estaban mal
+
+Victorius notó dos cosas mirando la pantalla —"todo dice Mercado Nuevo" y
+"hay varias filas de la misma tienda"— y las dos destaparon errores reales.
+Dos agentes de lectura rastrearon el resto.
+
+- **La referencia mayorista no siempre es del Mercado Nuevo.**
+  `precios_oficiales` recibe filas `nivel='mayorista'` de dos LUGARES: el
+  Ministerio publica el Mercado Nuevo de la Duarte y MERCADOM publica Merca
+  Santo Domingo, km 22. `exportar.py` tomaba la más reciente sin mirar la
+  fuente y la tarjeta rotulaba "Mercado Nuevo" en todas: falso en 14 de 32
+  rubros, y en cuáles cambiaba en cada corrida. Ahora la fuente y la fecha
+  viajan con el dato. El desempate también es explícito: antes, el día que
+  las dos publicaran, `may[0]` dependía del orden de filas de Postgres.
+- **Limón persa: "+777% sobre mayorista", el número más grande del sitio.**
+  Se cotiza en "Saco/600 Unidad", así que RD$6.67 son pesos POR LIMÓN. Se
+  comparaba contra RD$58.50/lb de góndola. Nuevo `factor_a_libra()`: solo
+  se compara cuando hay conversión honesta a libra. Limón y leche líquida
+  quedaron sin referencia, que es lo correcto.
+- **La papa venía por kilo.** Se convirtió MULTIPLICANDO por 0.4536, no
+  dividiendo: la libra pesa menos que el kilo, así que cuesta menos.
+  Dividir la ponía a RD$88/lb; son RD$18.11.
+- **La mediana por vendedor comparaba el precio del EMPAQUE contra una
+  referencia por libra.** Un saco de 20 lb a RD$669.95 contra RD$33.60/lb.
+  Las medianas eran 96/111/69% y por libra son 34/30/60% — y el orden se
+  invierte: Fruttissimo es la más cara, no Nacional.
+- **El filtro por cadena cambiaba el porcentaje.** El mismo arroz decía
+  +21% sin filtro y +522% al tocar Sirena, con los mismos datos, porque el
+  recálculo usaba `o.precio` en vez de `o.precio_lb` — y tampoco recalculaba
+  el titular, así que la cifra grande era la del rubro completo mientras la
+  lista de abajo ya estaba filtrada. Ahora todo se rehace por libra con la
+  misma cuenta del pipeline.
+- **`precio_min` salía mayor que `precio_max`.** `base` viene ordenada por
+  precio_lb, así que `base[0]` es el más barato POR LIBRA —el saco grande—.
+  El orden "Precio más bajo" rankeaba por el precio del saco.
+- **"Un solo precio observado" y debajo tres tiendas.** `n_fuentes` cuenta
+  solo las comparables por libra; la lista las enseña todas. Cuando no
+  coinciden ahora se dicen los dos números.
+- **Lechoza de primera a 60 centavos la libra.** El gremio la cotiza por
+  quintal en bulto Y por unidad la fruta suelta; el catálogo tenía una sola
+  `libras_unidad: 100` y dividía las dos. Un renglón del parte ahora puede
+  traer su propia unidad y manda sobre la del catálogo.
+- **Los contrastes de +500% mezclaban grados.** Apio, zanahoria, remolacha
+  y papa vienen sin grado declarado y se comparaban contra góndola, que es
+  primera. Se siguen enseñando pero lo dicen.
+- **"Hoy" donde el dato tiene 5 a 10 días**, y la tarjeta del héroe era un
+  anuncio inventado sin rotular. Corregidos.
+
+Regla que sale de todo esto: **antes de rotular un número con un lugar, una
+fecha o una unidad, hay que poder señalar el campo del que sale.** Los tres
+rótulos falsos —el mercado, el "/lb" del limón y el "hoy"— eran literales
+escritos a mano encima de datos que decían otra cosa.

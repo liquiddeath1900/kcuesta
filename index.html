@@ -20,7 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kcuesta.com/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/css/kcuesta.css?v=8">
+<link rel="stylesheet" href="assets/css/kcuesta.css?v=9">
 </head>
 <body>
 
@@ -30,7 +30,7 @@
 
 <header class="barra">
   <div class="env barra-in">
-    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=8" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
+    <a href="index.html" class="marca"><img src="assets/brand/logo.png?v=9" alt="Kcuesta — ¿A cómo está?" width="192" height="34"></a>
     <nav class="nav-esc">
       <a href="precios.html">Precios oficiales</a>
       <a href="gremio.html">Mercado Nuevo</a>
@@ -50,8 +50,8 @@
         <p class="sobretitulo">República Dominicana</p>
         <h1>¿A cómo <em>está</em>?</h1>
         <p class="portada-sub">
-          El mercado agrícola dominicano, en tu teléfono. Mira quién tiene mercancía hoy,
-          a cómo la da, y cómo se compara con el precio oficial.
+          El mercado agrícola dominicano, en tu teléfono. Mira a cómo está cada
+          rubro, quién lo tiene, y cómo se compara con el precio mayorista oficial.
         </p>
         <div class="portada-acc">
           <a class="boton grande" href="entrar.html">Comenzar</a>
@@ -65,11 +65,12 @@
         <img src="assets/img/platano.jpg" width="640" height="512"
              alt="Campo de plátano en La Joya, República Dominicana" fetchpriority="high">
         <div class="portada-tarjeta">
+          <div class="pt-ejemplo">Ejemplo</div>
           <div class="pt-tit">Plátano barahonero</div>
           <div class="pt-precio cifra">RD$ 12,500</div>
           <div class="pt-unidad">por millar · Tamayo, Bahoruco</div>
           <div class="pt-delta">26% bajo el precio del mercado</div>
-          <div class="pt-ref">Mercado Nuevo hoy: RD$ 17,000</div>
+          <div class="pt-ref">Referencia mayorista: RD$ 17,000</div>
         </div>
       </div>
     </div>
@@ -85,7 +86,7 @@
           Cada rubro trae el precio de todas las cadenas que publican su catálogo,
           <strong>normalizado por libra</strong> —para que un saco de 50 libras y una
           libra suelta se puedan comparar de verdad— y al lado el precio mayorista
-          oficial del mismo día.
+          oficial más reciente, con su fecha.
         </p>
         <ul class="muestra-lista">
           <li><b>Por libra</b> siempre, sin importar el empaque en que se venda.</li>
@@ -202,8 +203,8 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=8"></script>
-<script src="assets/js/auth.js?v=8"></script>
+<script src="assets/js/config.js?v=9"></script>
+<script src="assets/js/auth.js?v=9"></script>
 <script>
 /* Muestra de portada: el mismo componente de tarjeta del mercado, con los
    precios de hoy. Se lee data/portada.json —2.5 KB— en vez de datos.js, que
@@ -225,7 +226,7 @@
     });
   }
 
-  fetch('data/portada.json?v=8')
+  fetch('data/portada.json?v=9')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var cadenas = d.cadenas || {};
@@ -256,8 +257,16 @@
               '</span><span class="rb-u">/lb</span></div>' +
           '</div>' +
           (r.mercado_ref_unidad
+            // El mercado NO se escribe a mano: la referencia mayorista sale
+            // del Ministerio (Mercado Nuevo) o de MERCADOM (Merca Santo
+            // Domingo), que son dos sitios distintos. Sin la fuente en el
+            // dato se dice lo único cierto de todas.
             ? '<div class="rb-ref">Referencia: mayorista ' + rd(r.mercado_ref_unidad, 2) +
-                '/lb · Mercado Nuevo, Santo Domingo ' + marca + '</div>'
+                '/lb · ' + esc(r.mercado_ref_fuente === 'Ministerio de Agricultura'
+                  ? 'Mercado Nuevo, Santo Domingo'
+                  : r.mercado_ref_fuente
+                    ? 'Merca Santo Domingo (MERCADOM)'
+                    : 'mayoristas de Santo Domingo') + ' ' + marca + '</div>'
             : '') +
         '</article>';
       }).join('');

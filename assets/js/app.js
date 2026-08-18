@@ -226,8 +226,37 @@
      Las URL siguen en los datos, sin pintarse. Son la herramienta de
      verificación de la casa, no un botón para el visitante. */
 
-  var SEDE_MAYORISTA = ((O.ofertas && O.ofertas._meta) || {}).sede_mayorista
-                       || 'Mercado Nuevo, Santo Domingo';
+  /* ---------- de qué mercado es la referencia mayorista ----------
+     No es siempre el mismo. `precios_oficiales` recibe filas mayoristas de
+     dos fuentes que son dos LUGARES distintos:
+
+       Ministerio de Agricultura -> Mercado Nuevo de la Duarte
+       MERCADOM                  -> Merca Santo Domingo (km 22, Aut. Duarte)
+
+     Aquí se rotulaba "Mercado Nuevo, Santo Domingo" en todas las tarjetas,
+     y era falso en 14 de 32 rubros. Ahora la fuente viaja con el dato y
+     cada tarjeta dice de dónde salió la suya.
+
+     Mientras el pipeline no vuelva a correr, los datos ya publicados no
+     traen `mercado_ref_fuente`. En ese caso NO se inventa un mercado: se
+     dice lo único que es cierto de todos, que son los mayoristas de Santo
+     Domingo. Vago, pero no falso. */
+  var MERCADO_DE = {
+    'Ministerio de Agricultura': 'Mercado Nuevo, Santo Domingo',
+    'MERCADO NUEVO': 'Mercado Nuevo, Santo Domingo',
+    'MERCADOM — Merca Santo Domingo': 'Merca Santo Domingo (MERCADOM)',
+    'MERCADOM': 'Merca Santo Domingo (MERCADOM)'
+  };
+  var SEDE_GENERICA = 'mayoristas de Santo Domingo';
+
+  function sedeMayorista(r) {
+    var f = r.mercado_ref_fuente;
+    if (!f) return SEDE_GENERICA;
+    if (MERCADO_DE[f]) return MERCADO_DE[f];
+    // Fuente nueva que nadie mapeó: se enseña su nombre tal cual antes que
+    // asignarle un mercado a dedo.
+    return f;
+  }
 
   function cita(id) {
     var c = O.cadenas[id] || {};
@@ -250,6 +279,24 @@
     var claves = Object.keys(sedes);
     return 'De dónde sale este número' +
       (claves.length === 1 ? ' — ' + esc(claves[0].replace(/ · $/, '')) : '');
+  }
+
+
+  function etiquetaFuentes(r) {
+    var cadenas = {};
+    r.ofertas.forEach(function (o) { cadenas[o.cadena] = 1; });
+    var total = Object.keys(cadenas).length;
+    var comp = r.n_fuentes || 0;
+
+    if (comp === 0) return 'Precio sin peso declarado · ' + total +
+      (total === 1 ? ' tienda' : ' tiendas');
+    if (comp === total) {
+      return comp === 1 ? 'Un solo precio observado'
+                        : 'Valor de referencia · ' + comp + ' fuentes';
+    }
+    // Hay tiendas que no se pudieron comparar: se dice cuántas de cuántas.
+    return (comp === 1 ? 'Un solo precio comparable' : 'Valor de referencia · ' + comp + ' fuentes') +
+           ' de ' + total + ' tiendas';
   }
 
   function tarjetaRubro(r) {
@@ -287,6 +334,16 @@
     var valor  = porLb ? r.valor_lb : r.valor_unidad;
     var unidad = porLb ? '/lb' : '/' + esc(r.unidad_valor || mejor.unidad);
 
+    // Al filtrar por cadena puede quedar un rubro cuyas ofertas de ESA
+    // tienda no declaran peso: no hay mediana por libra ni valor por unidad
+    // que enseñar. Antes reventaba el render entero de la página con un
+    // null.toLocaleString(). Se cae al precio de etiqueta, que es lo único
+    // que sí se sabe, y se dice que es del empaque.
+    if (valor == null) {
+      valor = r.precio_min;
+      unidad = ' el empaque';
+    }
+
     // Encabezado: nombre a la izquierda, precio a la derecha en la misma
     // línea base. Es la franja que se escanea con el pulgar.
     // La referencia mayorista va en su PROPIA fila, a todo el ancho. Metida
@@ -305,9 +362,13 @@
           // un precio visto una vez. Llamarlo "valor de referencia" le
           // daría un peso que no tiene, y el sitio vive de que el número
           // se pueda defender.
-          (r.n_fuentes === 1
-            ? 'Un solo precio observado'
-            : 'Valor de referencia · ' + r.n_fuentes + ' fuentes') +
+          //
+          // `n_fuentes` cuenta solo las cadenas COMPARABLES —las que
+          // declararon peso— y la lista de abajo las enseña todas. La
+          // naranja agria decía "un solo precio observado" y acto seguido
+          // listaba tres tiendas, que se lee como que el sitio no sabe
+          // contar. Cuando los dos números no coinciden, se dicen los dos.
+          etiquetaFuentes(r) +
           (rango ? '<span class="rb-rango"> · ' + rd(r.precio_lb_min, 2) +
                    ' – ' + rd(r.precio_lb_max, 2) + '/lb</span>' : '') +
       '</div>' +
@@ -323,7 +384,9 @@
     // primero cuánto vale la cosa, y de último contra qué se está midiendo.
     var pieRef = (r.mercado_ref_unidad && porLb)
       ? '<div class="rb-ref">Referencia: mayorista ' + rd(r.mercado_ref_unidad, 2) +
-          '/lb · ' + esc(SEDE_MAYORISTA) + ' ' + marca + '</div>'
+          '/lb · ' + esc(sedeMayorista(r)) +
+          (r.mercado_ref_fecha ? ' · ' + esc(r.mercado_ref_fecha) : '') +
+          ' ' + marca + '</div>'
       : '<div class="rb-ref silencio">Sin referencia mayorista comparable</div>';
 
     // Un solo precio no necesita desplegable: se dibuja la misma cáscara
@@ -351,6 +414,43 @@
       '</details>' +
       pieRef +
     '</article>';
+  }
+
+
+  /* ---------- qué distingue una oferta de otra ----------
+     Dentro de una tarjeta de rubro la CADENA se repite: el arroz selecto
+     trae quince ofertas de solo dos tiendas. Lo que cambia es la marca y el
+     tamaño del empaque —Líder, Wala, Bisonó, Pimco, de 1 a 20 libras— y eso
+     estaba en gris chiquito debajo del nombre de la tienda en negrita. Se
+     leía como nueve veces "Supermercados Nacional" repetido, como si fueran
+     datos duplicados o nueve sucursales distintas.
+
+     Se invierte: primero lo que distingue, después de quién es.
+
+     Del título se le quita el nombre del rubro, que ya lo dice la cabecera.
+     "Arroz Selecto Wala 20 Lb" adentro de la tarjeta de Arroz selecto
+     sobra la mitad; lo que hace falta es "Wala 20 Lb". */
+  function distintivo(titulo, rubro) {
+    var t = String(titulo || '').trim();
+    var pal = String(rubro || '').trim().split(/\s+/);
+    // Se quitan las palabras del rubro SOLO si van al principio y en orden.
+    // Quitarlas donde caigan borraría "Selecto" de "Súper Selecto".
+    for (var i = 0; i < pal.length; i++) {
+      var re = new RegExp('^' + pal[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s+', 'i');
+      var sinTilde = sinAcento(t), objetivo = sinAcento(pal[i]);
+      if (sinTilde.toLowerCase().indexOf(objetivo.toLowerCase() + ' ') === 0) {
+        t = t.slice(pal[i].length).replace(/^[\s,·-]+/, '');
+      } else if (re.test(t)) {
+        t = t.replace(re, '');
+      } else break;
+    }
+    // Si no quedó nada, el título era solo el nombre del rubro: se devuelve
+    // entero antes que una fila vacía.
+    return t.trim() || String(titulo || '').trim();
+  }
+
+  function sinAcento(x) {
+    return String(x).normalize ? String(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '') : String(x);
   }
 
   function filasOfertas(r) {
@@ -387,8 +487,8 @@
 
       return '<li class="rb-fila">' +
         '<div class="rb-cadena">' +
-          '<b>' + esc(cad(o.cadena)) + '</b>' +
-          '<span class="silencio rb-desc">' + esc(o.titulo) + '</span>' +
+          '<b>' + esc(distintivo(o.titulo, r.nombre)) + '</b>' +
+          '<span class="silencio rb-desc">' + esc(cad(o.cadena)) + '</span>' +
         '</div>' +
         '<div class="rb-cifras">' +
           '<span class="cifra rb-p">' +
@@ -445,6 +545,54 @@
     '</article>';
   }
 
+
+  /* ---------- recortar un rubro a una sola cadena ----------
+     Todo se recalcula POR LIBRA, igual que en el pipeline.
+
+     Antes esto comparaba `o.precio` —el precio del empaque— contra
+     `mercado_ref_unidad`, que es por libra. El resultado: la tarjeta de
+     arroz súper selecto decía "+21% sobre mayorista" sin filtro y "+522%"
+     al tocar la pastilla de Sirena, con los mismos datos. Y como tampoco
+     se recalculaba `valor_lb`, la cifra grande seguía siendo la del rubro
+     completo mientras la lista de abajo ya estaba filtrada.
+
+     La mediana es la misma cuenta que `resumen_valor()` en
+     pipeline/exportar.py —cuantil con interpolación lineal— para que el
+     número no cambie según quién lo calcule. */
+  function cuantil(xs, q) {
+    if (!xs.length) return null;
+    if (xs.length === 1) return xs[0];
+    var pos = q * (xs.length - 1), bajo = Math.floor(pos),
+        alto = Math.min(bajo + 1, xs.length - 1);
+    return Math.round((xs[bajo] + (xs[alto] - xs[bajo]) * (pos - bajo)) * 100) / 100;
+  }
+
+  function recortarACadena(r, cadena) {
+    var solo = r.ofertas.filter(function (o) { return o.cadena === cadena; });
+    var conLb = solo.filter(function (o) { return o.precio_lb; });
+    var lbs = conLb.map(function (o) { return o.precio_lb; })
+                   .sort(function (a, b) { return a - b; });
+    var precios = solo.map(function (o) { return o.precio; });
+    var valor = lbs.length ? cuantil(lbs, 0.5) : null;
+    var ref = r.mercado_ref_unidad;
+
+    return Object.assign({}, r, {
+      ofertas: solo,
+      n: solo.length,
+      n_comparables: conLb.length,
+      // Una sola cadena es UNA fuente, diga lo que diga el rubro completo.
+      n_fuentes: conLb.length ? 1 : 0,
+      precio_min: Math.min.apply(null, precios),
+      precio_max: Math.max.apply(null, precios),
+      precio_lb_min: lbs.length ? lbs[0] : null,
+      precio_lb_max: lbs.length ? lbs[lbs.length - 1] : null,
+      valor_lb: valor,
+      p25_lb: lbs.length ? cuantil(lbs, 0.25) : null,
+      p75_lb: lbs.length ? cuantil(lbs, 0.75) : null,
+      sobreprecio: (ref && valor) ? Math.round((valor - ref) / ref * 100) : null
+    });
+  }
+
   /* ---------- render ---------- */
 
   // Filtro por cadena: la investigación es clara en que agrupar por cadena
@@ -488,19 +636,7 @@
       // Si hay filtro de cadena, se recorta cada rubro a esa cadena: si no,
       // la tarjeta diría "5 tiendas" mientras el filtro dice una.
       if (cadenaActiva !== 'todas') {
-        lista = lista.map(function (r) {
-          var solo = r.ofertas.filter(function (o) { return o.cadena === cadenaActiva; });
-          var precios = solo.map(function (o) { return o.precio; });
-          return Object.assign({}, r, {
-            ofertas: solo, n: solo.length,
-            precio_min: Math.min.apply(null, precios),
-            precio_max: Math.max.apply(null, precios),
-            sobreprecio: r.mercado_ref_unidad
-              ? Math.round((Math.min.apply(null, precios) - r.mercado_ref_unidad) /
-                  r.mercado_ref_unidad * 100)
-              : null
-          });
-        });
+        lista = lista.map(function (r) { return recortarACadena(r, cadenaActiva); });
       }
 
       lista.sort(function (x, y) {

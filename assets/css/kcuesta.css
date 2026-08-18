@@ -935,3 +935,10 @@ p.aviso-seg { max-width: 62ch; }
 .fuentes-lista li { font-size: .82rem; line-height: 1.45; padding: 9px 0;
   border-top: 1px solid var(--linea); }
 .fuentes-lista .silencio { display: block; font-size: .78rem; }
+.gr-aviso-grado { display: block; font-size: .7rem; margin-top: 3px; }
+
+/* La tarjeta del héroe es un anuncio inventado —no hay ni un productor
+   publicando todavía— así que va rotulada como ejemplo. */
+.pt-ejemplo { display: inline-block; font-size: .64rem; text-transform: uppercase;
+  letter-spacing: .07em; background: rgba(0,0,0,.06); border-radius: 999px;
+  padding: 2px 8px; margin-bottom: 6px; }

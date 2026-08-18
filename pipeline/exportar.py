@@ -20,7 +20,8 @@ from collections import defaultdict
 
 from .catalogo import cultivos
 from .config import ASSETS_JS, DATOS, RAIZ
-from .normalizar import libras_de_titulo, sin_tildes, unidad_canonica
+from .normalizar import (factor_a_libra, libras_de_titulo, sin_tildes,
+                         unidad_canonica)
 
 log = logging.getLogger("kcuesta.exportar")
 
@@ -271,8 +272,42 @@ def _ofertas(db, hoy: dt.date) -> dict:
         cid = p["cultivo_id"]
         cult = catalogo.get(cid, {})
 
-        may = cubos.get((cid, "mayorista"), [])
-        ref = may[0]["precio_por_unidad"] if may else None
+        # La referencia mayorista NO viene siempre del mismo mercado.
+        # `precios_oficiales` recibe filas nivel='mayorista' de dos fuentes
+        # que son dos LUGARES distintos: el Ministerio publica el Mercado
+        # Nuevo de la Duarte y MERCADOM publica Merca Santo Domingo, en el
+        # km 22 de la Autopista Duarte. Como aquí solo se pedía la más
+        # reciente —y MERCADOM publica a diario contra el interdiario del
+        # Ministerio— MERCADOM gana la mayoría de los días, y aun así la
+        # tarjeta rotulaba "Mercado Nuevo" en todas. Era falso en 14 de 32
+        # rubros, y en cuáles cambiaba en cada corrida.
+        #
+        # Se sigue prefiriendo la más fresca —para comparar un precio de hoy
+        # sirve más el de anteayer que el de la semana pasada— pero ahora
+        # sale con su fuente y su fecha, y la tarjeta dice cuál es.
+        #
+        # El desempate es explícito. Antes, el día que las dos fuentes
+        # publicaran, `may[0]` dependía del orden en que Postgres devolviera
+        # las filas: el mismo rubro podía cambiar de mercado sin que nadie
+        # tocara nada.
+        may = sorted(cubos.get((cid, "mayorista"), []),
+                     key=lambda x: (x["fecha"], x.get("fuente") or ""),
+                     reverse=True)
+        # `precio_por_unidad` NO siempre son pesos por libra: el limón persa
+        # va en "Saco/600 Unidad", así que 4,000/600 son RD$6.67 por LIMÓN.
+        # Enseñarlo como /lb contra RD$58.50/lb de góndola daba "+777% sobre
+        # mayorista", el número más grande del sitio, comparando limones con
+        # libras. Solo se compara cuando hay conversión honesta a libra.
+        ref = ref_fuente = ref_fecha = None
+        if may:
+            fac = factor_a_libra(may[0].get("unidad"))
+            if fac is not None and may[0]["precio_por_unidad"] is not None:
+                # Se MULTIPLICA por el factor. La libra pesa menos que el
+                # kilo, así que cuesta menos.
+                ref = (may[0]["precio_por_unidad"] if fac == 1.0
+                       else round(may[0]["precio_por_unidad"] * fac, 4))
+                ref_fuente = may[0].get("fuente")
+                ref_fecha = may[0].get("fecha")
 
         # Solo se sirve la foto propia si además fue aprobada a ojo.
         propia = p["foto_estado"] == "aprobada" and p["foto_url"]
@@ -292,6 +327,8 @@ def _ofertas(db, hoy: dt.date) -> dict:
             # supermercado se vende de uno en uno; el default es Unidad.
             "unidad": unidad_canonica(p["unidad_externa"]),
             "mercado_ref_unidad": ref,
+            "mercado_ref_fuente": ref_fuente,
+            "mercado_ref_fecha": ref_fecha,
             "url": p["url_producto"],
             "foto": p["foto_url"] if propia else _foto_cc(cid)[0],
             "foto_propia": bool(propia),
@@ -349,6 +386,8 @@ def _ofertas(db, hoy: dt.date) -> dict:
         lista = conlb + sinlb           # lo comparable primero
 
         ref = lista[0]["mercado_ref_unidad"]
+        ref_fuente = lista[0].get("mercado_ref_fuente")
+        ref_fecha = lista[0].get("mercado_ref_fecha")
         base = conlb or lista
         min_lb = base[0].get("precio_lb")
         max_lb = base[-1].get("precio_lb")
@@ -382,10 +421,16 @@ def _ofertas(db, hoy: dt.date) -> dict:
             "foto": lista[0]["foto"],
             "foto_credito": lista[0]["foto_credito"],
             "mercado_ref_unidad": ref,
+            "mercado_ref_fuente": ref_fuente,
+            "mercado_ref_fecha": ref_fecha,
             "n": len(lista),
             "n_comparables": len(conlb),
-            "precio_min": base[0]["precio"],
-            "precio_max": base[-1]["precio"],
+            # min()/max() y no base[0]/base[-1]: `base` viene ordenada por
+            # precio_lb, así que el primero es el más barato POR LIBRA —el
+            # saco de 20 lb— y salía precio_min 669.95 con precio_max 148.
+            # El orden "Precio más bajo" rankeaba por el precio del saco.
+            "precio_min": min(o["precio"] for o in base),
+            "precio_max": max(o["precio"] for o in base),
             "precio_lb_min": min_lb,
             "precio_lb_max": max_lb,
             "cadena_min": base[0]["cadena"],
@@ -451,8 +496,14 @@ def _ofertas(db, hoy: dt.date) -> dict:
     for vid, lista in porvendedor.items():
         cad = cadenas.get(vid, {})
         lista.sort(key=lambda o: (o["cultivo"], o["precio"]))
-        conref = [o for o in lista if o["mercado_ref_unidad"]]
-        sobre = [round((o["precio"] - o["mercado_ref_unidad"]) / o["mercado_ref_unidad"] * 100)
+        # Contra la referencia POR LIBRA hay que poner el precio por libra,
+        # no el del empaque. Con `o["precio"]` un saco de arroz de 20 lb a
+        # RD$669.95 se comparaba contra RD$33.60/lb y daba +1,894%: las
+        # medianas salían 96/111/69% cuando por libra son 34/30/51%, y de
+        # paso ordenaba mal a las cadenas —Nacional parecía la peor y por
+        # libra la más cara es Fruttissimo.
+        conref = [o for o in lista if o["mercado_ref_unidad"] and o.get("precio_lb")]
+        sobre = [round((o["precio_lb"] - o["mercado_ref_unidad"]) / o["mercado_ref_unidad"] * 100)
                  for o in conref]
         rubros_vend = sorted({o["cultivo"] for o in lista})
 
@@ -530,6 +581,7 @@ def _portada(ofertas: dict, hoy: dt.date) -> dict:
             "n": r["n"], "precio_lb_min": r["precio_lb_min"],
             "precio_lb_max": r["precio_lb_max"],
             "mercado_ref_unidad": r["mercado_ref_unidad"],
+            "mercado_ref_fuente": r.get("mercado_ref_fuente"),
             "sobreprecio": r["sobreprecio"],
             "valor_lb": r["valor_lb"],
             "n_fuentes": r["n_fuentes"],

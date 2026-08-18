@@ -322,3 +322,51 @@ def unidad_canonica(unidad: str | None) -> str:
     limpia = sin_tildes(unidad.strip().lower()).rstrip(".")
     return _UNIDADES.get(limpia, unidad.strip())
 
+
+
+# ------------------------------------------------------------------
+# ¿LA REFERENCIA MAYORISTA ES POR PESO?
+#
+# `precio_por_unidad` divide el precio del empaque entre lo que trae el
+# empaque, y eso NO siempre da pesos por libra. El limón persa se cotiza en
+# "Saco/600 Unidad": 4,000 entre 600 son RD$6.67 POR LIMÓN. La tarjeta lo
+# enseñaba como RD$6.67/lb y lo comparaba contra RD$58.50/lb de góndola,
+# que daba "+777% sobre mayorista" — el número más grande del sitio, y
+# comparaba limones con libras.
+#
+# Devuelve el factor por el que se MULTIPLICA para pasar a libra, o None
+# cuando no hay conversión honesta:
+#   1.0     -> ya viene por libra
+#   0.4536  -> viene por kilo. Se MULTIPLICA, no se divide: una libra pesa
+#              menos que un kilo, así que la libra cuesta menos. Dividir
+#              ponía la papa a RD$88/lb cuando son RD$18.11.
+#   None    -> se cotiza por pieza (unidad, ciento, millar, fardo). No se
+#              compara: un hueco se ve, un supuesto no.
+# ------------------------------------------------------------------
+_RE_LB_EMPAQUE = re.compile(r"/\s*\d+(?:[.,]\d+)?\s*(?:lb|libras?)\b", re.I)
+_RE_UD_EMPAQUE = re.compile(r"/\s*\d+(?:[.,]\d+)?\s*(?:ud|und|unidad(?:es)?|u)\b", re.I)
+
+
+def factor_a_libra(unidad_mayorista: str | None) -> float | None:
+    if not unidad_mayorista:
+        return None
+    u = sin_tildes(unidad_mayorista.strip().lower())
+
+    # Empaque contado por piezas: "Saco/600 Unidad", "Fardo/12 Ud".
+    if _RE_UD_EMPAQUE.search(u):
+        return None
+    # Empaque pesado: "Saco/100 lb", "Huacal/20 lb", "Saco/125 lb".
+    if _RE_LB_EMPAQUE.search(u):
+        return 1.0
+    if u in ("lb", "libra", "libras"):
+        return 1.0
+    # Quintal son 100 lb y `precio_por_unidad` ya dividió entre 100.
+    if u == "quintal":
+        return 1.0
+    if u in ("kilo", "kg", "kilogramo"):
+        return 0.45359237
+    # Piezas sueltas.
+    if u in ("ud", "und", "unidad", "unidades", "u", "ciento", "millar",
+             "docena", "mata", "racimo", "litro", "lt", "galon", "carton"):
+        return None
+    return None

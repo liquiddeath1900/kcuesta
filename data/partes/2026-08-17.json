@@ -17,7 +17,9 @@
    "nota": "Permiso verbal del administrador, no un acuerdo escrito. Se registra aquí con fecha para que quede claro de quién vino. La asociación va acreditada en cada pantalla donde salgan sus números: es lo que hace que el trato le sirva a ella —autoridad del gremio— y es lo que hay que sostener si algún día pregunta otro miembro. Si piden retirarlo, el campo `estado` pasa a 'retirado' y desaparece del sitio."
   },
   "catalogo": "data/gremio-rubros.json",
-  "nota_fotos": "Las fotos van en el parte porque son del día: el gremio retrata la mercancía que entró esa mañana. Si un día no mandan foto, la tarjeta cae a la del catálogo y se nota en el crédito."
+  "nota_fotos": "Las fotos van en el parte porque son del día: el gremio retrata la mercancía que entró esa mañana. Si un día no mandan foto, la tarjeta cae a la del catálogo y se nota en el crédito.",
+  "nota_unidades": "Un renglón puede traer `unidad`/`libras_unidad` propias y mandan sobre las del catálogo. Un mismo rubro se cotiza en dos unidades a la vez —la lechoza va por quintal en bulto y por unidad la fruta suelta— y una sola unidad por rubro ponía la de primera a 60 centavos la libra.",
+  "miembros_canal": 203
  },
  "items": [
   {
@@ -75,14 +77,20 @@
    "calidad": "primera",
    "procedencia": null,
    "precio_min": 60,
-   "precio_max": 80
+   "precio_max": 80,
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "nota": "El gremio la cotizó por unidad, no por quintal."
   },
   {
    "cultivo": "lechoza",
    "calidad": "segunda",
    "procedencia": null,
    "precio_min": 40,
-   "precio_max": 50
+   "precio_max": 50,
+   "unidad": "Unidad",
+   "libras_unidad": null,
+   "nota": "El gremio la cotizó por unidad, no por quintal."
   },
   {
    "cultivo": "platano-verde",
